@@ -69,6 +69,10 @@ const messages = {
     subscriptionList: "Subscription List",
     addSubscription: "Add Subscription",
     viewSubscription: "View Subscription",
+    pricing1: "Pricing 1",
+    pricing2: "Pricing 2",
+    "about-us": "About Us",
+    "contact-us": "Contact Us"
   },
   es: {
     dashboard: "Tablero",

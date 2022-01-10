@@ -19,7 +19,7 @@
       id="#kt_header_menu"
       data-kt-menu="true"
     >
-      <template v-for="(item, i) in MainMenuConfig" :key="i">
+      <!-- <template v-for="(item, i) in MainMenuConfig" :key="i">
         <template v-if="!item.heading">
           <template v-for="(menuItem, j) in item.pages" :key="j">
             <div v-if="menuItem.heading" class="menu-item me-lg-1">
@@ -164,7 +164,7 @@
             </template>
           </div>
         </div>
-      </template>
+      </template> -->
 
       <div
         data-kt-menu-trigger="click"

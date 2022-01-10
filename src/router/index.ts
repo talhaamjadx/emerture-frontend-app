@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw, createWebHistory } from "vue-router";
 import store from "@/store";
 import { Mutations, Actions } from "@/store/enums/StoreEnums";
 
@@ -70,6 +70,26 @@ const routes: Array<RouteRecordRaw> = [
         path: "/crafted/pages/wizards/vertical",
         name: "vertical-wizard",
         component: () => import("@/views/crafted/pages/wizards/Vertical.vue"),
+      },
+      {
+        path: "/crafted/pages/pricing/pricing-1",
+        name: "pricing-1",
+        component: () => import("@/views/crafted/pages/pricing/pricing-1.vue"),
+      },
+      {
+        path: "/crafted/pages/pricing/pricing-2",
+        name: "pricing-2",
+        component: () => import("@/views/crafted/pages/pricing/pricing-2.vue"),
+      },
+      {
+        path: "/crafted/pages/about-us",
+        name: "about-us",
+        component: () => import("@/views/crafted/pages/about-us.vue"),
+      },
+      {
+        path: "/crafted/pages/contact-us",
+        name: "contact-us",
+        component: () => import("@/views/crafted/pages/contact-us.vue"),
       },
       {
         path: "/crafted/account",
@@ -274,6 +294,16 @@ const routes: Array<RouteRecordRaw> = [
     path: "/500",
     name: "500",
     component: () => import("@/views/crafted/authentication/Error500.vue"),
+  },
+  {
+    path: "/verify-email-1",
+    name: "verify-email-1",
+    component: () => import("@/views/crafted/authentication/verify-email-1.vue"),
+  },
+  {
+    path: "/verify-email-2",
+    name: "verify-email-2",
+    component: () => import("@/views/crafted/authentication/verify-email-2.vue"),
   },
   {
     path: "/:pathMatch(.*)*",
