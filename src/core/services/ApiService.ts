@@ -19,7 +19,7 @@ class ApiService {
   public static init(app: App<Element>) {
     ApiService.vueInstance = app;
     ApiService.vueInstance.use(VueAxios, axios);
-    ApiService.vueInstance.axios.defaults.baseURL = process.env.VUE_APP_API_URL;
+    ApiService.vueInstance.axios.defaults.baseURL = process.env.VUE_APP_BASE_URL
   }
 
   /**
@@ -28,7 +28,7 @@ class ApiService {
   public static setHeader(): void {
     ApiService.vueInstance.axios.defaults.headers.common[
       "Authorization"
-    ] = `Token ${JwtService.getToken()}`;
+    ] = `Bearer ${window.localStorage.getItem("access_token")}`;
     ApiService.vueInstance.axios.defaults.headers.common["Accept"] =
       "application/json";
   }
@@ -56,7 +56,7 @@ class ApiService {
     resource: string,
     slug = "" as string
   ): Promise<AxiosResponse> {
-    return ApiService.vueInstance.axios.get(`${resource}/${slug}`);
+    return ApiService.vueInstance.axios.get(`${resource}${slug ? "/"+slug : ""}`);
   }
 
   /**

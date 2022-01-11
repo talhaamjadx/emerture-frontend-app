@@ -1,8 +1,8 @@
 import { Module, Action, Mutation, VuexModule } from "vuex-module-decorators";
 import { Actions, Mutations } from "../enums/StoreEnums"
-import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
+import { AxiosResponse, AxiosRequestConfig } from "axios";
+import ApiService from "@/core/services/ApiService";
 import objectPath from "object-path";
-import { headers } from "@/utils"
 
 interface AuthInterface {
     isLoggedIn: boolean
@@ -58,7 +58,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.SIGNUP](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        return axios.post(process.env.VUE_APP_BASE_URL + '/register', payload)
+        return ApiService.post("/register", payload)
             .then(signup => {
                 console.log(signup)
                 window.localStorage.setItem("access_token", objectPath.get(signup, "data.data.accessToken", ""))
@@ -73,7 +73,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.SIGNIN](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        return axios.post(process.env.VUE_APP_BASE_URL + '/login', payload)
+        return ApiService.post("/login", payload)
             .then(signin => {
                 console.log(signin)
                 window.localStorage.setItem("access_token", objectPath.get(signin, "data.access_token", ""))
@@ -88,7 +88,8 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.AUTH_USER](): Promise<AxiosResponse> {
-        return axios.get(process.env.VUE_APP_BASE_URL + '/auth-user', headers())
+        ApiService.setHeader()
+        return ApiService.get("/auth-user")
             .then(auth => {
                 console.log(auth)
                 this.context.commit(Mutations.SET_AUTH_USER, objectPath.get(auth, "data.data", {}))
