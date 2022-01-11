@@ -44,7 +44,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
    * Get authentification errors
    * @returns array
    */
-  get getErrors() {
+  get getErrorsOld() {
     return this.errors;
   }
 

@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw, createWebHistory } from "vue-router";
 import store from "@/store";
 import { Mutations, Actions } from "@/store/enums/StoreEnums";
+import AuthGuard from "@/middlewares/auth_guard"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,6 +13,9 @@ const routes: Array<RouteRecordRaw> = [
         path: "/dashboard",
         name: "dashboard",
         component: () => import("@/views/Dashboard.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/builder",
@@ -65,36 +69,57 @@ const routes: Array<RouteRecordRaw> = [
         path: "/crafted/pages/wizards/horizontal",
         name: "horizontal-wizard",
         component: () => import("@/views/crafted/pages/wizards/Horizontal.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/crafted/pages/wizards/vertical",
         name: "vertical-wizard",
         component: () => import("@/views/crafted/pages/wizards/Vertical.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/crafted/pages/pricing/pricing-1",
         name: "pricing-1",
         component: () => import("@/views/crafted/pages/pricing/pricing-1.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/crafted/pages/pricing/pricing-2",
         name: "pricing-2",
         component: () => import("@/views/crafted/pages/pricing/pricing-2.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/crafted/pages/about-us",
         name: "about-us",
         component: () => import("@/views/crafted/pages/about-us.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/crafted/pages/contact-us",
         name: "contact-us",
         component: () => import("@/views/crafted/pages/contact-us.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/crafted/account",
         name: "account",
         component: () => import("@/views/crafted/account/Account.vue"),
+        meta: {
+          loginRequired: true
+        },
         children: [
           {
             path: "overview",
@@ -316,16 +341,6 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(() => {
-  // reset config to initial state
-  store.commit(Mutations.RESET_LAYOUT_CONFIG);
-
-  store.dispatch(Actions.VERIFY_AUTH);
-
-  // Scroll page to top on every route change
-  setTimeout(() => {
-    window.scrollTo(0, 0);
-  }, 100);
-});
+router.beforeEach(AuthGuard);
 
 export default router;

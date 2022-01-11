@@ -200,13 +200,10 @@ export default defineComponent({
         // Activate indicator
         submitButton.value.setAttribute("data-kt-indicator", "on");
       }
-
-      // Dummy delay
-      setTimeout(() => {
-        // Send login request
         store
-          .dispatch(Actions.LOGIN, values)
-          .then(() => {
+          .dispatch(Actions.SIGNIN, values)
+          .then((res) => {
+            if(res !== true) throw new Error()
             Swal.fire({
               text: "You have successfully logged in!",
               icon: "success",
@@ -237,7 +234,6 @@ export default defineComponent({
         submitButton.value?.removeAttribute("data-kt-indicator");
         // eslint-disable-next-line
         submitButton.value!.disabled = false;
-      }, 2000);
     };
 
     return {

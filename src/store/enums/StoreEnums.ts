@@ -12,6 +12,9 @@ enum Actions {
   UPDATE_USER = "updateUser",
   FORGOT_PASSWORD = "forgotPassword",
   SET_BREADCRUMB_ACTION = "setBreadcrumbAction",
+  SIGNUP = "signup",
+  SIGNIN = "signin",
+  AUTH_USER = "getAuthUser"
 }
 
 enum Mutations {
@@ -27,6 +30,9 @@ enum Mutations {
   RESET_LAYOUT_CONFIG = "resetLayoutConfig",
   OVERRIDE_LAYOUT_CONFIG = "overrideLayoutConfig",
   OVERRIDE_PAGE_LAYOUT_CONFIG = "overridePageLayoutConfig",
+  IS_LOGGED_IN = "setIsLoggedIn",
+  SET_AUTH_USER = "setAuthUser",
+  SET_DEFAULT_AUTH = "setDefaultAuth"
 }
 
 export { Actions, Mutations };

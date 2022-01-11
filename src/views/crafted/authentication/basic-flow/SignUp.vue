@@ -55,12 +55,12 @@
             class="form-control form-control-lg form-control-solid"
             type="text"
             placeholder=""
-            name="first_name"
+            name="firstName"
             autocomplete="off"
           />
           <div class="fv-plugins-message-container">
             <div class="fv-help-block">
-              <ErrorMessage name="first_name" />
+              <ErrorMessage name="firstName" />
             </div>
           </div>
         </div>
@@ -73,12 +73,12 @@
             class="form-control form-control-lg form-control-solid"
             type="text"
             placeholder=""
-            name="last_name"
+            name="lastName"
             autocomplete="off"
           />
           <div class="fv-plugins-message-container">
             <div class="fv-help-block">
-              <ErrorMessage name="last_name" />
+              <ErrorMessage name="lastName" />
             </div>
           </div>
         </div>
@@ -242,8 +242,8 @@ export default defineComponent({
     const submitButton = ref<HTMLButtonElement | null>(null);
 
     const registration = Yup.object().shape({
-      first_name: Yup.string().required().label("Name"),
-      last_name: Yup.string().required().label("Surname"),
+      firstName: Yup.string().required().label("Name"),
+      lastName: Yup.string().required().label("Surname"),
       email: Yup.string().min(4).required().email().label("Email"),
       password: Yup.string().required().label("Password"),
       password_confirmation: Yup.string()
@@ -268,14 +268,12 @@ export default defineComponent({
       // Activate indicator
       submitButton.value?.setAttribute("data-kt-indicator", "on");
 
-      console.log(values);
+      console.log({values});
 
-      // Dummy delay
-      setTimeout(() => {
-        // Send login request
         store
-          .dispatch(Actions.REGISTER, values)
-          .then(() => {
+          .dispatch(Actions.SIGNUP, values)
+          .then((res) => {
+            if(res !== true) throw new Error()
             Swal.fire({
               text: "You have successfully created new account!",
               icon: "success",
@@ -305,7 +303,6 @@ export default defineComponent({
         submitButton.value?.removeAttribute("data-kt-indicator");
         // eslint-disable-next-line
         submitButton.value!.disabled = false;
-      }, 2000);
     };
 
     return {
