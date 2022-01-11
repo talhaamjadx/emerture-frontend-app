@@ -1,6 +1,8 @@
 <template>
   <!--begin::Wrapper-->
   <div class="w-lg-500px bg-white rounded shadow-sm p-10 p-lg-15 mx-auto">
+    <KTLoader v-if="loaderEnabled" :logo="loaderLogo"></KTLoader>
+
     <!--begin::Form-->
     <Form
       class="form w-100"
@@ -25,13 +27,6 @@
         <!--end::Link-->
       </div>
       <!--begin::Heading-->
-
-      <div class="mb-10 bg-light-info p-8 rounded">
-        <div class="text-info">
-          Use account <strong>admin@demo.com</strong> and password
-          <strong>demo</strong> to continue.
-        </div>
-      </div>
 
       <!--begin::Input group-->
       <div class="fv-row mb-10">
@@ -164,11 +159,13 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { ErrorMessage, Field, Form } from "vee-validate";
+import KTLoader from "@/components/Loader.vue";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
+import { loaderEnabled, loaderLogo } from "@/core/helpers/config";
 
 export default defineComponent({
   name: "sign-in",
@@ -176,6 +173,7 @@ export default defineComponent({
     Field,
     Form,
     ErrorMessage,
+    KTLoader,
   },
   setup() {
     const store = useStore();
@@ -193,53 +191,57 @@ export default defineComponent({
     const onSubmitLogin = (values) => {
       // Clear existing errors
       store.dispatch(Actions.LOGOUT);
-
+      store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");
       if (submitButton.value) {
         // eslint-disable-next-line
         submitButton.value!.disabled = true;
         // Activate indicator
         submitButton.value.setAttribute("data-kt-indicator", "on");
       }
-        store
-          .dispatch(Actions.SIGNIN, values)
-          .then((res) => {
-            if(res !== true) throw new Error()
-            Swal.fire({
-              text: "You have successfully logged in!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-primary",
-              },
-            }).then(function () {
-              // Go to page after successfully login
-              router.push({ name: "dashboard" });
-            });
-          })
-          .catch(() => {
-            const [error] = Object.keys(store.getters.getErrors);
-            Swal.fire({
-              text: store.getters.getErrors[error],
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-danger",
-              },
-            });
+      store
+        .dispatch(Actions.SIGNIN, values)
+        .then((res) => {
+          if (res !== true) throw new Error();
+          store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
+          Swal.fire({
+            text: "You have successfully logged in!",
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn fw-bold btn-light-primary",
+            },
+          }).then(function () {
+            // Go to page after successfully login
+            router.push({ name: "dashboard" });
           });
+        })
+        .catch(() => {
+          store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
+          const [error] = Object.keys(store.getters.getErrors);
+          Swal.fire({
+            text: store.getters.getErrors[error],
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Try again!",
+            customClass: {
+              confirmButton: "btn fw-bold btn-light-danger",
+            },
+          });
+        });
 
-        //Deactivate indicator
-        submitButton.value?.removeAttribute("data-kt-indicator");
-        // eslint-disable-next-line
-        submitButton.value!.disabled = false;
+      //Deactivate indicator
+      submitButton.value?.removeAttribute("data-kt-indicator");
+      // eslint-disable-next-line
+      submitButton.value!.disabled = false;
     };
 
     return {
       onSubmitLogin,
       login,
       submitButton,
+      loaderEnabled,
+      loaderLogo,
     };
   },
 });

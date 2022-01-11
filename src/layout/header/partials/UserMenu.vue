@@ -28,15 +28,16 @@
         <!--begin::Username-->
         <div class="d-flex flex-column">
           <div class="fw-bolder d-flex align-items-center fs-5">
-            Max Smith
+            {{ op.get(user, "firstName", "") }}
+            {{ op.get(user, "lastName", "") }}
             <span
               class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2"
               >Pro</span
             >
           </div>
-          <a href="#" class="fw-bold text-muted text-hover-primary fs-7"
-            >max@kt.com</a
-          >
+          <a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{
+            op.get(user, "email", "")
+          }}</a>
         </div>
         <!--end::Username-->
       </div>
@@ -326,6 +327,7 @@ import { useI18n } from "vue-i18n/index";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Mutations } from "@/store/enums/StoreEnums";
+import objectPath from "object-path";
 
 export default defineComponent({
   name: "kt-user-menu",
@@ -334,6 +336,11 @@ export default defineComponent({
     const router = useRouter();
     const i18n = useI18n();
     const store = useStore();
+    const user = computed(() => {
+      return store.getters.getUser;
+    });
+
+    const op = computed(() => objectPath);
 
     i18n.locale.value = localStorage.getItem("lang")
       ? (localStorage.getItem("lang") as string)
@@ -365,7 +372,7 @@ export default defineComponent({
     const signOut = () => {
       window.localStorage.removeItem("access_token");
       store.commit(Mutations.SET_DEFAULT_AUTH);
-      router.push("/sign-in")
+      router.push("/sign-in");
     };
 
     const setLang = (lang) => {
@@ -387,6 +394,8 @@ export default defineComponent({
       currentLanguage,
       currentLangugeLocale,
       countries,
+      user,
+      op,
     };
   },
 });

@@ -25,8 +25,8 @@ class LayoutService {
     });
 
     if (objectPath.get(config.value, "loader.display")) {
-      store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading-enabled");
-      store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");
+      // store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading-enabled");
+      // store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");
     }
   }
 

@@ -100,7 +100,7 @@ export default defineComponent({
     const router = useRouter();
 
     // show page loading
-    store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");
+    // store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");
 
     // initialize html element classes
     HtmlClass.init();
@@ -120,21 +120,16 @@ export default defineComponent({
       });
 
       // Simulate the delay page loading
-      setTimeout(() => {
-        // Remove page loader after some time
-        store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-      }, 500);
+      // setTimeout(() => {
+      //   // Remove page loader after some time
+      //   store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
+      // }, 500);
     });
 
     watch(
       () => route.path,
       () => {
         MenuComponent.hideDropdowns(undefined);
-
-        // check if current user is authenticated
-        if (!store.getters.isUserAuthenticated) {
-          router.push({ name: "sign-in" });
-        }
 
         nextTick(() => {
           reinitializeComponents();

@@ -11,7 +11,13 @@
     <div class="d-flex align-items-center ms-1 ms-lg-3">
       <!--begin::drawer toggle-->
       <div
-        class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+        class="
+          btn btn-icon btn-active-light-primary
+          w-30px
+          h-30px
+          w-md-40px
+          h-md-40px
+        "
         id="kt_activities_toggle"
       >
         <span class="svg-icon svg-icon-1">
@@ -26,7 +32,13 @@
     <div class="d-flex align-items-center ms-1 ms-lg-3">
       <!--begin::Menu-->
       <div
-        class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+        class="
+          btn btn-icon btn-active-light-primary
+          w-30px
+          h-30px
+          w-md-40px
+          h-md-40px
+        "
         data-kt-menu-trigger="click"
         data-kt-menu-attach="parent"
         data-kt-menu-placement="bottom-end"
@@ -45,7 +57,14 @@
     <div class="d-flex align-items-center ms-1 ms-lg-3">
       <!--begin::Menu wrapper-->
       <div
-        class="btn btn-icon btn-active-light-primary position-relative w-30px h-30px w-md-40px h-md-40px"
+        class="
+          btn btn-icon btn-active-light-primary
+          position-relative
+          w-30px
+          h-30px
+          w-md-40px
+          h-md-40px
+        "
         id="kt_drawer_chat_toggle"
       >
         <span class="svg-icon svg-icon-1">
@@ -53,7 +72,17 @@
         </span>
 
         <span
-          class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
+          class="
+            bullet bullet-dot
+            bg-success
+            h-6px
+            w-6px
+            position-absolute
+            translate-middle
+            top-0
+            start-50
+            animation-blink
+          "
         >
         </span>
       </div>
@@ -65,7 +94,14 @@
     <div class="d-flex align-items-center ms-1 ms-lg-3">
       <!--begin::Menu-->
       <div
-        class="btn btn-icon btn-active-light-primary position-relative w-30px h-30px w-md-40px h-md-40px"
+        class="
+          btn btn-icon btn-active-light-primary
+          position-relative
+          w-30px
+          h-30px
+          w-md-40px
+          h-md-40px
+        "
         data-kt-menu-trigger="click"
         data-kt-menu-attach="parent"
         data-kt-menu-placement="bottom-end"
@@ -121,6 +157,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Actions } from "../../store/enums/StoreEnums";
+import { useStore } from "vuex";
 import KTSearch from "@/layout/header/partials/Search.vue";
 import KTNotificationsMenu from "@/layout/header/partials/NotificationsMenu.vue";
 import KTQuickLinksMenu from "@/layout/header/partials/QuickLinksMenu.vue";
@@ -133,6 +171,11 @@ export default defineComponent({
     KTNotificationsMenu,
     KTQuickLinksMenu,
     KTUserMenu,
+  },
+  setup() {
+    const store = useStore();
+    if (!Object.keys(store.getters.getUser).length)
+      store.dispatch(Actions.AUTH_USER);
   },
 });
 </script>

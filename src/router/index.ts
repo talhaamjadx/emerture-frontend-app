@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw, createWebHistory } from "vue-router";
-import store from "@/store";
-import { Mutations, Actions } from "@/store/enums/StoreEnums";
 import AuthGuard from "@/middlewares/auth_guard"
+import LoggedInGuard from "@/middlewares/logged_in_guard"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -294,18 +293,21 @@ const routes: Array<RouteRecordRaw> = [
         name: "sign-in",
         component: () =>
           import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
+        beforeEnter: LoggedInGuard
       },
       {
         path: "/sign-up",
         name: "sign-up",
         component: () =>
           import("@/views/crafted/authentication/basic-flow/SignUp.vue"),
+        beforeEnter: LoggedInGuard
       },
       {
         path: "/password-reset",
         name: "password-reset",
         component: () =>
           import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
+        beforeEnter: LoggedInGuard
       },
     ],
   },
