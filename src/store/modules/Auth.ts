@@ -35,7 +35,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     get getIsLoggedIn() {
         return this.isLoggedIn
     }
-    get getUser() {
+    get getUser(): AuthUser {
         return this.user
     }
     @Mutation
@@ -46,7 +46,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Mutation
     [Mutations.SET_AUTH_USER](payload) {
-        this.user = { ...payload }
+        this.user = payload
     }
     @Mutation
     [Mutations.IS_LOGGED_IN](payload) {
@@ -91,8 +91,7 @@ export default class Auth extends VuexModule implements AuthInterface {
         ApiService.setHeader()
         return ApiService.get("/auth-user")
             .then(auth => {
-                console.log(auth)
-                this.context.commit(Mutations.SET_AUTH_USER, objectPath.get(auth, "data.data", {}))
+                this.context.commit(Mutations.SET_AUTH_USER, auth.data.data)
                 this.context.commit(Mutations.IS_LOGGED_IN, true)
                 return true
             })

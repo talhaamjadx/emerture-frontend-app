@@ -2,6 +2,8 @@ import store from "@/store"
 import { Actions } from "../store/enums/StoreEnums"
 
 export default async (to, from, next) => {
+    if (to.name === 'sign-in' || to.name === 'sign-up' || to.name === 'password-reset')
+        return next()
     if (!store.getters.getIsLoggedIn) {
         try {
             const response = await store.dispatch(Actions.AUTH_USER)

@@ -31,6 +31,9 @@ const routes: Array<RouteRecordRaw> = [
             name: "profile-overview",
             component: () =>
               import("@/views/crafted/pages/profile/Overview.vue"),
+            meta: {
+              loginRequired: true
+            }
           },
           {
             path: "projects",
@@ -113,6 +116,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/email-verification",
+        name: "email-verification",
+        component: () => import("@/views/crafted/authentication/basic-flow/email-verification.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/crafted/account",
         name: "account",
         component: () => import("@/views/crafted/account/Account.vue"),
@@ -170,6 +181,9 @@ const routes: Array<RouteRecordRaw> = [
         name: "subscriptions-view-subscription",
         component: () =>
           import("@/views/apps/subscriptions/ViewSubscription.vue"),
+          meta: {
+            loginRequired: true
+          }
       },
       {
         path: "/apps/calendar",
@@ -261,6 +275,9 @@ const routes: Array<RouteRecordRaw> = [
         path: "/crafted/widgets/statistics",
         name: "widgets-statistics",
         component: () => import("@/views/crafted/widgets/Statistics.vue"),
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/crafted/widgets/charts",
