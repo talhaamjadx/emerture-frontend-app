@@ -1,6 +1,7 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import AuthGuard from "@/middlewares/auth_guard"
 import LoggedInGuard from "@/middlewares/logged_in_guard"
+import store from "../store"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -121,7 +122,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/crafted/authentication/basic-flow/email-verification.vue"),
         meta: {
           loginRequired: true
-        }
+        },
       },
       {
         path: "/crafted/account",

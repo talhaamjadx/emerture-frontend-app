@@ -14,7 +14,8 @@ enum Actions {
   SET_BREADCRUMB_ACTION = "setBreadcrumbAction",
   SIGNUP = "signup",
   SIGNIN = "signin",
-  AUTH_USER = "getAuthUser"
+  AUTH_USER = "getAuthUser",
+  VERIFY_CODE = "verifyCode"
 }
 
 enum Mutations {

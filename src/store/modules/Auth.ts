@@ -61,7 +61,11 @@ export default class Auth extends VuexModule implements AuthInterface {
         return ApiService.post("/register", payload)
             .then(signup => {
                 console.log(signup)
+                console.log(objectPath.get(signup, "data.data.sendTime", ""))
+                console.log(objectPath.get(signup, "data.data.timeLimit", ""))
                 window.localStorage.setItem("access_token", objectPath.get(signup, "data.data.accessToken", ""))
+                window.localStorage.setItem('verification_code_time', objectPath.get(signup, "data.data.sendTime", ""))
+                window.localStorage.setItem('verification_code_limit', objectPath.get(signup, "data.data.timeLimit", ""))
                 this.context.commit(Mutations.IS_LOGGED_IN, true)
                 return true
             })
@@ -93,6 +97,20 @@ export default class Auth extends VuexModule implements AuthInterface {
             .then(auth => {
                 this.context.commit(Mutations.SET_AUTH_USER, auth.data.data)
                 this.context.commit(Mutations.IS_LOGGED_IN, true)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.VERIFY_AUTH](payload: AxiosRequestConfig): Promise<AxiosResponse> {
+        ApiService.setHeader()
+        return ApiService.post("/verify-code", payload)
+            .then(verifyAuth => {
+                console.log({ verifyAuth })
                 return true
             })
             .catch(err => {

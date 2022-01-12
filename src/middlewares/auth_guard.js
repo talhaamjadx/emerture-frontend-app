@@ -9,6 +9,9 @@ export default async (to, from, next) => {
             if (response !== true) throw new Error()
             if (!objectPath.get(store, "getters.getUser.isActive", false))
                 return next("/email-verification")
+            else if (to.name === "email-verification") {
+                return next("/")
+            }
             next()
         }
         catch (err) {
@@ -18,6 +21,9 @@ export default async (to, from, next) => {
     else {
         if (!objectPath.get(store, "getters.getUser.isActive", false) && to.meta.loginRequired && to.name !== "email-verification") {
             return next("/email-verification")
+        }
+        else if (objectPath.get(store, "getters.getUser.isActive", false) && to.meta.loginRequired && to.name == "email-verification") {
+            return next("/")
         }
         next()
     }
