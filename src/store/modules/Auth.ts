@@ -119,4 +119,32 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return err.response
             })
     }
+    @Action
+    [Actions.RESEND_VERIFY_CODE](): Promise<AxiosResponse> {
+        ApiService.setHeader()
+        return ApiService.get("/resend-code")
+            .then(resendCode => {
+                console.log({ resendCode })
+                return resendCode
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.SIGNOUT](): Promise<AxiosResponse> {
+        ApiService.setHeader()
+        return ApiService.get("/logout")
+            .then(logout => {
+                console.log({ logout })
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }

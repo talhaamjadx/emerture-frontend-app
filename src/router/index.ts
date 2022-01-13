@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import AuthGuard from "@/middlewares/auth_guard"
 import LoggedInGuard from "@/middlewares/logged_in_guard"
-import store from "../store"
 
 const routes: Array<RouteRecordRaw> = [
   {

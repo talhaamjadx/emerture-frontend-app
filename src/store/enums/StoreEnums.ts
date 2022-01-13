@@ -15,7 +15,9 @@ enum Actions {
   SIGNUP = "signup",
   SIGNIN = "signin",
   AUTH_USER = "getAuthUser",
-  VERIFY_CODE = "verifyCode"
+  VERIFY_CODE = "verifyCode",
+  RESEND_VERIFY_CODE = "resendVerifyCode",
+  SIGNOUT = "signout"
 }
 
 enum Mutations {

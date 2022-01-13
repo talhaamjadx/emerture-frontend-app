@@ -1,11 +1,12 @@
 import store from "@/store"
 import { Actions } from "../store/enums/StoreEnums"
 import objectPath from "object-path"
+import { NavigationGuardNext } from "vue-router"
 
-export default async (to, from, next) => {
+export default async (to, from, next): Promise<NavigationGuardNext | undefined> => {
     if (!store.getters.getIsLoggedIn && to.meta.loginRequired) {
         try {
-            const response = await store.dispatch(Actions.AUTH_USER)
+            const response: (Record<string, unknown> | boolean) = await store.dispatch(Actions.AUTH_USER)
             if (response !== true) throw new Error()
             if (!objectPath.get(store, "getters.getUser.isActive", false))
                 return next("/email-verification")
@@ -27,4 +28,5 @@ export default async (to, from, next) => {
         }
         next()
     }
+    window.scrollTo(0, 0)
 }

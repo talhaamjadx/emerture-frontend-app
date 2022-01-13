@@ -211,9 +211,24 @@ export default defineComponent({
             customClass: {
               confirmButton: "btn fw-bold btn-light-primary",
             },
-          }).then(function () {
-            // Go to page after successfully login
-            router.push({ name: "dashboard" });
+          }).then(async () => {
+            try {
+              const response = await store.dispatch(Actions.AUTH_USER);
+              if (response !== true) throw new Error();
+              router.push({ name: "dashboard" });
+            } catch (err) {
+              store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
+              const [error] = Object.keys(store.getters.getErrors);
+              Swal.fire({
+                text: store.getters.getErrors[error],
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Try again!",
+                customClass: {
+                  confirmButton: "btn fw-bold btn-light-danger",
+                },
+              });
+            }
           });
         })
         .catch(() => {

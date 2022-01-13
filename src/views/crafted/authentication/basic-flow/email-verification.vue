@@ -60,8 +60,9 @@
       <div class="fs-5">
         <span class="fw-bold text-gray-700">Did’t receive an email?</span>
         <a
-          href="../../demo1/dist/authentication/sign-up/basic.html"
+          href="javascript:void(0)"
           class="link-primary fw-bolder"
+          @click="resendCode"
           >Resend</a
         >
       </div>
@@ -121,6 +122,40 @@ export default defineComponent({
     const user = computed(() => {
       return store.getters.getUser;
     });
+    const resendCode = async () => {
+      try {
+        const response = await store.dispatch(Actions.RESEND_VERIFY_CODE);
+        if (response.status !== 200) throw new Error();
+        clearInterval(interval.value);
+        localStorage.setItem(
+          "verification_code_time",
+          objectPath.get(response, "data.data.sendTime", "")
+        );
+        localStorage.setItem(
+          "verification_code_limit",
+          objectPath.get(response, "data.data.timeLimit", "")
+        );
+        verificationSendTime.value =
+          localStorage.getItem("verification_code_time") ?? "10:20:00";
+        verficationCodeLimit.value = localStorage.getItem(
+          "verification_code_limit"
+        );
+        timeExists.value = false;
+        timedOut.value = false;
+        verificationCodeTime();
+      } catch (err) {
+        const [error] = Object.keys(store.getters.getErrors);
+        Swal.fire({
+          text: store.getters.getErrors[error],
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again!",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-danger",
+          },
+        });
+      }
+    };
     const verify = async (values) => {
       try {
         const response = await store.dispatch(Actions.VERIFY_AUTH, {
@@ -223,6 +258,7 @@ export default defineComponent({
       op,
       timedOut,
       timeLeft,
+      resendCode,
     };
   },
 });

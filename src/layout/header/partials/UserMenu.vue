@@ -326,8 +326,9 @@ import { defineComponent, computed } from "vue";
 import { useI18n } from "vue-i18n/index";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { Mutations } from "@/store/enums/StoreEnums";
+import { Actions, Mutations } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
+import Swal from "sweetalert2";
 
 export default defineComponent({
   name: "kt-user-menu",
@@ -369,10 +370,25 @@ export default defineComponent({
       },
     };
 
-    const signOut = () => {
-      window.localStorage.removeItem("access_token");
-      store.commit(Mutations.SET_DEFAULT_AUTH);
-      router.push("/sign-in");
+    const signOut = async () => {
+      try {
+        const response = await store.dispatch(Actions.SIGNOUT);
+        if (response !== true) throw new Error();
+        window.localStorage.removeItem("access_token");
+        store.commit(Mutations.SET_DEFAULT_AUTH);
+        router.push("/sign-in");
+      } catch (err) {
+        const [error] = Object.keys(store.getters.getErrors);
+        Swal.fire({
+          text: store.getters.getErrors[error],
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again!",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-danger",
+          },
+        });
+      }
     };
 
     const setLang = (lang) => {
