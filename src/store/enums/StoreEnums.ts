@@ -10,14 +10,17 @@ enum Actions {
   LOGOUT = "logout",
   REGISTER = "register",
   UPDATE_USER = "updateUser",
-  FORGOT_PASSWORD = "forgotPassword",
+  FORGOT_PASSWORD_OLD = "forgotPasswordOld",
   SET_BREADCRUMB_ACTION = "setBreadcrumbAction",
   SIGNUP = "signup",
   SIGNIN = "signin",
   AUTH_USER = "getAuthUser",
   VERIFY_CODE = "verifyCode",
   RESEND_VERIFY_CODE = "resendVerifyCode",
-  SIGNOUT = "signout"
+  SIGNOUT = "signout",
+  FORGOT_PASSWORD = "forgotPassword",
+  RESET_PASSWORD = "resetPassword",
+  CHANGE_PASSWORD = "changePassword",
 }
 
 enum Mutations {

@@ -112,7 +112,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   }
 
   @Action
-  [Actions.FORGOT_PASSWORD](payload) {
+  [Actions.FORGOT_PASSWORD_OLD](payload) {
     const params = {
       params: {
         ...payload,

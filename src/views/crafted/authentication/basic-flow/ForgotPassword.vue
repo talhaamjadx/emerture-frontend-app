@@ -74,6 +74,7 @@
 import { defineComponent, ref } from "vue";
 import { ErrorMessage, Field, Form } from "vee-validate";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import * as Yup from "yup";
 import { Actions } from "@/store/enums/StoreEnums";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
@@ -87,7 +88,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-
+    const router = useRouter();
     const submitButton = ref<HTMLButtonElement | null>(null);
 
     //Create form validation object
@@ -96,46 +97,32 @@ export default defineComponent({
     });
 
     //Form submit function
-    const onSubmitForgotPassword = (values) => {
-      // eslint-disable-next-line
-      submitButton.value!.disabled = true;
-      // Activate loading indicator
-      submitButton.value?.setAttribute("data-kt-indicator", "on");
-
-      // dummy delay
-      setTimeout(() => {
-        // Send login request
-        store
-          .dispatch(Actions.FORGOT_PASSWORD, values)
-          .then(() => {
-            Swal.fire({
-              text: "Password reset email have been successfully sent!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-primary",
-              },
-            });
-          })
-          .catch(() => {
-            const [error] = Object.keys(store.getters.getErrors);
-            // Alert then login failed
-            Swal.fire({
-              text: store.getters.getErrors[error],
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-danger",
-              },
-            });
-          });
-
-        submitButton.value?.removeAttribute("data-kt-indicator");
-        // eslint-disable-next-line
-        submitButton.value!.disabled = false;
-      }, 2000);
+    const onSubmitForgotPassword = async (values) => {
+      try {
+        const response = await store.dispatch(Actions.FORGOT_PASSWORD, values);
+        if (response !== true) throw new Error();
+        Swal.fire({
+          text: `A Password reset email has been sent to ${values.email}`,
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-primary",
+          },
+        }).then(() => router.push("/sign-in"));
+      } catch (err) {
+        store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
+        const [error] = Object.keys(store.getters.getErrors);
+        Swal.fire({
+          text: store.getters.getErrors[error],
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again!",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-danger",
+          },
+        });
+      }
     };
 
     return {

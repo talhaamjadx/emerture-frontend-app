@@ -181,9 +181,9 @@ const routes: Array<RouteRecordRaw> = [
         name: "subscriptions-view-subscription",
         component: () =>
           import("@/views/apps/subscriptions/ViewSubscription.vue"),
-          meta: {
-            loginRequired: true
-          }
+        meta: {
+          loginRequired: true
+        }
       },
       {
         path: "/apps/calendar",
@@ -320,10 +320,17 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: LoggedInGuard
       },
       {
-        path: "/password-reset",
-        name: "password-reset",
+        path: "/forgot-password",
+        name: "forgot-password",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
+          import("@/views/crafted/authentication/basic-flow/ForgotPassword.vue"),
+        beforeEnter: LoggedInGuard
+      },
+      {
+        path: "/reset-password",
+        name: "reset-password",
+        component: () =>
+          import("@/views/crafted/authentication/basic-flow/ResetPassword.vue"),
         beforeEnter: LoggedInGuard
       },
     ],

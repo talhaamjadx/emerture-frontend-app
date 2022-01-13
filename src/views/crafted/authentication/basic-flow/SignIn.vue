@@ -61,7 +61,10 @@
           <!--end::Label-->
 
           <!--begin::Link-->
-          <router-link to="/password-reset" class="link-primary fs-6 fw-bolder">
+          <router-link
+            to="/forgot-password"
+            class="link-primary fs-6 fw-bolder"
+          >
             Forgot Password ?
           </router-link>
           <!--end::Link-->

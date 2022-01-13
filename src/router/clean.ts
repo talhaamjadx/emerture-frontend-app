@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/password-reset",
         name: "password-reset",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
+          import("@/views/crafted/authentication/basic-flow/ForgotPassword.vue"),
       },
     ],
   },

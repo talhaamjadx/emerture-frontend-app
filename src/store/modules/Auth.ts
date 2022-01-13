@@ -147,4 +147,46 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return err.response
             })
     }
+    @Action
+    [Actions.FORGOT_PASSWORD](payload: AxiosRequestConfig): Promise<AxiosResponse> {
+        ApiService.setHeader()
+        return ApiService.post("/forgot-password", payload)
+            .then(forgotPassword => {
+                console.log({ forgotPassword })
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.RESET_PASSWORD](payload: AxiosRequestConfig): Promise<AxiosResponse> {
+        ApiService.setHeader()
+        return ApiService.post("/reset-password", payload)
+            .then(resetPassword => {
+                console.log({ resetPassword })
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.CHANGE_PASSWORD](payload: AxiosRequestConfig): Promise<AxiosResponse> {
+        ApiService.setHeader()
+        return ApiService.post("/change-password", payload)
+            .then(changePassword => {
+                console.log({ changePassword })
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }
