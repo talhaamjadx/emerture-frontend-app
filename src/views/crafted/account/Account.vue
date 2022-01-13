@@ -247,7 +247,7 @@
         <ul
           class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap"
         >
-          <!--begin::Nav item-->
+          <!-- begin::Nav item
           <li class="nav-item">
             <router-link
               to="/crafted/account/overview"
@@ -256,7 +256,7 @@
             >
               Overview
             </router-link>
-          </li>
+          </li> -->
           <!--end::Nav item-->
           <!--begin::Nav item-->
           <li class="nav-item">

@@ -80,7 +80,7 @@ export default class Auth extends VuexModule implements AuthInterface {
         return ApiService.post("/login", payload)
             .then(signin => {
                 console.log(signin)
-                window.localStorage.setItem("access_token", objectPath.get(signin, "data.access_token", ""))
+                window.localStorage.setItem("access_token", objectPath.get(signin, "data.data.access_token", ""))
                 this.context.commit(Mutations.IS_LOGGED_IN, true)
                 return true
             })
@@ -181,6 +181,20 @@ export default class Auth extends VuexModule implements AuthInterface {
         return ApiService.post("/change-password", payload)
             .then(changePassword => {
                 console.log({ changePassword })
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.UPDATE_PROFILE](payload: AxiosRequestConfig): Promise<AxiosResponse> {
+        ApiService.setHeader()
+        return ApiService.put("/update-profile", payload)
+            .then(updateProfile => {
+                console.log({ updateProfile })
                 return true
             })
             .catch(err => {

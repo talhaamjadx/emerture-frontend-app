@@ -21,6 +21,7 @@ enum Actions {
   FORGOT_PASSWORD = "forgotPassword",
   RESET_PASSWORD = "resetPassword",
   CHANGE_PASSWORD = "changePassword",
+  UPDATE_PROFILE = "updateProfile",
 }
 
 enum Mutations {
