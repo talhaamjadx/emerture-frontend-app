@@ -130,7 +130,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   @Action
   [Actions.VERIFY_AUTH]() {
     if (JwtService.getToken()) {
-      ApiService.setHeader();
+      ApiService.setHeader("application/json");
       const params = {
         params: {
           api_token: JwtService.getToken(),
@@ -151,7 +151,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
 
   // @Action
   // [Actions.UPDATE_USER](payload) {
-  //   ApiService.setHeader();
+  //   ApiService.setHeader("application/json");
   //   return new Promise<void>((resolve, reject) => {
   //     ApiService.post("update_user", payload)
   //       .then(({ data }) => {

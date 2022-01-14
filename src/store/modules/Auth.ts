@@ -1,6 +1,6 @@
 import { Module, Action, Mutation, VuexModule } from "vuex-module-decorators";
 import { Actions, Mutations } from "../enums/StoreEnums"
-import { AxiosResponse, AxiosRequestConfig } from "axios";
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import ApiService from "@/core/services/ApiService";
 import objectPath from "object-path";
 
@@ -92,7 +92,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.AUTH_USER](): Promise<AxiosResponse> {
-        ApiService.setHeader()
+        ApiService.setHeader("application/json")
         return ApiService.get("/auth-user")
             .then(auth => {
                 this.context.commit(Mutations.SET_AUTH_USER, auth.data.data)
@@ -107,7 +107,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.VERIFY_AUTH](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        ApiService.setHeader()
+        ApiService.setHeader("application/json")
         return ApiService.post("/verify-code", payload)
             .then(verifyAuth => {
                 console.log({ verifyAuth })
@@ -121,7 +121,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.RESEND_VERIFY_CODE](): Promise<AxiosResponse> {
-        ApiService.setHeader()
+        ApiService.setHeader("application/json")
         return ApiService.get("/resend-code")
             .then(resendCode => {
                 console.log({ resendCode })
@@ -135,7 +135,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.SIGNOUT](): Promise<AxiosResponse> {
-        ApiService.setHeader()
+        ApiService.setHeader("application/json")
         return ApiService.get("/logout")
             .then(logout => {
                 console.log({ logout })
@@ -149,7 +149,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.FORGOT_PASSWORD](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        ApiService.setHeader()
+        ApiService.setHeader("application/json")
         return ApiService.post("/forgot-password", payload)
             .then(forgotPassword => {
                 console.log({ forgotPassword })
@@ -163,7 +163,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.RESET_PASSWORD](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        ApiService.setHeader()
+        ApiService.setHeader("application/json")
         return ApiService.post("/reset-password", payload)
             .then(resetPassword => {
                 console.log({ resetPassword })
@@ -177,7 +177,7 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.CHANGE_PASSWORD](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        ApiService.setHeader()
+        ApiService.setHeader("application/json")
         return ApiService.post("/change-password", payload)
             .then(changePassword => {
                 console.log({ changePassword })
@@ -191,8 +191,8 @@ export default class Auth extends VuexModule implements AuthInterface {
     }
     @Action
     [Actions.UPDATE_PROFILE](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        ApiService.setHeader()
-        return ApiService.put("/update-profile", payload)
+        ApiService.setHeader("multipart/form-data")
+        return ApiService.post("/update-profile", payload)
             .then(updateProfile => {
                 console.log({ updateProfile })
                 return true

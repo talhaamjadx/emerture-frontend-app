@@ -46,6 +46,7 @@
               >
                 <!--begin::Preview existing avatar-->
                 <div
+                  ref="profilePictureRef"
                   class="image-input-wrapper w-125px h-125px"
                   :style="`background-image: url(${profileDetails.profileImage})`"
                 ></div>
@@ -1262,10 +1263,11 @@ export default defineComponent({
     const user = computed(() => {
       return store.getters.getUser;
     });
+    let file: File;
     const oldPasswordRef: Ref = ref(null);
     const newPasswordRef: Ref = ref(null);
     const passwordConfirmationRef: Ref = ref(null);
-    let imageFormData: FormData;
+    const profilePictureRef: Ref = ref(null)
     const submitButton1 = ref<HTMLElement | null>(null);
     const submitButton2 = ref<HTMLElement | null>(null);
     const submitButton3 = ref<HTMLElement | null>(null);
@@ -1308,22 +1310,24 @@ export default defineComponent({
       profileImage: user.value.profileImage,
     });
     const handleImageUpload = (event) => {
-      const file = event.target.files[0];
-      let fd = new FormData();
-      fd.append("image", file, file.name);
-      imageFormData = fd;
+      file = event.target.files[0];
+      console.log({profilePictureRef})
+      // profilePictureRef.value.style.backgroundImage = `url(${URL.createObjectURL(file)})`
     };
     const saveChanges1 = async () => {
       try {
-        const response = await store.dispatch(Actions.UPDATE_PROFILE, {
-          firstName: profileDetails.value.firstName,
-          lastName: profileDetails.value.lastName,
-          linkedInProfileUrl: profileDetails.value.linkedInProfileUrl,
-          jobTitle: profileDetails.value.jobTitle,
-          telephone: profileDetails.value.telephone,
-          introduction: profileDetails.value.introduction,
-          profileImage: imageFormData,
-        });
+        let fd = new FormData();
+        fd.append("profileImage", file, file.name);
+        fd.append("firstName", profileDetails.value.firstName);
+        fd.append("lastName", profileDetails.value.lastName);
+        fd.append(
+          "linkedInProfileUrl",
+          profileDetails.value.linkedInProfileUrl
+        );
+        fd.append("jobTitle", profileDetails.value.jobTitle);
+        fd.append("telephone", profileDetails.value.telephone);
+        fd.append("introduction", profileDetails.value.introduction);
+        const response = await store.dispatch(Actions.UPDATE_PROFILE, fd);
         if (response !== true) throw new Error();
         Swal.fire({
           text: "Profile Updated Successfully!",

@@ -25,12 +25,14 @@ class ApiService {
   /**
    * @description set the default HTTP request headers
    */
-  public static setHeader(): void {
+  public static setHeader(contentType: string): void {
     ApiService.vueInstance.axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${window.localStorage.getItem("access_token")}`;
     ApiService.vueInstance.axios.defaults.headers.common["Accept"] =
-      "application/json";
+      contentType;
+      ApiService.vueInstance.axios.defaults.headers.common["Accept"] =
+      contentType;
   }
 
   /**
