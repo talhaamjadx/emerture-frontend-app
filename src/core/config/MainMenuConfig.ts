@@ -32,7 +32,7 @@ const DocMenuConfig = [
         fontIcon: "bi-cart",
       },
       {
-        heading: "pricing1",
+        heading: "addRole",
         route: "/crafted/pages/pricing/pricing-1",
         svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
         fontIcon: "bi-cart",
