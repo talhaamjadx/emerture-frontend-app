@@ -11,6 +11,7 @@
     <!--begin::Nav group-->
     <!--end::Nav group-->
     <!--begin::Row-->
+  
     <div class="row g-10">
       <!--begin::Col-->
       <div class="col-xl-4">
@@ -181,7 +182,7 @@
             </div>
             <!--end::Heading-->
             <!--begin::Features-->
-            <div class="w-100 mb-10">
+            <div style="min-height: 140px;" class="w-100 mb-10">
               <!--begin::Item-->
               <div class="d-flex align-items-center mb-5">
                 <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3"
@@ -365,6 +366,7 @@
       </div>
       <!--end::Col-->
     </div>
-    <!--end::Row-->
+
+
   </div>
 </template>
