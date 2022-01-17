@@ -12,6 +12,7 @@
     <!--begin::Nav group-->
     <!--end::Nav group-->
     <!--begin::Row-->
+  
     <div class="row g-10">
       <!--begin::Col-->
       <div v-for="role in roles" :key="role.id" class="col-xl-4">
@@ -152,7 +153,6 @@
         </div>
       </div>
     </div>
-    <!--end::Row-->
   </div>
 </template>
 

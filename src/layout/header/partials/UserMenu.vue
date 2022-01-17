@@ -35,7 +35,7 @@
               >Pro</span
             >
           </div>
-          <a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{
+          <a href="#" class="fw-bold text-break text-muted text-hover-primary fs-7">{{
             op.get(user, "email", "")
           }}</a>
         </div>
