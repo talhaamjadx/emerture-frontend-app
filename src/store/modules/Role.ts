@@ -37,4 +37,17 @@ export default class Role extends VuexModule {
                 return err.response
             })
     }
+    @Action
+    [Actions.ATTACH_ROLE]({ id }): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/attach-role?roleId=${id}`)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }

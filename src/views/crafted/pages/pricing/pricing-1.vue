@@ -12,7 +12,7 @@
     <!--begin::Nav group-->
     <!--end::Nav group-->
     <!--begin::Row-->
-  
+
     <div class="row g-10">
       <!--begin::Col-->
       <div v-for="role in roles" :key="role.id" class="col-xl-4">
@@ -44,12 +44,16 @@
             </div>
             <!--end::Heading-->
             <!--begin::Features-->
-            <div v-for="feature in op.get(role, 'roleFeatures', [])" :key="feature.id" class="w-100 mb-10">
+            <div
+              v-for="feature in op.get(role, 'roleFeatures', [])"
+              :key="feature.id"
+              class="w-100 mb-10"
+            >
               <!--begin::Item-->
               <div class="d-flex align-items-center mb-5">
-                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3"
-                  >{{ feature.name }}</span
-                >
+                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">{{
+                  feature.name
+                }}</span>
                 <!--begin::Svg Icon | path: icons/duotune/general/gen043.svg-->
                 <span class="svg-icon svg-icon-1 svg-icon-success">
                   <svg
@@ -79,7 +83,17 @@
             </div>
             <!--end::Features-->
             <!--begin::Select-->
-            <a href="#" class="btn btn-sm btn-primary">Get Started</a>
+            <button
+              :disabled="isRoleAttached(role.id) == 0 ? true : false"
+              class="btn btn-sm btn-primary"
+              @click="attachRole(role.id)"
+            >
+              {{
+                isRoleAttached(role.id) == 0
+                  ? "Awaiting Approval"
+                  : "Get Started"
+              }}
+            </button>
             <!--end::Select-->
           </div>
           <!--end::Option-->
@@ -94,6 +108,11 @@ import { defineComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
+import Swal from "sweetalert2";
+
+interface RoleRequest {
+  status: number;
+}
 
 export default defineComponent({
   setup() {
@@ -101,7 +120,46 @@ export default defineComponent({
     const roles = computed(() => {
       return store.getters.getRolesData;
     });
-    const op = computed(() => objectPath)
+    const op = computed(() => objectPath);
+    const user = computed(() => store.getters.getUser);
+    
+    const isRoleAttached = (id) => {
+      const roleRequest: RoleRequest = objectPath
+        .get(user.value, "userRoleRequests", [])
+        .find((roleRequest) => {
+          return objectPath.get(roleRequest, "role.id") == id;
+        })!;
+      return roleRequest?.status;
+    };
+    const attachRole = async (id) => {
+      try {
+        const response = await store.dispatch(Actions.ATTACH_ROLE, {
+          id: id,
+        });
+        if (response !== true) throw new Error();
+        await store.dispatch(Actions.AUTH_USER)
+        Swal.fire({
+          text: "Role is pending for approval",
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+        });
+      } catch (err) {
+        const [error] = Object.keys(store.getters.getErrors);
+        Swal.fire({
+          text: store.getters.getErrors[error],
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again!",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-danger",
+          },
+        });
+      }
+    };
     onMounted(async () => {
       try {
         if (!roles.value.length) {
@@ -113,8 +171,11 @@ export default defineComponent({
       }
     });
     return {
+      isRoleAttached,
+      user,
       roles,
-      op
+      op,
+      attachRole,
     };
   },
 });
