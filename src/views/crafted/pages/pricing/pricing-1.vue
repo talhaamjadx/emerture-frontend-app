@@ -19,10 +19,13 @@
         <div class=" h-100 align-items-center">
           <!--begin::Option-->
           <div
+          style="justify-content: space-between;
+    align-items: center;"
             class="
+              h-100
               w-100
               d-flex
-              flex-column flex-center
+              flex-column
               rounded-3
               bg-light bg-opacity-75
               py-5
