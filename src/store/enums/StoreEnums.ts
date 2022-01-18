@@ -22,7 +22,8 @@ enum Actions {
   RESET_PASSWORD = "resetPassword",
   CHANGE_PASSWORD = "changePassword",
   UPDATE_PROFILE = "updateProfile",
-  GET_ROLES = "getRoles"
+  GET_ROLES = "getRoles",
+  ATTACH_ROLE = "attachRole"
 }
 
 enum Mutations {
