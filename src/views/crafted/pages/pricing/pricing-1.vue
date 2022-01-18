@@ -16,7 +16,7 @@
     <div class="row g-10">
       <!--begin::Col-->
       <div v-for="role in roles" :key="role.id" class="col-xl-4">
-        <div class="d-flex h-100 align-items-center">
+        <div class=" h-100 align-items-center">
           <!--begin::Option-->
           <div
             class="
