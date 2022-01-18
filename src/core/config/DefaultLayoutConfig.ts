@@ -6,17 +6,17 @@ const config: LayoutConfigTypes = {
   demo: "demo1",
   main: {
     type: "default",
-    primaryColor: "#009EF7",
+    primaryColor: "#236DB5",
     logo: {
-      dark: "media/logos/logo-1-dark.svg",
-      light: "media/logos/logo-1.svg",
+      dark: "media/logos/nav-logo.png",
+      light: "media/logos/nav-logo.png",
     },
   },
   illustrations: {
     set: "sketchy-1",
   },
   loader: {
-    logo: "media/logos/logo-1-dark.svg",
+    logo: "media/logos/nav-logo.png",
     display: true,
     type: "default",
   },

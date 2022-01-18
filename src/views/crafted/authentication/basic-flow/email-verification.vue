@@ -4,7 +4,7 @@
   >
     <!--begin::Logo-->
     <a href="../../demo1/dist/index.html" class="mb-10 pt-lg-10">
-      <!-- <img alt="Logo" src="assets/media/logos/logo-1.svg" class="h-40px mb-5" /> -->
+      <!-- <img alt="Logo" src="assets/media/logos/nav-logo.png" class="h-40px mb-5" /> -->
     </a>
     <!--end::Logo-->
     <!--begin::Wrapper-->
