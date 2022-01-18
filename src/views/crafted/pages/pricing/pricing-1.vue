@@ -44,11 +44,11 @@
             </div>
             <!--end::Heading-->
             <!--begin::Features-->
-            <div class="w-100 mb-10">
+            <div v-for="feature in op.get(role, 'roleFeatures', [])" :key="feature.id" class="w-100 mb-10">
               <!--begin::Item-->
               <div class="d-flex align-items-center mb-5">
                 <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3"
-                  >Promote your fundraising rounds with curated investors</span
+                  >{{ feature.name }}</span
                 >
                 <!--begin::Svg Icon | path: icons/duotune/general/gen043.svg-->
                 <span class="svg-icon svg-icon-1 svg-icon-success">
@@ -76,73 +76,6 @@
                 </span>
                 <!--end::Svg Icon-->
               </div>
-              <!--end::Item-->
-              <!--begin::Item-->
-              <div class="d-flex align-items-center mb-5">
-                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3"
-                  >Find industry experts</span
-                >
-                <!--begin::Svg Icon | path: icons/duotune/general/gen043.svg-->
-                <span class="svg-icon svg-icon-1 svg-icon-success">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <rect
-                      opacity="0.3"
-                      x="2"
-                      y="2"
-                      width="20"
-                      height="20"
-                      rx="10"
-                      fill="black"
-                    />
-                    <path
-                      d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z"
-                      fill="black"
-                    />
-                  </svg>
-                </span>
-                <!--end::Svg Icon-->
-              </div>
-              <!--end::Item-->
-              <!--begin::Item-->
-              <div class="d-flex align-items-center mb-5">
-                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3"
-                  >Find Founders of similar businesses</span
-                >
-                <!--begin::Svg Icon | path: icons/duotune/general/gen043.svg-->
-                <span class="svg-icon svg-icon-1 svg-icon-success">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <rect
-                      opacity="0.3"
-                      x="2"
-                      y="2"
-                      width="20"
-                      height="20"
-                      rx="10"
-                      fill="black"
-                    />
-                    <path
-                      d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z"
-                      fill="black"
-                    />
-                  </svg>
-                </span>
-                <!--end::Svg Icon-->
-              </div>
-              <!--end::Item-->
-              <!--begin::Item-->
-              <!--end::Item-->
             </div>
             <!--end::Features-->
             <!--begin::Select-->
@@ -160,6 +93,7 @@
 import { defineComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
+import objectPath from "object-path";
 
 export default defineComponent({
   setup() {
@@ -167,6 +101,7 @@ export default defineComponent({
     const roles = computed(() => {
       return store.getters.getRolesData;
     });
+    const op = computed(() => objectPath)
     onMounted(async () => {
       try {
         if (!roles.value.length) {
@@ -179,6 +114,7 @@ export default defineComponent({
     });
     return {
       roles,
+      op
     };
   },
 });
