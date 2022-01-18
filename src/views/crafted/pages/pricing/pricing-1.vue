@@ -84,13 +84,33 @@
             <!--end::Features-->
             <!--begin::Select-->
             <button
-              :disabled="isRoleAttached(role.id) == 0 ? true : false"
-              class="btn btn-sm btn-primary"
+              :disabled="
+                isRoleAttached(role.id) == 0 ||
+                isRoleAttached(role.id) == 1 ||
+                isRoleAttached(role.id) == 2
+                  ? true
+                  : false
+              "
+              :class="[
+                'btn',
+                'btn-sm',
+                isRoleAttached(role.id) == 0
+                  ? 'btn-secondary'
+                  : isRoleAttached(role.id) == 1
+                  ? 'btn-primary'
+                  : isRoleAttached(role.id) == 2
+                  ? 'btn-danger'
+                  : 'btn-primary',
+              ]"
               @click="attachRole(role.id)"
             >
               {{
                 isRoleAttached(role.id) == 0
                   ? "Awaiting Approval"
+                  : isRoleAttached(role.id) == 1
+                  ? "Approved"
+                  : isRoleAttached(role.id) == 2
+                  ? "Rejected"
                   : "Get Started"
               }}
             </button>
@@ -122,7 +142,7 @@ export default defineComponent({
     });
     const op = computed(() => objectPath);
     const user = computed(() => store.getters.getUser);
-    
+
     const isRoleAttached = (id) => {
       const roleRequest: RoleRequest = objectPath
         .get(user.value, "userRoleRequests", [])
@@ -137,7 +157,7 @@ export default defineComponent({
           id: id,
         });
         if (response !== true) throw new Error();
-        await store.dispatch(Actions.AUTH_USER)
+        await store.dispatch(Actions.AUTH_USER);
         Swal.fire({
           text: "Role is pending for approval",
           icon: "success",
