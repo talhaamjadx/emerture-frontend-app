@@ -23,7 +23,10 @@ enum Actions {
   CHANGE_PASSWORD = "changePassword",
   UPDATE_PROFILE = "updateProfile",
   GET_ROLES = "getRoles",
-  ATTACH_ROLE = "attachRole"
+  ATTACH_ROLE = "attachRole",
+  CREATE_EXPERT_PROFILE = "createExpertProfile",
+  GET_EXPERT_PROFILE = "getExpertProfile",
+  UPDATE_EXPERT_PROFILE = "updateExpertProfile"
 }
 
 enum Mutations {
@@ -42,7 +45,8 @@ enum Mutations {
   IS_LOGGED_IN = "setIsLoggedIn",
   SET_AUTH_USER = "setAuthUser",
   SET_DEFAULT_AUTH = "setDefaultAuth",
-  SET_ROLES = "setRoles"
+  SET_ROLES = "setRoles",
+  SET_EXPERT_PROFILE = "setExpertProfile"
 }
 
 export { Actions, Mutations };

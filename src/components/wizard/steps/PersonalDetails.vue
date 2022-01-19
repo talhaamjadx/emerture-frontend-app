@@ -16,12 +16,12 @@
 
       <!--begin::Input-->
       <Field
-        name="businessName"
+        name="name"
         class="form-control form-control-lg form-control-solid"
-        value="Keenthemes Inc."
+        value=""
       />
       <ErrorMessage
-        name="businessName"
+        name="name"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -46,13 +46,13 @@
 
       <!--begin::Input-->
       <Field
-        name="businessDescriptor"
+        name="jobTitle"
         class="form-control form-control-lg form-control-solid"
-        value="KEENTHEMES"
+        value=""
       />
       <!--end::Input-->
       <ErrorMessage
-        name="businessDescriptor"
+        name="jobTitle"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
 
@@ -110,10 +110,14 @@
       <!--begin::Input-->
       <Field
         type="text"
-        name="businessDescription"
+        name="linkedInProfileUrl"
         class="form-control form-control-lg form-control-solid"
         rows="3"
       ></Field>
+      <ErrorMessage
+        name="linkedInProfileUrl"
+        class="fv-plugins-message-container invalid-feedback"
+      ></ErrorMessage>
       <!--end::Input-->
     </div>
     <!--end::Input group-->
@@ -128,7 +132,7 @@ import { defineComponent } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
-  name: "step-3",
+  name: "PersonalDetails",
   components: {
     Field,
     ErrorMessage,

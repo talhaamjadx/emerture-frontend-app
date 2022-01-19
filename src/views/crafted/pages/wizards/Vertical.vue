@@ -1,13 +1,26 @@
 <template>
   <!--begin::Stepper-->
   <div
-    class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid"
+    class="
+      stepper stepper-pills stepper-column
+      d-flex
+      flex-column flex-xl-row flex-row-fluid
+    "
     id="kt_create_account_stepper"
     ref="verticalWizardRef"
   >
     <!--begin::Aside-->
     <div
-      class="d-flex justify-content-center bg-white rounded justify-content-xl-start flex-row-auto w-100 w-xl-300px w-xxl-400px me-9"
+      class="
+        d-flex
+        justify-content-center
+        bg-white
+        rounded
+        justify-content-xl-start
+        flex-row-auto
+        w-100 w-xl-300px w-xxl-400px
+        me-9
+      "
     >
       <!--begin::Wrapper-->
       <div class="px-6 px-lg-10 px-xxl-15 py-20">
@@ -102,29 +115,6 @@
             </div>
             <!--end::Label-->
           </div>
-          <!--end::Step 4-->
-
-          <!--begin::Step 5-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <!--begin::Line-->
-            <div class="stepper-line w-40px"></div>
-            <!--end::Line-->
-
-            <!--begin::Icon-->
-            <div class="stepper-icon w-40px h-40px">
-              <i class="stepper-check fas fa-check"></i>
-              <span class="stepper-number">5</span>
-            </div>
-            <!--end::Icon-->
-
-            <!--begin::Label-->
-            <div class="stepper-label">
-              <h3 class="stepper-title">Completed</h3>
-              <div class="stepper-desc fw-bold">Woah, we are here</div>
-            </div>
-            <!--end::Label-->
-          </div>
-          <!--end::Step 5-->
         </div>
         <!--end::Nav-->
       </div>
@@ -149,28 +139,21 @@
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <Step2></Step2>
+          <ProfessionalSummary></ProfessionalSummary>
         </div>
         <!--end::Step 2-->
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <Step3></Step3>
+          <ShowcaseYourExpertise></ShowcaseYourExpertise>
         </div>
         <!--end::Step 3-->
 
         <!--begin::Step 4-->
         <div data-kt-stepper-element="content">
-          <Step4></Step4>
+          <KeySkills></KeySkills>
         </div>
         <!--end::Step 4-->
-
-        <!--begin::Step 5-->
-        <div data-kt-stepper-element="content">
-          <Step5></Step5>
-        </div>
-        <!--end::Step 5-->
-
         <!--begin::Actions-->
         <div class="d-flex flex-stack pt-10">
           <!--begin::Wrapper-->
@@ -233,10 +216,9 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
 import PersonalDetails from "@/components/wizard/steps/PersonalDetails.vue";
-import Step2 from "@/components/wizard/steps/Step2.vue";
-import Step3 from "@/components/wizard/steps/Step3.vue";
-import Step4 from "@/components/wizard/steps/Step4.vue";
-import Step5 from "@/components/wizard/steps/Step5.vue";
+import ProfessionalSummary from "@/components/wizard/steps/ProfessionalSummary.vue";
+import ShowcaseYourExpertise from "@/components/wizard/steps/ShowcaseYourExpertise.vue";
+import KeySkills from "@/components/wizard/steps/KeySkills.vue";
 import { StepperComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
@@ -276,10 +258,9 @@ export default defineComponent({
   name: "kt-vertical-wizard",
   components: {
     PersonalDetails,
-    Step2,
-    Step3,
-    Step4,
-    Step5,
+    ProfessionalSummary,
+    ShowcaseYourExpertise,
+    KeySkills,
   },
   setup() {
     const _stepperObj = ref<StepperComponent | null>(null);
@@ -314,25 +295,15 @@ export default defineComponent({
 
     const createAccountSchema = [
       Yup.object({
-        accountType: Yup.string().required().label("Account Type"),
-      }),
-      Yup.object({
-        accountName: Yup.string().required().label("Account Name"),
-      }),
-      Yup.object({
-        businessName: Yup.string().required().label("Business Name"),
-        businessDescriptor: Yup.string()
+        name: Yup.string().required().label("Name"),
+        jobTitle: Yup.string().required().label("Job Title"),
+        linkedInProfileUrl: Yup.string()
           .required()
-          .label("Shortened Descriptor"),
-        businessType: Yup.string().required().label("Corporation Type"),
-        businessEmail: Yup.string().required().label("Contact Email"),
+          .label("LinkedIn Profile URL"),
       }),
       Yup.object({
-        nameOnCard: Yup.string().required().label("Name On Card"),
-        cardNumber: Yup.string().required().label("Card Number"),
-        cardExpiryMonth: Yup.string().required().label("Expiration Month"),
-        cardExpiryYear: Yup.string().required().label("Expiration Year"),
-        cardCvv: Yup.string().required().label("CVV"),
+        introduction: Yup.string().required().label("Introduction"),
+        bio: Yup.string().required().label("Bio"),
       }),
     ];
 
