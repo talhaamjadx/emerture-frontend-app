@@ -26,7 +26,9 @@ enum Actions {
   ATTACH_ROLE = "attachRole",
   CREATE_EXPERT_PROFILE = "createExpertProfile",
   GET_EXPERT_PROFILE = "getExpertProfile",
-  UPDATE_EXPERT_PROFILE = "updateExpertProfile"
+  UPDATE_EXPERT_PROFILE = "updateExpertProfile",
+  GET_EXPERTISE = "getExpertise",
+  GET_INDUSTRY_SECTORS = "getIndustrySectors",
 }
 
 enum Mutations {
@@ -46,7 +48,9 @@ enum Mutations {
   SET_AUTH_USER = "setAuthUser",
   SET_DEFAULT_AUTH = "setDefaultAuth",
   SET_ROLES = "setRoles",
-  SET_EXPERT_PROFILE = "setExpertProfile"
+  SET_EXPERT_PROFILE = "setExpertProfile",
+  SET_EXPERTISE = "setExpertise",
+  SET_INDUSTRY_SECTORS = "setIndustrySectors",
 }
 
 export { Actions, Mutations };

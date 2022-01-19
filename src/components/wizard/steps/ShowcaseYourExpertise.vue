@@ -13,7 +13,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <input type="file" />
+      <input type="file" @change="handleImageUpload($event)" name="documents" />
       <!--end::Input-->
     </div>
     <div class="fv-row mb-10">
@@ -22,6 +22,7 @@
       <!--end::Label-->
 
       <Field
+        @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
         name="linkToExternalDocuments"
@@ -35,13 +36,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { Field } from "vee-validate";
 
 export default defineComponent({
   name: "ProfessionalSummary",
   components: {
     Field,
+  },
+  props: {
+    formDataTemp: {
+      type: FormData,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const formData = ref<FormData>(props.formDataTemp);
+    const handleImageUpload = (event) => {
+      const file = event.target.files[0];
+      const tempEvent = {
+        target: {
+          name: "documents",
+          value: file,
+        },
+      };
+      fieldChanged(tempEvent);
+    };
+    const fieldChanged = (event) => {
+      if (formData.value.get(event.target.name)) {
+        formData.value.set(event.target.name, event.target.value);
+      } else formData.value.append(event.target.name, event.target.value);
+      emit("form-data", formData.value);
+    };
+    return {
+      formData,
+      fieldChanged,
+      handleImageUpload,
+    };
   },
 });
 </script>

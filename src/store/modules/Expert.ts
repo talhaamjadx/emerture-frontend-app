@@ -8,11 +8,19 @@ import objectPath from "object-path";
 export default class Role extends VuexModule {
     errors = []
     expert = null
+    expertise = []
+    industrySectors = []
     get getErrorsRoles() {
         return this.errors
     }
     get exportProfileGetter() {
         return this.expert
+    }
+    get expertiseGetter() {
+        return this.expertise
+    }
+    get industrySectorsGetter() {
+        return this.industrySectors
     }
     @Mutation
     [Mutations.SET_ERROR](payload): void {
@@ -22,9 +30,17 @@ export default class Role extends VuexModule {
     [Mutations.SET_EXPERT_PROFILE](payload): void {
         this.expert = payload
     }
+    @Mutation
+    [Mutations.SET_EXPERTISE](payload): void {
+        this.expertise = payload
+    }
+    @Mutation
+    [Mutations.SET_INDUSTRY_SECTORS](payload): void {
+        this.industrySectors = payload
+    }
     @Action
     [Actions.CREATE_EXPERT_PROFILE](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        ApiService.setHeader("appilcation/json")
+        ApiService.setHeader("multipart/form-data")
         return ApiService.post("/expert", payload)
             .then(() => {
                 return true
@@ -54,6 +70,34 @@ export default class Role extends VuexModule {
         return ApiService.get(`/expert/${id}`)
             .then(expert => {
                 this.context.commit(Mutations.SET_EXPERT_PROFILE, expert.data.data)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
+    [Actions.GET_EXPERTISE](): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/expertise`)
+            .then(expertise => {
+                this.context.commit(Mutations.SET_EXPERTISE, expertise.data.data)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
+    [Actions.GET_INDUSTRY_SECTORS](): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/industry-sectors`)
+            .then(industrySectors => {
+                this.context.commit(Mutations.SET_INDUSTRY_SECTORS, industrySectors.data.data)
                 return true
             })
             .catch(err => {

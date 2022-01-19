@@ -76,9 +76,9 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "/crafted/pages/wizards/vertical",
-        name: "vertical-wizard",
-        component: () => import("@/views/crafted/pages/wizards/Vertical.vue"),
+        path: "/expert-profile",
+        name: "expert-profile",
+        component: () => import("@/views/crafted/pages/wizards/ExpertProfile.vue"),
         meta: {
           loginRequired: true
         }

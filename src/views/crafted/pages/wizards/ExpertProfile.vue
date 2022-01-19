@@ -133,25 +133,25 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <PersonalDetails></PersonalDetails>
+          <PersonalDetails @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></PersonalDetails>
         </div>
         <!--end::Step 1-->
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <ProfessionalSummary></ProfessionalSummary>
+          <ProfessionalSummary @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></ProfessionalSummary>
         </div>
         <!--end::Step 2-->
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <ShowcaseYourExpertise></ShowcaseYourExpertise>
+          <ShowcaseYourExpertise @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></ShowcaseYourExpertise>
         </div>
         <!--end::Step 3-->
 
         <!--begin::Step 4-->
         <div data-kt-stepper-element="content">
-          <KeySkills></KeySkills>
+          <KeySkills @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></KeySkills>
         </div>
         <!--end::Step 4-->
         <!--begin::Actions-->
@@ -224,38 +224,35 @@ import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums"
 
 interface IStep1 {
-  accountType: string;
+  name: string;
+  jobTitle: string;
+  telephone: string;
+  linkedInProfileUrl: string;
 }
 
 interface IStep2 {
-  accountTeamSize: string;
-  accountName: string;
-  accountPlan: string;
+  introduction: string;
+  bio: string;
 }
 
 interface IStep3 {
-  businessName: string;
-  businessDescriptor: string;
-  businessType: string;
-  businessDescription: string;
-  businessEmail: string;
+  linkToExternalDocuments: string;
+  documents: unknown;
 }
 
 interface IStep4 {
-  nameOnCard: string;
-  cardNumber: string;
-  cardExpiryMonth: string;
-  cardExpiryYear: string;
-  cardCvv: string;
-  saveCard: string;
+  expertIndustrySectors: Array<number | string>;
+  expertExpertise: Array<number | string>;
 }
 
 interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "kt-vertical-wizard",
+  name: "expert-profile",
   components: {
     PersonalDetails,
     ProfessionalSummary,
@@ -263,36 +260,32 @@ export default defineComponent({
     KeySkills,
   },
   setup() {
+    const store = useStore()
+    const formDataTemp = ref<FormData>(new FormData())
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
 
     const formData = ref<CreateAccount>({
-      accountType: "personal",
-      accountTeamSize: "50+",
-      accountName: "",
-      accountPlan: "1",
-      businessName: "Keenthemes Inc.",
-      businessDescriptor: "KEENTHEMES",
-      businessType: "1",
-      businessDescription: "",
-      businessEmail: "corp@support.com",
-      nameOnCard: "Max Doe",
-      cardNumber: "4111 1111 1111 1111",
-      cardExpiryMonth: "1",
-      cardExpiryYear: "2",
-      cardCvv: "123",
-      saveCard: "1",
+      name: "",
+      jobTitle: "",
+      telephone: "",
+      linkedInProfileUrl: "",
+      introduction: "",
+      bio: "",
+      linkToExternalDocuments: "",
+      documents: null,
+      expertIndustrySectors: [],
+      expertExpertise: [],
     });
 
     onMounted(() => {
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
-
-      setCurrentPageBreadcrumbs("Vertical", ["Pages", "Wizards"]);
+      
+      setCurrentPageBreadcrumbs("Expert Profile", []);
     });
-
     const createAccountSchema = [
       Yup.object({
         name: Yup.string().required().label("Name"),
@@ -356,21 +349,27 @@ export default defineComponent({
       _stepperObj.value.goPrev();
     };
 
-    const formSubmit = () => {
-      Swal.fire({
-        text: "All is cool! Now you submit this form",
-        icon: "success",
-        buttonsStyling: false,
-        confirmButtonText: "Ok, got it!",
-        customClass: {
-          confirmButton: "btn fw-bold btn-light-primary",
-        },
-      }).then(() => {
-        window.location.reload();
-      });
+    const formSubmit = async () => {
+      try{
+        const response = await store.dispatch(Actions.CREATE_EXPERT_PROFILE, formDataTemp.value)
+      }catch(err){
+        console.log(err)
+      }
+      // Swal.fire({
+      //   text: "All is cool! Now you submit this form",
+      //   icon: "success",
+      //   buttonsStyling: false,
+      //   confirmButtonText: "Ok, got it!",
+      //   customClass: {
+      //     confirmButton: "btn fw-bold btn-light-primary",
+      //   },
+      // }).then(() => {
+      //   window.location.reload();
+      // });
     };
 
     return {
+      formDataTemp,
       verticalWizardRef,
       previousStep,
       handleStep,

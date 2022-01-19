@@ -11,15 +11,20 @@
       <label class="form-label">Areas of Expertise</label>
       <!--end::Label-->
 
-      <div class="form-check form-check-custom form-check-solid my-3">
+      <div
+        v-for="e in expertise"
+        :key="e.id"
+        class="form-check form-check-custom form-check-solid my-3"
+      >
         <input
+          @input="addToExpertise($event)"
           class="form-check-input"
           type="checkbox"
-          value=""
           id="flexCheckDefault"
+          :data-id="e.id"
         />
         <label class="form-check-label" for="flexCheckDefault">
-          Default checkbox
+          {{ e.name }}
         </label>
       </div>
       <!--end::Input-->
@@ -29,15 +34,21 @@
       <label class="form-label">Industry Sectors</label>
       <!--end::Label-->
 
-      <div class="form-check form-check-custom form-check-solid my-3">
+      <div
+        v-for="is in industrySectors"
+        :key="is.id"
+        class="form-check form-check-custom form-check-solid my-3"
+      >
         <input
           class="form-check-input"
           type="checkbox"
           value=""
           id="flexCheckDefault"
+          :data-id="is.id"
+          @input="addToIndustrySectors($event)"
         />
         <label class="form-check-label" for="flexCheckDefault">
-          Default checkbox
+          {{ is.name }}
         </label>
       </div>
       <!--end::Input-->
@@ -47,10 +58,98 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, onMounted, computed, watch } from "vue";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
+
+interface ExpertiseInterface {
+  id: number;
+}
+interface IndustrySectorsInterface {
+  id: number;
+}
 
 export default defineComponent({
   name: "ProfessionalSummary",
   components: {},
+  props: {
+    formDataTemp: {
+      type: FormData,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const store = useStore();
+    const expertise = computed(() => store.getters.expertiseGetter);
+    const industrySectors = computed(() => store.getters.industrySectorsGetter);
+    const formData = ref<FormData>(props.formDataTemp);
+    const selectedExpertise = ref<Array<ExpertiseInterface>>([]);
+    const selectedIndustrySectors = ref<Array<IndustrySectorsInterface>>([]);
+    const fieldChanged = (event) => {
+      if (formData.value.get(event.target.name)) {
+        formData.value.set(event.target.name, JSON.stringify(event.target.value));
+      } else formData.value.append(event.target.name, JSON.stringify(event.target.value));
+      emit("form-data", formData.value);
+    };
+    const addToExpertise = (event) => {
+      if (event.target.checked) {
+        selectedExpertise.value = [
+          ...selectedExpertise.value,
+          event.target.dataset["id"],
+        ];
+      } else {
+        selectedExpertise.value = selectedExpertise.value.filter((e) => {
+          return e != event.target.dataset["id"];
+        });
+      }
+    };
+    const addToIndustrySectors = (event) => {
+      if (event.target.checked) {
+        selectedIndustrySectors.value = [
+          ...selectedIndustrySectors.value,
+          event.target.dataset["id"],
+        ];
+      } else {
+        selectedIndustrySectors.value = selectedIndustrySectors.value.filter(
+          (i) => {
+            return i != event.target.dataset["id"];
+          }
+        );
+      }
+    };
+    watch(selectedExpertise, (value) => {
+      const event = {
+        target: {
+          name: "expertExpertise",
+          value: value,
+        },
+      };
+      fieldChanged(event);
+    });
+    watch(selectedIndustrySectors, (value) => {
+      const event = {
+        target: {
+          name: "expertIndustrySectors",
+          value: value,
+        },
+      };
+      fieldChanged(event);
+    });
+    onMounted(() => {
+      if (!expertise.value.length) store.dispatch(Actions.GET_EXPERTISE);
+      if (!industrySectors.value.length)
+        store.dispatch(Actions.GET_INDUSTRY_SECTORS);
+    });
+    return {
+      formData,
+      fieldChanged,
+      expertise,
+      industrySectors,
+      addToExpertise,
+      addToIndustrySectors,
+      selectedExpertise,
+      selectedIndustrySectors,
+    };
+  },
 });
 </script>
