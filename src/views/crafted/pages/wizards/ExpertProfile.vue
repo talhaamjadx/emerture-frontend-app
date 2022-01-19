@@ -110,8 +110,7 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Key Skils</h3>
-              <div class="stepper-desc fw-bold">Set Your Payment Methods</div>
+              <h3 class="stepper-title">Key Skills</h3>
             </div>
             <!--end::Label-->
           </div>
@@ -133,25 +132,25 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <PersonalDetails></PersonalDetails>
+          <PersonalDetails @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></PersonalDetails>
         </div>
         <!--end::Step 1-->
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <ProfessionalSummary></ProfessionalSummary>
+          <ProfessionalSummary @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></ProfessionalSummary>
         </div>
         <!--end::Step 2-->
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <ShowcaseYourExpertise></ShowcaseYourExpertise>
+          <ShowcaseYourExpertise @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></ShowcaseYourExpertise>
         </div>
         <!--end::Step 3-->
 
         <!--begin::Step 4-->
         <div data-kt-stepper-element="content">
-          <KeySkills></KeySkills>
+          <KeySkills @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></KeySkills>
         </div>
         <!--end::Step 4-->
         <!--begin::Actions-->
@@ -224,6 +223,8 @@ import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums"
 
 interface IStep1 {
   name: string;
@@ -258,6 +259,8 @@ export default defineComponent({
     KeySkills,
   },
   setup() {
+    const store = useStore()
+    const formDataTemp = ref<FormData>(new FormData())
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
@@ -279,10 +282,9 @@ export default defineComponent({
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
-
+      
       setCurrentPageBreadcrumbs("Expert Profile", []);
     });
-
     const createAccountSchema = [
       Yup.object({
         name: Yup.string().required().label("Name"),
@@ -347,21 +349,27 @@ export default defineComponent({
       _stepperObj.value.goPrev();
     };
 
-    const formSubmit = () => {
-      Swal.fire({
-        text: "All is cool! Now you submit this form",
-        icon: "success",
-        buttonsStyling: false,
-        confirmButtonText: "Ok, got it!",
-        customClass: {
-          confirmButton: "btn fw-bold btn-light-primary",
-        },
-      }).then(() => {
-        window.location.reload();
-      });
+    const formSubmit = async () => {
+      try{
+        const response = await store.dispatch(Actions.CREATE_EXPERT_PROFILE, formDataTemp.value)
+      }catch(err){
+        console.log(err)
+      }
+      // Swal.fire({
+      //   text: "All is cool! Now you submit this form",
+      //   icon: "success",
+      //   buttonsStyling: false,
+      //   confirmButtonText: "Ok, got it!",
+      //   customClass: {
+      //     confirmButton: "btn fw-bold btn-light-primary",
+      //   },
+      // }).then(() => {
+      //   window.location.reload();
+      // });
     };
 
     return {
+      formDataTemp,
       verticalWizardRef,
       previousStep,
       handleStep,

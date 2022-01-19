@@ -14,6 +14,7 @@
 
       <!--begin::Input-->
       <Field
+        @input="fieldChanged($event)"
         type="textarea"
         name="introduction"
         class="form-control form-control-lg form-control-solid"
@@ -31,6 +32,7 @@
       <!--end::Label-->
 
       <Field
+        @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
         name="bio"
@@ -48,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
@@ -56,6 +58,25 @@ export default defineComponent({
   components: {
     Field,
     ErrorMessage,
+  },
+  props: {
+    formDataTemp: {
+      type: FormData,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const formData = ref<FormData>(props.formDataTemp);
+    const fieldChanged = (event) => {
+      if (formData.value.get(event.target.name)) {
+        formData.value.set(event.target.name, event.target.value);
+      } else formData.value.append(event.target.name, event.target.value);
+      emit("form-data", formData.value);
+    };
+    return {
+      formData,
+      fieldChanged,
+    };
   },
 });
 </script>

@@ -16,6 +16,7 @@
 
       <!--begin::Input-->
       <Field
+        @input="fieldChanged($event)"
         name="name"
         class="form-control form-control-lg form-control-solid"
         value=""
@@ -46,6 +47,7 @@
 
       <!--begin::Input-->
       <Field
+        @input="fieldChanged($event)"
         name="jobTitle"
         class="form-control form-control-lg form-control-solid"
         value=""
@@ -82,6 +84,7 @@
 
       <!--begin::Input-->
       <Field
+        @input="fieldChanged($event)"
         type="text"
         name="telephone"
         class="form-control form-control-lg form-control-solid"
@@ -109,6 +112,7 @@
 
       <!--begin::Input-->
       <Field
+        @input="fieldChanged($event)"
         type="text"
         name="linkedInProfileUrl"
         class="form-control form-control-lg form-control-solid"
@@ -128,7 +132,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
@@ -136,6 +140,25 @@ export default defineComponent({
   components: {
     Field,
     ErrorMessage,
+  },
+  props: {
+    formDataTemp: {
+      type: FormData,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const formData = ref<FormData>(props.formDataTemp);
+    const fieldChanged = (event) => {
+      if (formData.value.get(event.target.name)) {
+        formData.value.set(event.target.name, event.target.value);
+      } else formData.value.append(event.target.name, event.target.value);
+      emit("form-data", formData.value);
+    };
+    return {
+      formData,
+      fieldChanged,
+    };
   },
 });
 </script>
