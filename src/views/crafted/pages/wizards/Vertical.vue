@@ -28,9 +28,9 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Account Type</h3>
+              <h3 class="stepper-title">Personal Details</h3>
 
-              <div class="stepper-desc fw-bold">Setup Your Account Details</div>
+              <!-- <div class="stepper-desc fw-bold">Setup Your Account Details</div> -->
             </div>
             <!--end::Label-->
           </div>
@@ -51,10 +51,10 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Account Settings</h3>
-              <div class="stepper-desc fw-bold">
+              <h3 class="stepper-title">Professional Summary</h3>
+              <!-- <div class="stepper-desc fw-bold">
                 Setup Your Account Settings
-              </div>
+              </div> -->
             </div>
             <!--end::Label-->
           </div>
@@ -75,8 +75,8 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Business Info</h3>
-              <div class="stepper-desc fw-bold">Your Business Related Info</div>
+              <h3 class="stepper-title">Showcase your expertise</h3>
+              <!-- <div class="stepper-desc fw-bold">Your Business Related Info</div> -->
             </div>
             <!--end::Label-->
           </div>
@@ -97,7 +97,7 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Billing Details</h3>
+              <h3 class="stepper-title">Key Skils</h3>
               <div class="stepper-desc fw-bold">Set Your Payment Methods</div>
             </div>
             <!--end::Label-->
@@ -143,7 +143,7 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <Step1></Step1>
+          <PersonalDetails></PersonalDetails>
         </div>
         <!--end::Step 1-->
 
@@ -232,7 +232,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
-import Step1 from "@/components/wizard/steps/Step1.vue";
+import PersonalDetails from "@/components/wizard/steps/PersonalDetails.vue";
 import Step2 from "@/components/wizard/steps/Step2.vue";
 import Step3 from "@/components/wizard/steps/Step3.vue";
 import Step4 from "@/components/wizard/steps/Step4.vue";
@@ -275,7 +275,7 @@ interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 export default defineComponent({
   name: "kt-vertical-wizard",
   components: {
-    Step1,
+    PersonalDetails,
     Step2,
     Step3,
     Step4,

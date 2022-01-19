@@ -72,7 +72,8 @@ const messages = {
     addRole: "Add Role",
     pricing2: "Pricing 2",
     "about-us": "About Us",
-    "contact-us": "Contact Us"
+    "contact-us": "Contact Us",
+    "expert-profile": "Expert Profile"
   },
   es: {
     dashboard: "Tablero",

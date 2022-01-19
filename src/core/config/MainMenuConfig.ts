@@ -1,14 +1,20 @@
 const DocMenuConfig = [
   {
     pages: [
+      // {
+      //   heading: "profile",
+      //   route: "/crafted/pages/profile/overview",
+      //   svgIcon: "media/icons/duotune/general/gen019.svg",
+      //   fontIcon: "bi-layers",
+      // },
       {
         heading: "profile",
-        route: "/crafted/pages/profile/overview",
+        route: "/crafted/account/settings",
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-layers",
       },
       {
-        heading: "wizard",
+        heading: "expert-profile",
         route: "/crafted/pages/wizards/vertical",
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-layers",
