@@ -226,36 +226,31 @@ import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 
 interface IStep1 {
-  accountType: string;
+  name: string;
+  jobTitle: string;
+  telephone: string;
+  linkedInProfileUrl: string;
 }
 
 interface IStep2 {
-  accountTeamSize: string;
-  accountName: string;
-  accountPlan: string;
+  introduction: string;
+  bio: string;
 }
 
 interface IStep3 {
-  businessName: string;
-  businessDescriptor: string;
-  businessType: string;
-  businessDescription: string;
-  businessEmail: string;
+  linkToExternalDocuments: string;
+  documents: unknown;
 }
 
 interface IStep4 {
-  nameOnCard: string;
-  cardNumber: string;
-  cardExpiryMonth: string;
-  cardExpiryYear: string;
-  cardCvv: string;
-  saveCard: string;
+  expertIndustrySectors: Array<number | string>;
+  expertExpertise: Array<number | string>;
 }
 
 interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "kt-vertical-wizard",
+  name: "expert-profile",
   components: {
     PersonalDetails,
     ProfessionalSummary,
@@ -268,21 +263,16 @@ export default defineComponent({
     const currentStepIndex = ref(0);
 
     const formData = ref<CreateAccount>({
-      accountType: "personal",
-      accountTeamSize: "50+",
-      accountName: "",
-      accountPlan: "1",
-      businessName: "Keenthemes Inc.",
-      businessDescriptor: "KEENTHEMES",
-      businessType: "1",
-      businessDescription: "",
-      businessEmail: "corp@support.com",
-      nameOnCard: "Max Doe",
-      cardNumber: "4111 1111 1111 1111",
-      cardExpiryMonth: "1",
-      cardExpiryYear: "2",
-      cardCvv: "123",
-      saveCard: "1",
+      name: "",
+      jobTitle: "",
+      telephone: "",
+      linkedInProfileUrl: "",
+      introduction: "",
+      bio: "",
+      linkToExternalDocuments: "",
+      documents: null,
+      expertIndustrySectors: [],
+      expertExpertise: [],
     });
 
     onMounted(() => {
@@ -290,7 +280,7 @@ export default defineComponent({
         verticalWizardRef.value as HTMLElement
       );
 
-      setCurrentPageBreadcrumbs("Vertical", ["Pages", "Wizards"]);
+      setCurrentPageBreadcrumbs("Expert Profile", []);
     });
 
     const createAccountSchema = [
@@ -332,6 +322,7 @@ export default defineComponent({
     });
 
     const handleStep = handleSubmit((values) => {
+      console.log({ values });
       formData.value = {
         ...formData.value,
         ...values,

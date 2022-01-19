@@ -13,7 +13,7 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <input type="file" />
+      <input type="file" name="documents" />
       <!--end::Input-->
     </div>
     <div class="fv-row mb-10">
