@@ -13,7 +13,7 @@ export default class Role extends VuexModule {
     get getErrorsRoles() {
         return this.errors
     }
-    get exportProfileGetter() {
+    get expertProfileGetter() {
         return this.expert
     }
     get expertiseGetter() {
@@ -53,8 +53,8 @@ export default class Role extends VuexModule {
     }
     @Action
     [Actions.UPDATE_EXPERT_PROFILE]({ id, data }): Promise<AxiosResponse> {
-        ApiService.setHeader("appilcation/json")
-        return ApiService.put(`/expert/${id}`, data)
+        ApiService.setHeader("multipart/form-data")
+        return ApiService.post(`/expert/${id}`, data)
             .then(() => {
                 return true
             })

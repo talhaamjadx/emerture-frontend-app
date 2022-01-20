@@ -132,25 +132,37 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <PersonalDetails @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></PersonalDetails>
+          <PersonalDetails
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></PersonalDetails>
         </div>
         <!--end::Step 1-->
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <ProfessionalSummary @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></ProfessionalSummary>
+          <ProfessionalSummary
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></ProfessionalSummary>
         </div>
         <!--end::Step 2-->
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <ShowcaseYourExpertise @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></ShowcaseYourExpertise>
+          <ShowcaseYourExpertise
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></ShowcaseYourExpertise>
         </div>
         <!--end::Step 3-->
 
         <!--begin::Step 4-->
         <div data-kt-stepper-element="content">
-          <KeySkills @form-data="formDataTemp = $event" :formDataTemp="formDataTemp"></KeySkills>
+          <KeySkills
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></KeySkills>
         </div>
         <!--end::Step 4-->
         <!--begin::Actions-->
@@ -181,7 +193,7 @@
               @click="formSubmit()"
             >
               <span class="indicator-label">
-                Submit
+                {{ doesExpertProfileExist ? "Update" : "Submit" }}
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
@@ -213,7 +225,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref, watch, provide } from "vue";
 import PersonalDetails from "@/components/wizard/steps/PersonalDetails.vue";
 import ProfessionalSummary from "@/components/wizard/steps/ProfessionalSummary.vue";
 import ShowcaseYourExpertise from "@/components/wizard/steps/ShowcaseYourExpertise.vue";
@@ -224,7 +236,7 @@ import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
-import { Actions } from "@/store/enums/StoreEnums"
+import { Actions } from "@/store/enums/StoreEnums";
 
 interface IStep1 {
   name: string;
@@ -259,12 +271,34 @@ export default defineComponent({
     KeySkills,
   },
   setup() {
-    const store = useStore()
-    const formDataTemp = ref<FormData>(new FormData())
+    const store = useStore();
+    const formDataTemp = ref<FormData>(new FormData());
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
-
+    const user = computed(() => store.getters.getUser);
+    const expertProfile = computed(() => store.getters.expertProfileGetter);
+    const doesExpertProfileExist = computed(() => {
+      if (expertProfile.value) return true;
+      else return false;
+    });
+    watch(user, () => {
+      if (!Object.keys(user).length) {
+        getExpertProfile();
+      }
+    });
+    const getExpertProfile = async () => {
+      if (!expertProfile.value)
+        try {
+          await store.dispatch(Actions.GET_EXPERT_PROFILE, {
+            id: user.value.id,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+    };
+    getExpertProfile();
+    provide("expertProfile", expertProfile);
     const formData = ref<CreateAccount>({
       name: "",
       jobTitle: "",
@@ -282,7 +316,7 @@ export default defineComponent({
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
-      
+
       setCurrentPageBreadcrumbs("Expert Profile", []);
     });
     const createAccountSchema = [
@@ -350,25 +384,44 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
-      try{
-        const response = await store.dispatch(Actions.CREATE_EXPERT_PROFILE, formDataTemp.value)
-      }catch(err){
-        console.log(err)
+      try {
+        const response = await store.dispatch(
+          doesExpertProfileExist.value
+            ? Actions.UPDATE_EXPERT_PROFILE
+            : Actions.CREATE_EXPERT_PROFILE,
+          doesExpertProfileExist.value
+            ? { id: expertProfile.value.id, data: formDataTemp.value }
+            : formDataTemp.value
+        );
+        if (response !== true) throw new Error();
+        Swal.fire({
+          text: `Expert Profile ${
+            doesExpertProfileExist.value ? "Updated" : "Created"
+          }`,
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-primary",
+          },
+        });
+      } catch (err) {
+        Swal.fire({
+          text: `Expert Profile ${
+            doesExpertProfileExist.value ? "Updation" : "Creation"
+          } Unsuccessful`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn fw-bold btn-light-primary",
+          },
+        });
       }
-      // Swal.fire({
-      //   text: "All is cool! Now you submit this form",
-      //   icon: "success",
-      //   buttonsStyling: false,
-      //   confirmButtonText: "Ok, got it!",
-      //   customClass: {
-      //     confirmButton: "btn fw-bold btn-light-primary",
-      //   },
-      // }).then(() => {
-      //   window.location.reload();
-      // });
     };
 
     return {
+      doesExpertProfileExist,
       formDataTemp,
       verticalWizardRef,
       previousStep,

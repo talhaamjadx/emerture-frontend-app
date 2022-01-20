@@ -14,6 +14,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="introduction"
         @input="fieldChanged($event)"
         type="textarea"
         name="introduction"
@@ -32,6 +33,7 @@
       <!--end::Label-->
 
       <Field
+        v-model="bio"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
@@ -50,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, inject, watch } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
@@ -67,6 +69,15 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
+    const introduction = ref<string | unknown>("");
+    const bio = ref<string | unknown>("");
+    const expertProfile = inject("expertProfile");
+    watch(expertProfile as Record<string, unknown>, (value) => {
+      bio.value = value.bio;
+      introduction.value = value.introduction;
+      formData.value.append("bio", bio.value as string)
+      formData.value.append("introduction", introduction.value as string)
+    });
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -74,6 +85,8 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
+      bio,
+      introduction,
       formData,
       fieldChanged,
     };

@@ -13,7 +13,15 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <input type="file" @change="handleImageUpload($event)" name="documents" />
+      <input
+        id="documents"
+        type="file"
+        @change="handleImageUpload($event)"
+        name="documents"
+      />
+      <a v-if="document" target="_blank" :href="document" class="my-2"
+        >Uploaded Document</a
+      >
       <!--end::Input-->
     </div>
     <div class="fv-row mb-10">
@@ -22,10 +30,11 @@
       <!--end::Label-->
 
       <Field
+        v-model="externalDocumentUrl"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
-        name="linkToExternalDocuments"
+        name="externalDocumentUrl"
         placeholder="https://"
         value=""
       />
@@ -36,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, inject, watch } from "vue";
 import { Field } from "vee-validate";
 
 export default defineComponent({
@@ -52,6 +61,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
+    const document = ref<string | unknown>("");
+    const externalDocumentUrl = ref<string | unknown>("");
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
       const tempEvent = {
@@ -62,6 +73,15 @@ export default defineComponent({
       };
       fieldChanged(tempEvent);
     };
+    const expertProfile = inject("expertProfile");
+    watch(expertProfile as Record<string, unknown>, (value) => {
+      document.value = value.document;
+      externalDocumentUrl.value = value.externalDocumentUrl;
+      formData.value.append(
+        "externalDocumentUrl",
+        externalDocumentUrl.value as string
+      );
+    });
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -69,6 +89,8 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
+      document,
+      externalDocumentUrl,
       formData,
       fieldChanged,
       handleImageUpload,

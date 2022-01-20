@@ -16,6 +16,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="name"
         @input="fieldChanged($event)"
         name="name"
         class="form-control form-control-lg form-control-solid"
@@ -47,6 +48,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="jobTitle"
         @input="fieldChanged($event)"
         name="jobTitle"
         class="form-control form-control-lg form-control-solid"
@@ -84,6 +86,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="telephone"
         @input="fieldChanged($event)"
         type="text"
         name="telephone"
@@ -112,6 +115,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="linkedInProfileUrl"
         @input="fieldChanged($event)"
         type="text"
         name="linkedInProfileUrl"
@@ -132,7 +136,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, inject, watch } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
@@ -148,7 +152,25 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const name = ref<string | unknown>("");
+    const jobTitle = ref<string | unknown>("");
+    const telephone = ref<string | unknown>("");
+    const linkedInProfileUrl = ref<string | unknown>("");
     const formData = ref<FormData>(props.formDataTemp);
+    const expertProfile = inject("expertProfile");
+    watch(expertProfile as Record<string, unknown>, (value) => {
+      name.value = value.name;
+      jobTitle.value = value.jobTitle;
+      telephone.value = value.telephone;
+      linkedInProfileUrl.value = value.linkedInProfileUrl;
+      formData.value.append("name", name.value as string);
+      formData.value.append("jobTitle", jobTitle.value as string);
+      formData.value.append("telephone", telephone.value as string);
+      formData.value.append(
+        "linkedInProfileUrl",
+        linkedInProfileUrl.value as string
+      );
+    });
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -156,6 +178,11 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
+      name,
+      jobTitle,
+      telephone,
+      linkedInProfileUrl,
+      expertProfile,
       formData,
       fieldChanged,
     };

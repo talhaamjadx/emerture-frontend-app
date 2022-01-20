@@ -17,6 +17,7 @@
         class="form-check form-check-custom form-check-solid my-3"
       >
         <input
+          :checked="isSelected('expertise', e.id)"
           @input="addToExpertise($event)"
           class="form-check-input"
           type="checkbox"
@@ -40,6 +41,7 @@
         class="form-check form-check-custom form-check-solid my-3"
       >
         <input
+          :checked="isSelected('industrySectors', is.id)"
           class="form-check-input"
           type="checkbox"
           value=""
@@ -58,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed, watch } from "vue";
+import { defineComponent, ref, onMounted, computed, watch, inject } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 
@@ -85,11 +87,34 @@ export default defineComponent({
     const formData = ref<FormData>(props.formDataTemp);
     const selectedExpertise = ref<Array<ExpertiseInterface>>([]);
     const selectedIndustrySectors = ref<Array<IndustrySectorsInterface>>([]);
+    const expertProfile = inject("expertProfile");
+    watch(expertProfile as Record<string, unknown>, (value) => {
+      selectedExpertise.value = [
+        ...(value.expertise as Array<ExpertiseInterface>),
+      ];
+      selectedIndustrySectors.value = [
+        ...(value.industrySectors as Array<IndustrySectorsInterface>),
+      ];
+    });
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
-        formData.value.set(event.target.name, JSON.stringify(event.target.value));
-      } else formData.value.append(event.target.name, JSON.stringify(event.target.value));
+        formData.value.set(
+          event.target.name,
+          JSON.stringify(event.target.value)
+        );
+      } else
+        formData.value.append(
+          event.target.name,
+          JSON.stringify(event.target.value)
+        );
       emit("form-data", formData.value);
+    };
+    const isSelected = (name, id) => {
+      if (name == "expertise") {
+        return selectedExpertise.value.find((e) => e.id == id);
+      } else if (name == "industrySectors") {
+        return selectedIndustrySectors.value.find((is) => is.id == id);
+      }
     };
     const addToExpertise = (event) => {
       if (event.target.checked) {
@@ -141,6 +166,7 @@ export default defineComponent({
         store.dispatch(Actions.GET_INDUSTRY_SECTORS);
     });
     return {
+      isSelected,
       formData,
       fieldChanged,
       expertise,
