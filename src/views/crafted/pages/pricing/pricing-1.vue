@@ -23,7 +23,7 @@
                 <h1 class="text-dark mb-5 fw-boldest">{{ role.name }}</h1>
                 <!--end::Title-->
                 <!--begin::Description-->
-                <div style="font-size:13px;" class="text-gray-400 fw-bold mb-5">
+                <div style="font-size:13px;" class="text-gray-400 fw-bold ">
                   {{ role.description }}
                 </div>
                 <!--end::Description-->
