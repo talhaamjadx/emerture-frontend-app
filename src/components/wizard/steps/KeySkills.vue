@@ -89,12 +89,12 @@ export default defineComponent({
     const selectedIndustrySectors = ref<Array<IndustrySectorsInterface>>([]);
     const expertProfile = inject("expertProfile");
     watch(expertProfile as Record<string, unknown>, (value) => {
-      selectedExpertise.value = [
-        ...(value.expertise as Array<ExpertiseInterface>),
-      ];
-      selectedIndustrySectors.value = [
-        ...(value.industrySectors as Array<IndustrySectorsInterface>),
-      ];
+      for(let i = 0; i < (value.expertise as Array<ExpertiseInterface>).length; i++){
+        selectedExpertise.value = [...selectedExpertise.value, (value.expertise as Array<ExpertiseInterface>)[i]]
+      }
+      for(let i = 0; i < (value.industrySectors as Array<IndustrySectorsInterface>).length; i++){
+        selectedIndustrySectors.value = [...selectedIndustrySectors.value, (value.industrySectors as Array<IndustrySectorsInterface>)[i]]
+      }
     });
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
