@@ -73,7 +73,8 @@ const messages = {
     pricing2: "Pricing 2",
     "about-us": "About Us",
     "contact-us": "Contact Us",
-    "expert-profile": "Expert Profile"
+    "expert-profile": "Expert Profile",
+    "investor-profile": "Investor Profile"
   },
   es: {
     dashboard: "Tablero",

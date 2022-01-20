@@ -3,6 +3,7 @@ import { config } from "vuex-module-decorators";
 
 import AuthModule from "@/store/modules/AuthModule";
 import Auth from "@/store/modules/Auth";
+import Investor from "@/store/modules/Investor";
 import Role from "@/store/modules/Role";
 import Expert from "@/store/modules/Expert";
 import BodyModule from "@/store/modules/BodyModule";
@@ -19,7 +20,8 @@ const store = createStore({
     BodyModule,
     BreadcrumbsModule,
     ConfigModule,
-    Expert
+    Expert,
+    Investor
   },
 });
 

@@ -27,6 +27,9 @@ enum Actions {
   CREATE_EXPERT_PROFILE = "createExpertProfile",
   GET_EXPERT_PROFILE = "getExpertProfile",
   UPDATE_EXPERT_PROFILE = "updateExpertProfile",
+  CREATE_INVESTOR_PROFILE = "createInvestorProfile",
+  GET_INVESTOR_PROFILE = "getInvestorProfile",
+  UPDATE_INVESTOR_PROFILE = "updateInvestorProfile",
   GET_EXPERTISE = "getExpertise",
   GET_INDUSTRY_SECTORS = "getIndustrySectors",
 }
@@ -49,6 +52,7 @@ enum Mutations {
   SET_DEFAULT_AUTH = "setDefaultAuth",
   SET_ROLES = "setRoles",
   SET_EXPERT_PROFILE = "setExpertProfile",
+  SET_INVESTOR_PROFILE = "setInvestorProfile",
   SET_EXPERTISE = "setExpertise",
   SET_INDUSTRY_SECTORS = "setIndustrySectors",
 }

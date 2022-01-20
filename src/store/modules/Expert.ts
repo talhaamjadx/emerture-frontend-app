@@ -5,7 +5,7 @@ import ApiService from "@/core/services/ApiService";
 import objectPath from "object-path";
 
 @Module
-export default class Role extends VuexModule {
+export default class Expert extends VuexModule {
     errors = []
     expert = null
     expertise = []
