@@ -72,12 +72,17 @@ export default defineComponent({
     const introduction = ref<string | unknown>("");
     const bio = ref<string | unknown>("");
     const expertProfile = inject("expertProfile");
-    watch(expertProfile as Record<string, unknown>, (value) => {
+    const fetchData = (value) => {
       bio.value = value.bio;
       introduction.value = value.introduction;
-      formData.value.append("bio", bio.value as string)
-      formData.value.append("introduction", introduction.value as string)
+      formData.value.append("bio", bio.value as string);
+      formData.value.append("introduction", introduction.value as string);
+    };
+    watch(expertProfile as Record<string, unknown>, (value) => {
+      fetchData(value);
     });
+    if ((expertProfile as Record<string, unknown>).value)
+      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);

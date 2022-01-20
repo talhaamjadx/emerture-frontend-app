@@ -70,10 +70,16 @@ export default defineComponent({
       formData.value = props.formDataTemp
     })
     watch(investorProfile as Record<string, unknown>, (value) => {
-      for(let i = 0; i < (value.industrySectors as Array<IndustrySectorsInterface>).length; i++){
+      fetchData(value)
+    });
+    const fetchData = (value) => {
+        for(let i = 0; i < (value.industrySectors as Array<IndustrySectorsInterface>).length; i++){
         selectedIndustrySectors.value = [...selectedIndustrySectors.value, (value.industrySectors as Array<IndustrySectorsInterface>)[i].id]
       }
-    });
+    }
+    if((investorProfile as Record<string, unknown>).value){
+        fetchData((investorProfile as Record<string, unknown>).value)
+    }
     const fieldChanged = () => {
       formData.value["industrySectors"] = selectedIndustrySectors.value
       emit("form-data", formData.value);

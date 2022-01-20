@@ -158,7 +158,7 @@ export default defineComponent({
     const linkedInProfileUrl = ref<string | unknown>("");
     const formData = ref<FormData>(props.formDataTemp);
     const expertProfile = inject("expertProfile");
-    watch(expertProfile as Record<string, unknown>, (value) => {
+    const fetchData = (value) => {
       name.value = value.name;
       jobTitle.value = value.jobTitle;
       telephone.value = value.telephone;
@@ -170,7 +170,12 @@ export default defineComponent({
         "linkedInProfileUrl",
         linkedInProfileUrl.value as string
       );
+    };
+    watch(expertProfile as Record<string, unknown>, (value) => {
+      fetchData(value);
     });
+    if ((expertProfile as Record<string, unknown>).value)
+      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);

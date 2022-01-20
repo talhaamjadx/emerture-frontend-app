@@ -63,14 +63,23 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<Record<string, unknown>>(props.formDataTemp);
-    const notification = ref<string | unknown>("")
+    const notification = ref<string | unknown>("");
     const investorProfile = inject("investorProfile");
-    watch(() => props.formDataTemp, () => {
-      formData.value = props.formDataTemp
-    })
+    watch(
+      () => props.formDataTemp,
+      () => {
+        formData.value = props.formDataTemp;
+      }
+    );
     watch(investorProfile as Record<string, unknown>, (value) => {
-        notification.value = value.notification
-    })
+      fetchData(value);
+    });
+    const fetchData = (value) => {
+      notification.value = value.notification;
+    };
+    if ((investorProfile as Record<string, unknown>).value) {
+      fetchData((investorProfile as Record<string, unknown>).value);
+    }
     const fieldChanged = (event) => {
       formData.value[event.target.name] = event.target.value;
       emit("form-data", formData.value);
@@ -78,7 +87,7 @@ export default defineComponent({
     return {
       formData,
       fieldChanged,
-      notification
+      notification,
     };
   },
 });

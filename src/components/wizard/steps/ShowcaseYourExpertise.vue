@@ -74,14 +74,19 @@ export default defineComponent({
       fieldChanged(tempEvent);
     };
     const expertProfile = inject("expertProfile");
-    watch(expertProfile as Record<string, unknown>, (value) => {
+    const fetchData = (value) => {
       document.value = value.document;
       externalDocumentUrl.value = value.externalDocumentUrl;
       formData.value.append(
         "externalDocumentUrl",
         externalDocumentUrl.value as string
       );
+    };
+    watch(expertProfile as Record<string, unknown>, (value) => {
+      fetchData(value);
     });
+    if ((expertProfile as Record<string, unknown>).value)
+      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);

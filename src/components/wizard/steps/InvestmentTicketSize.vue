@@ -190,53 +190,6 @@ export default defineComponent({
     const currencyCode = ref<string | unknown>("");
     const minInvestment = ref<string | unknown>("");
     const maxInvestment = ref<string | unknown>("");
-    watch(() => props.formDataTemp, () => {
-      formData.value = props.formDataTemp
-    })
-    watch(investorProfile as Record<string, unknown>, (value) => {
-      currencyCode.value = value.currencyCode;
-      minInvestment.value = value.minInvestment;
-      maxInvestment.value = value.maxInvestment;
-      for (let i = 0; i < stageOfEvolution.length; i++) {
-        if (value[stageOfEvolution[i].name] == 1)
-          stageOfEvolution[i].value = true;
-      }
-      for (let i = 0; i < minimumTraction.length; i++) {
-        if (value[minimumTraction[i].name] == 1)
-          minimumTraction[i].value = true;
-      }
-      for (let i = 0; i < geoFocus.length; i++) {
-        if (value[geoFocus[i].name] == 1)
-          geoFocus[i].value = true;
-      }
-      for (let i = 0; i < taxReliefStatus.length; i++) {
-        if (value[taxReliefStatus[i].name] == 1)
-          taxReliefStatus[i].value = true;
-      }
-    });
-    const fieldChanged = (event) => {
-      if (event.target.type == "checkbox")
-        formData.value[event.target.name] = event.target.checked ? 1 : 0;
-      else formData.value[event.target.name] = event.target.value;
-      emit("form-data", formData.value);
-    };
-    const enums = reactive({
-      stageOfEvolutionPreSeed: "Pre-seed",
-      stageOfEvolutionSeed: "Seed",
-      stageOfEvolutionPreSeriesA: "Pre-series-A",
-      stageOfEvolutionSeriesA: "Series As",
-      minimumTractionPreMvp: "Pre-MVP",
-      minimumTractionPostMvp: "Post-MVP",
-      minimumTractionPreRevenue: "Pre-Revenue",
-      minimumTractionPostRevenue: "Post-Revenue",
-      geoFocusUk: "UK",
-      geoFocusUs: "US",
-      geoFocusEu: "EU",
-      geoFocusGlobal: "Global",
-      taxReliefStatusSeis: "SEIS",
-      taxReliefStatusEis: "EIS",
-      taxReliefStatusNa: "NA",
-    });
     const stageOfEvolution = reactive([
       { name: "stageOfEvolutionPreSeed", value: false },
       { name: "stageOfEvolutionSeed", value: false },
@@ -260,6 +213,61 @@ export default defineComponent({
       { name: "taxReliefStatusEis", value: false },
       { name: "taxReliefStatusNa", value: false },
     ]);
+    watch(
+      () => props.formDataTemp,
+      () => {
+        formData.value = props.formDataTemp;
+      }
+    );
+    watch(investorProfile as Record<string, unknown>, (value) => {
+      fetchData(value);
+    });
+    const fetchData = (value) => {
+      currencyCode.value = value.currencyCode;
+      minInvestment.value = value.minInvestment;
+      maxInvestment.value = value.maxInvestment;
+      for (let i = 0; i < stageOfEvolution.length; i++) {
+        if (value[stageOfEvolution[i].name] == 1)
+          stageOfEvolution[i].value = true;
+      }
+      for (let i = 0; i < minimumTraction.length; i++) {
+        if (value[minimumTraction[i].name] == 1)
+          minimumTraction[i].value = true;
+      }
+      for (let i = 0; i < geoFocus.length; i++) {
+        if (value[geoFocus[i].name] == 1) geoFocus[i].value = true;
+      }
+      for (let i = 0; i < taxReliefStatus.length; i++) {
+        if (value[taxReliefStatus[i].name] == 1)
+          taxReliefStatus[i].value = true;
+      }
+    };
+    if ((investorProfile as Record<string, unknown>)?.value){
+      fetchData((investorProfile as Record<string, unknown>)?.value);
+    }
+    const fieldChanged = (event) => {
+      if (event.target.type == "checkbox")
+        formData.value[event.target.name] = event.target.checked ? 1 : 0;
+      else formData.value[event.target.name] = event.target.value;
+      emit("form-data", formData.value);
+    };
+    const enums = reactive({
+      stageOfEvolutionPreSeed: "Pre-seed",
+      stageOfEvolutionSeed: "Seed",
+      stageOfEvolutionPreSeriesA: "Pre-series-A",
+      stageOfEvolutionSeriesA: "Series As",
+      minimumTractionPreMvp: "Pre-MVP",
+      minimumTractionPostMvp: "Post-MVP",
+      minimumTractionPreRevenue: "Pre-Revenue",
+      minimumTractionPostRevenue: "Post-Revenue",
+      geoFocusUk: "UK",
+      geoFocusUs: "US",
+      geoFocusEu: "EU",
+      geoFocusGlobal: "Global",
+      taxReliefStatusSeis: "SEIS",
+      taxReliefStatusEis: "EIS",
+      taxReliefStatusNa: "NA",
+    });
     return {
       formData,
       fieldChanged,
