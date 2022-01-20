@@ -85,15 +85,15 @@ export default defineComponent({
     const expertise = computed(() => store.getters.expertiseGetter);
     const industrySectors = computed(() => store.getters.industrySectorsGetter);
     const formData = ref<FormData>(props.formDataTemp);
-    const selectedExpertise = ref<Array<ExpertiseInterface>>([]);
-    const selectedIndustrySectors = ref<Array<IndustrySectorsInterface>>([]);
+    const selectedExpertise = ref<Array<number>>([]);
+    const selectedIndustrySectors = ref<Array<number>>([]);
     const expertProfile = inject("expertProfile");
     watch(expertProfile as Record<string, unknown>, (value) => {
       for(let i = 0; i < (value.expertise as Array<ExpertiseInterface>).length; i++){
-        selectedExpertise.value = [...selectedExpertise.value, (value.expertise as Array<ExpertiseInterface>)[i]]
+        selectedExpertise.value = [...selectedExpertise.value, (value.expertise as Array<ExpertiseInterface>)[i].id]
       }
       for(let i = 0; i < (value.industrySectors as Array<IndustrySectorsInterface>).length; i++){
-        selectedIndustrySectors.value = [...selectedIndustrySectors.value, (value.industrySectors as Array<IndustrySectorsInterface>)[i]]
+        selectedIndustrySectors.value = [...selectedIndustrySectors.value, (value.industrySectors as Array<IndustrySectorsInterface>)[i].id]
       }
     });
     const fieldChanged = (event) => {
@@ -111,9 +111,9 @@ export default defineComponent({
     };
     const isSelected = (name, id) => {
       if (name == "expertise") {
-        return selectedExpertise.value.find((e) => e.id == id);
+        return selectedExpertise.value.find((e) => e == id);
       } else if (name == "industrySectors") {
-        return selectedIndustrySectors.value.find((is) => is.id == id);
+        return selectedIndustrySectors.value.find((is) => is == id);
       }
     };
     const addToExpertise = (event) => {
