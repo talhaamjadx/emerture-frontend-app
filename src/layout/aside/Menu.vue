@@ -14,7 +14,15 @@
     <!--begin::Menu-->
     <div
       id="#kt_header_menu"
-      class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
+      class="
+        menu
+        menu-column
+        menu-title-gray-800
+        menu-state-title-primary
+        menu-state-icon-primary
+        menu-state-bullet-primary
+        menu-arrow-gray-500
+      "
       data-kt-menu="true"
     >
       <template v-for="(item, i) in MainMenuConfig" :key="i">
@@ -153,17 +161,46 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n/index";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 import { version } from "@/core/helpers/documentation";
 import { asideMenuIcons } from "@/core/helpers/config";
-import MainMenuConfig from "@/core/config/MainMenuConfig";
+import MainMenu from "@/core/config/MainMenuConfig";
 
 export default defineComponent({
   name: "kt-menu",
   components: {},
   setup() {
+    const store = useStore();
+    const user = computed(() => store.getters.getUser);
+    const MainMenuConfig = computed(() => MainMenu);
+    const filterItems = () => {
+      MainMenu[0].pages = MainMenu[0].pages.filter((config) => {
+        if (
+          config.heading == "expert-profile" &&
+          user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "expert"
+          )
+        ) {
+          return true;
+        } else if (
+          config.heading == "investor-profile" &&
+          user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "investor"
+          )
+        ) {
+          return true;
+        } else if (
+          config.heading !== "expert-profile" &&
+          config.heading !== "investor-profile"
+        ) {
+          return true;
+        } else return false;
+      });
+    };
+    filterItems();
     const { t, te } = useI18n();
     const route = useRoute();
     const scrollElRef = ref<null | HTMLElement>(null);
