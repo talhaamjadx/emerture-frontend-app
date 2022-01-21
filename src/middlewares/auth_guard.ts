@@ -23,6 +23,9 @@ export default async (to, from, next): Promise<NavigationGuardNext | undefined> 
             else if (to.name === "email-verification") {
                 return areRolesAdded(store.getters.getUser) ? next('/') : next('/add-role')
             }
+            if(to.name == 'dashboard' && from.name == 'social'){
+                return areRolesAdded(store.getters.getUser) ? next() : next('add-role')
+            }
             next()
         }
         catch (err) {

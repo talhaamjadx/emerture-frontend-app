@@ -131,7 +131,7 @@
       >
         <img
           :src="
-            op.get(user, 'profileImage', false) ?? 'media/avatars/150-26.jpg'
+            op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
           "
           alt="metronic"
         />

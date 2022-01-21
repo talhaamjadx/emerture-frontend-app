@@ -48,7 +48,11 @@
                 <div
                   ref="profilePictureRef"
                   class="image-input-wrapper w-125px h-125px"
-                  :style="`background-image: url(${profileDetails.profileImage})`"
+                  :style="`background-image: ${
+                    newImageAdded
+                      ? `url(${tempImage})`
+                      : `url(${profileDetails.profileImage})`
+                  }`"
                 ></div>
                 <!--end::Preview existing avatar-->
 
@@ -80,7 +84,7 @@
                 <!--end::Label-->
 
                 <!--begin::Remove-->
-                <span
+                <!-- <span
                   class="
                     btn btn-icon btn-circle btn-active-color-primary
                     w-25px
@@ -94,7 +98,7 @@
                   title="Remove avatar"
                 >
                   <i class="bi bi-x fs-2"></i>
-                </span>
+                </span> -->
                 <!--end::Remove-->
               </div>
               <!--end::Image input-->
@@ -426,8 +430,6 @@
     <!--end::Content-->
   </div>
   <!--end::Sign-in Method-->
-
-
 
   <!--begin::Notifications-->
   <div class="card mb-5 mb-xl-10">
@@ -831,6 +833,8 @@ export default defineComponent({
     Form,
   },
   setup() {
+    const tempImage = ref<string>("");
+    const newImageAdded = ref<boolean>(false);
     const store = useStore();
     const user = computed(() => {
       return store.getters.getUser;
@@ -839,7 +843,7 @@ export default defineComponent({
     const oldPasswordRef: Ref = ref(null);
     const newPasswordRef: Ref = ref(null);
     const passwordConfirmationRef: Ref = ref(null);
-    const profilePictureRef: Ref = ref(null)
+    const profilePictureRef: Ref = ref(null);
     const submitButton1 = ref<HTMLElement | null>(null);
     const submitButton2 = ref<HTMLElement | null>(null);
     const submitButton3 = ref<HTMLElement | null>(null);
@@ -883,8 +887,12 @@ export default defineComponent({
     });
     const handleImageUpload = (event) => {
       file = event.target.files[0];
-      console.log({profilePictureRef})
-      // profilePictureRef.value.style.backgroundImage = `url(${URL.createObjectURL(file)})`
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        tempImage.value = reader.result as string;
+        newImageAdded.value = true;
+      };
     };
     const saveChanges1 = async () => {
       try {
@@ -901,6 +909,7 @@ export default defineComponent({
         fd.append("introduction", profileDetails.value.introduction);
         const response = await store.dispatch(Actions.UPDATE_PROFILE, fd);
         if (response !== true) throw new Error();
+        store.dispatch(Actions.AUTH_USER)
         Swal.fire({
           text: "Profile Updated Successfully!",
           icon: "success",
@@ -1054,6 +1063,9 @@ export default defineComponent({
     });
 
     return {
+      profilePictureRef,
+      tempImage,
+      newImageAdded,
       passwordConfirmationRef,
       oldPasswordRef,
       newPasswordRef,
