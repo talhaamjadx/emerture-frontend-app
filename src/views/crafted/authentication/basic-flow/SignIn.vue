@@ -195,6 +195,15 @@ export default defineComponent({
         process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GOOGLE_LOGIN_URL
       );
     };
+    const areRolesAdded = (user) => {
+    return (user.userRoles?.some(
+        (role) => role.name.toLowerCase() == "expert"
+      ) && user?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "investor"
+      ) && user?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "founder"
+      ))
+}
     const onSubmitLogin = (values) => {
       // Clear existing errors
       store.dispatch(Actions.LOGOUT);
@@ -222,7 +231,7 @@ export default defineComponent({
             try {
               const response = await store.dispatch(Actions.AUTH_USER);
               if (response !== true) throw new Error();
-              router.push({ name: "dashboard" });
+              areRolesAdded(store.getters.getUser) ? router.push({ name: "dashboard" }) : router.push("/add-role")
             } catch (err) {
               store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
               const [error] = Object.keys(store.getters.getErrors);

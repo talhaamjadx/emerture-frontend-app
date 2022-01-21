@@ -129,7 +129,12 @@
         data-kt-menu-placement="bottom-end"
         data-kt-menu-flip="bottom"
       >
-        <img src="media/avatars/150-26.jpg" alt="metronic" />
+        <img
+          :src="
+            op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
+          "
+          alt="metronic"
+        />
       </div>
       <KTUserMenu></KTUserMenu>
       <!--end::Menu-->
@@ -156,7 +161,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
+import objectPath from "object-path";
 import { Actions } from "../../store/enums/StoreEnums";
 import { useStore } from "vuex";
 import KTSearch from "@/layout/header/partials/Search.vue";
@@ -174,8 +180,14 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const user = computed(() => store.getters.getUser);
+    const op = computed(() => objectPath);
     if (!Object.keys(store.getters.getUser).length)
       store.dispatch(Actions.AUTH_USER);
+    return {
+      user,
+      op,
+    };
   },
 });
 </script>

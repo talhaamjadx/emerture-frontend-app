@@ -3,6 +3,16 @@ import { Actions } from "../store/enums/StoreEnums"
 import objectPath from "object-path"
 import { NavigationGuardNext } from "vue-router"
 
+const areRolesAdded = (user) => {
+    return (user?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "expert"
+      ) && user?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "investor"
+      ) && user?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "founder"
+      ))
+}
+
 export default async (to, from, next): Promise<NavigationGuardNext | undefined> => {
     if (!store.getters.getIsLoggedIn && to.meta.loginRequired) {
         try {
@@ -11,7 +21,10 @@ export default async (to, from, next): Promise<NavigationGuardNext | undefined> 
             if (!objectPath.get(store, "getters.getUser.isActive", false))
                 return next("/email-verification")
             else if (to.name === "email-verification") {
-                return next("/")
+                return areRolesAdded(store.getters.getUser) ? next('/') : next('/add-role')
+            }
+            if(to.name == 'dashboard' && from.name == 'social'){
+                return areRolesAdded(store.getters.getUser) ? next() : next('add-role')
             }
             next()
         }
@@ -24,7 +37,7 @@ export default async (to, from, next): Promise<NavigationGuardNext | undefined> 
             return next("/email-verification")
         }
         else if (objectPath.get(store, "getters.getUser.isActive", false) && to.meta.loginRequired && to.name == "email-verification") {
-            return next("/")
+            return areRolesAdded(store.getters.getUser) ? next('/') : next('/add-role')
         }
         next()
     }

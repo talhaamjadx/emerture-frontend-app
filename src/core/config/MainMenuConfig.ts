@@ -1,12 +1,12 @@
 const DocMenuConfig = [
   {
     pages: [
-      // {
-      //   heading: "profile",
-      //   route: "/crafted/pages/profile/overview",
-      //   svgIcon: "media/icons/duotune/general/gen019.svg",
-      //   fontIcon: "bi-layers",
-      // },
+      {
+        heading: "dashboard",
+        route: "/dashboard",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
       {
         heading: "profile",
         route: "/crafted/account/settings",
@@ -45,7 +45,7 @@ const DocMenuConfig = [
       // },
       {
         heading: "addRole",
-        route: "/crafted/pages/pricing/pricing-1",
+        route: "/add-role",
         svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
         fontIcon: "bi-cart",
       },
