@@ -92,6 +92,19 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/create-business",
+        name: "create-business",
+        component: () => import("@/views/crafted/pages/wizards/BusinessCreate.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
+        path: "/social",
+        name: "social",
+        component: () => import("@/views/crafted/authentication/basic-flow/social.vue"),
+      },
+      {
         path: "/crafted/pages/pricing/pricing-1",
         name: "pricing-1",
         component: () => import("@/views/crafted/pages/pricing/pricing-1.vue"),

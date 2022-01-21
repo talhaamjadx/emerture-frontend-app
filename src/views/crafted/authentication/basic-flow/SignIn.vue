@@ -114,8 +114,8 @@
         <!--end::Separator-->
 
         <!--begin::Google link-->
-        <a
-          href="#"
+        <button
+          @click="googleLogin"
           class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
         >
           <img
@@ -124,11 +124,11 @@
             class="h-20px me-3"
           />
           Continue with Google
-        </a>
+        </button>
         <!--end::Google link-->
 
         <!--begin::Google link-->
-        <a
+        <!-- <a
           href="#"
           class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
         >
@@ -138,18 +138,18 @@
             class="h-20px me-3"
           />
           Continue with Facebook
-        </a>
+        </a> -->
         <!--end::Google link-->
 
         <!--begin::Google link-->
-        <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
+        <!-- <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
           <img
             alt="Logo"
             src="media/svg/brand-logos/apple-black.svg"
             class="h-20px me-3"
           />
           Continue with Apple
-        </a>
+        </a> -->
         <!--end::Google link-->
       </div>
       <!--end::Actions-->
@@ -190,7 +190,11 @@ export default defineComponent({
       password: Yup.string().min(4).required().label("Password"),
     });
 
-    //Form submit function
+    const googleLogin = () => {
+      location.replace(
+        process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GOOGLE_LOGIN_URL
+      );
+    };
     const onSubmitLogin = (values) => {
       // Clear existing errors
       store.dispatch(Actions.LOGOUT);
@@ -255,6 +259,7 @@ export default defineComponent({
     };
 
     return {
+      googleLogin,
       onSubmitLogin,
       login,
       submitButton,
