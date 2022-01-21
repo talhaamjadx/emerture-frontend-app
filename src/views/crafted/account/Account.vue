@@ -12,7 +12,7 @@
               position-relative
             "
           >
-            <img :src="op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg' " alt="image" />
+            <img :src="op.get(user, 'profileImage', null) ?? require('@/assets/img/150-2.jpg') " alt="image" />
           </div>
         </div>
         <!--end::Pic-->
