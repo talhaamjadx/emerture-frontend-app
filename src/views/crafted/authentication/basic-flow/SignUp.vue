@@ -28,7 +28,7 @@
       <!--end::Heading-->
 
       <!--begin::Action-->
-      <button type="button" class="btn btn-light-primary fw-bolder w-100 mb-10">
+      <button type="button" @click="googleLogin" class="btn btn-light-primary fw-bolder w-100 mb-10">
         <img
           alt="Logo"
           src="media/svg/brand-logos/google-icon.svg"
@@ -240,7 +240,11 @@ export default defineComponent({
     const router = useRouter();
 
     const submitButton = ref<HTMLButtonElement | null>(null);
-
+    const googleLogin = () => {
+      location.replace(
+        process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GOOGLE_LOGIN_URL
+      );
+    };
     const registration = Yup.object().shape({
       firstName: Yup.string().required().label("Name"),
       lastName: Yup.string().required().label("Surname"),
@@ -309,6 +313,7 @@ export default defineComponent({
       registration,
       onSubmitRegister,
       submitButton,
+      googleLogin
     };
   },
 });
