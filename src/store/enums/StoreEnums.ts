@@ -32,7 +32,8 @@ enum Actions {
   UPDATE_INVESTOR_PROFILE = "updateInvestorProfile",
   GET_EXPERTISE = "getExpertise",
   GET_INDUSTRY_SECTORS = "getIndustrySectors",
-  CREATE_FOUNDER_BUSINESS = "createFounderBusiness"
+  CREATE_FOUNDER_BUSINESS = "createFounderBusiness",
+  GET_FOUNDER_BUSINESSES = "getFounderBusinesses"
 }
 
 enum Mutations {
@@ -56,7 +57,8 @@ enum Mutations {
   SET_INVESTOR_PROFILE = "setInvestorProfile",
   SET_EXPERTISE = "setExpertise",
   SET_INDUSTRY_SECTORS = "setIndustrySectors",
-  SET_TOOLBAR_BUTTON = "setToolbarButton"
+  SET_TOOLBAR_BUTTON = "setToolbarButton",
+  SET_FOUNDER_BUSINESSES = "setFounderBusinesses"
 }
 
 export { Actions, Mutations };

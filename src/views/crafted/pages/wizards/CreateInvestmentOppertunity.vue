@@ -323,7 +323,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch, provide } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import Images from "@/components/wizard/steps/Images.vue";
 import UploadPitchDeck from "@/components/wizard/steps/UploadPitchDeck.vue";
 import BusinessDescription from "@/components/wizard/steps/BusinessDescription.vue";
@@ -338,6 +338,7 @@ import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { Actions } from "@/store/enums/StoreEnums";
 
 interface IStep1 {
@@ -377,6 +378,7 @@ export default defineComponent({
     IndustrySectorsBusinesses,
   },
   setup() {
+    const router = useRouter();
     const store = useStore();
     const formDataTemp = ref<FormData>(new FormData());
     const _stepperObj = ref<StepperComponent | null>(null);
@@ -404,7 +406,37 @@ export default defineComponent({
         "Businesses",
       ]);
     });
-    const createAccountSchema = [];
+    const createAccountSchema = [
+      {},
+      {},
+      Yup.object({
+        name: Yup.string().required().label("Name"),
+        summary: Yup.string().required().label("Summary"),
+        overview: Yup.string().required().label("Overview"),
+        defensibleUsp: Yup.string().required().label("Defensible USP"),
+      }),
+      Yup.object({
+        telephone: Yup.string().required().label("Telephone"),
+        website: Yup.string().required().label("Website"),
+        currencyCode: Yup.string().required().label("Currency"),
+        geoFocusCountryCode: Yup.string().required().label("Geo Focus"),
+      }),
+      {},
+      {},
+      {},
+      Yup.object({
+        fundingRoundName: Yup.string().required().label("Name"),
+        fundingRoundInvestmentRequired: Yup.string()
+          .required()
+          .label("Investment Required"),
+        fundingRoundPreMoneyValuation: Yup.string()
+          .required()
+          .label("Pre-Money Valuation"),
+        fundingRoundMinimumInvestment: Yup.string()
+          .required()
+          .label("Minimum Investment"),
+      }),
+    ];
 
     const currentSchema = computed(() => {
       return createAccountSchema[currentStepIndex.value];
@@ -471,6 +503,8 @@ export default defineComponent({
           customClass: {
             confirmButton: "btn fw-bold btn-light-primary",
           },
+        }).then(() => {
+          router.push("/businesses");
         });
       } catch (err) {
         Swal.fire({

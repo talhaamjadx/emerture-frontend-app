@@ -1,11 +1,14 @@
 <template>
   <div>
     <div
+      v-for="business in businesses.founderBusinesses"
+      :key="business.id"
       class="card h-175px bgi-no-repeat bgi-size-contain h-200px mb-5 mb-lg-10"
-      style="
-        background-color: #1b283f;
-        background-position: right;
-        background-image: url('media/stock/2000x800/1.jpg');
+      :style="[
+        'background-color: #1b283f',
+        'background-position: right',
+        `background-image: url('${business.headerImage}')`
+        ]
       "
     >
       <!--begin::Body-->
@@ -13,18 +16,17 @@
         <!--begin::Title-->
         <h2 class="text-white fw-bolder mb-5">
           <span class="lh-lg"
-            >Brilliant Ideas <br />for Your Web Application</span
+            >{{ business.name }}</span
           >
         </h2>
+        <p class="text-white">{{ business.summary }}</p>
         <!--end::Title-->
         <!--begin::Action-->
         <div class="m-0">
-          <a
-            href="#"
+          <router-link
+            :to="`/business/${business.id}`"
             class="btn btn-danger fw-bold px-6 py-3"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_modal_create_campaign"
-            >Create Campaign</a
+            >View Business</router-link
           >
         </div>
         <!--begin::Action-->
@@ -35,14 +37,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount, onMounted } from "vue";
+import { defineComponent, onBeforeUnmount, onMounted, computed } from "vue";
 import { useStore } from "vuex";
-import { Mutations } from "@/store/enums/StoreEnums";
+import { Mutations, Actions } from "@/store/enums/StoreEnums";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 
 export default defineComponent({
   setup() {
     const store = useStore();
+    const businesses = computed(() => store.getters.getBusinesses)
     store.commit(Mutations.SET_TOOLBAR_BUTTON, {
       shouldShow: true,
       title: "create",
@@ -50,6 +53,10 @@ export default defineComponent({
     });
     onMounted(() => {
       setCurrentPageBreadcrumbs("Businesses", [])
+      store.dispatch(Actions.GET_FOUNDER_BUSINESSES, {
+        page: 1,
+        perPage: 10
+      })
     })
     onBeforeUnmount(() => {
       store.commit(Mutations.SET_TOOLBAR_BUTTON, {
@@ -58,6 +65,9 @@ export default defineComponent({
         url: "",
       });
     });
+    return{
+      businesses
+    }
   },
 });
 </script>

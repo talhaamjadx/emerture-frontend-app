@@ -27,7 +27,11 @@
             <div
               class="image-input image-input-outline"
               data-kt-image-input="true"
-              style="background-image: url(media/avatars/blank.png)"
+              :style="`background-image: ${
+                teamMembers[index].profilePicture
+                  ? `url(${teamMembers[index].profilePicture})`
+                  : 'url(media/avatars/blank.png)'
+              }`"
             >
               <!--begin::Preview existing avatar-->
               <div
