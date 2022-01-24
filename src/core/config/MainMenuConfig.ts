@@ -49,6 +49,12 @@ const DocMenuConfig = [
         svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
         fontIcon: "bi-cart",
       },
+      {
+        heading: "businesses",
+        route: "/businesses",
+        svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
+        fontIcon: "bi-cart",
+      },
       // {
       //   heading: "pricing2",
       //   route: "/crafted/pages/pricing/pricing-2",

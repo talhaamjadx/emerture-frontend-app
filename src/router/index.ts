@@ -113,6 +113,22 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/businesses",
+        name: "businesses",
+        component: () => import("@/views/crafted/pages/businesses.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
+        path: "/create-investment-oppertunity",
+        name: "create-investment-oppertunity",
+        component: () => import("@/views/crafted/pages/wizards/CreateInvestmentOppertunity.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/crafted/pages/pricing/pricing-2",
         name: "pricing-2",
         component: () => import("@/views/crafted/pages/pricing/pricing-2.vue"),

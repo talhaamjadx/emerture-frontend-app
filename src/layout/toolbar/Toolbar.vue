@@ -56,14 +56,24 @@
         <!--end::Breadcrumb-->
       </div>
     </div>
-    <!--end::Container-->
+    <div v-if="toolBarButtonConfig.shouldShow" class="d-flex align-items-center py-1 mx-3">
+        <router-link
+          :to="toolBarButtonConfig.url"
+          class="btn btn-sm btn-primary"
+          id="kt_toolbar_primary_button"
+        >
+          {{ toolBarButtonConfig.title }}
+        </router-link>
+        <!--end::Button-->
+      </div>
   </div>
   <!--end::Toolbar-->
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
 import { toolbarWidthFluid } from "@/core/helpers/config";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "KToolbar",
@@ -72,8 +82,11 @@ export default defineComponent({
     title: String,
   },
   setup() {
+    const store = useStore()
+    const toolBarButtonConfig = computed(() => store.getters.toolBarButtonGetter)
     return {
       toolbarWidthFluid,
+      toolBarButtonConfig
     };
   },
 });

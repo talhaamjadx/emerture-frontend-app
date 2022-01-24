@@ -55,6 +55,7 @@ enum Mutations {
   SET_INVESTOR_PROFILE = "setInvestorProfile",
   SET_EXPERTISE = "setExpertise",
   SET_INDUSTRY_SECTORS = "setIndustrySectors",
+  SET_TOOLBAR_BUTTON = "setToolbarButton"
 }
 
 export { Actions, Mutations };

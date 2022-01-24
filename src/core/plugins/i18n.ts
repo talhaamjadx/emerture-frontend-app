@@ -74,7 +74,8 @@ const messages = {
     "about-us": "About Us",
     "contact-us": "Contact Us",
     "expert-profile": "Expert Profile",
-    "investor-profile": "Investor Profile"
+    "investor-profile": "Investor Profile",
+    "businesses": "Businesses",
   },
   es: {
     dashboard: "Tablero",

@@ -12,6 +12,11 @@ interface StoreInfo {
 
 @Module
 export default class BreadcrumbsModule extends VuexModule implements StoreInfo {
+  toolBarButton = {
+    title: "",
+    shouldShow: "",
+    url: ""
+  }
   breadcrumbs = {} as Breadcrumb;
 
   /**
@@ -21,6 +26,9 @@ export default class BreadcrumbsModule extends VuexModule implements StoreInfo {
   get getBreadcrumbs(): Breadcrumb {
     return this.breadcrumbs;
   }
+  get toolBarButtonGetter(){
+    return this.toolBarButton;
+  }
 
   /**
    * Get breadcrumb array for current page
@@ -29,7 +37,6 @@ export default class BreadcrumbsModule extends VuexModule implements StoreInfo {
   get pageBreadcrumbPath(): Array<string> {
     return this.breadcrumbs.pageBreadcrumbPath;
   }
-
   /**
    * Get current page title
    * @returns string
@@ -41,6 +48,11 @@ export default class BreadcrumbsModule extends VuexModule implements StoreInfo {
   @Mutation
   [Mutations.SET_BREADCRUMB_MUTATION](payload) {
     this.breadcrumbs = payload;
+  }
+
+  @Mutation
+  [Mutations.SET_TOOLBAR_BUTTON](payload) {
+    this.toolBarButton = payload
   }
 
   @Action
