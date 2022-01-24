@@ -32,6 +32,7 @@ enum Actions {
   UPDATE_INVESTOR_PROFILE = "updateInvestorProfile",
   GET_EXPERTISE = "getExpertise",
   GET_INDUSTRY_SECTORS = "getIndustrySectors",
+  CREATE_FOUNDER_BUSINESS = "createFounderBusiness"
 }
 
 enum Mutations {

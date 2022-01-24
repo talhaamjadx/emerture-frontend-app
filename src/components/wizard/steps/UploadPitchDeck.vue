@@ -4,7 +4,7 @@
     <!--begin::Heading-->
     <div class="pb-10 pb-lg-12">
       <!--begin::Title-->
-      <h2 class="fw-bolder text-dark">Upload Pitch Document</h2>
+      <h2 class="fw-bolder text-dark">Upload Pitch Deck</h2>
     </div>
     <!--end::Heading-->
     <div class="fv-row mb-10 d-flex flex-column">
@@ -17,7 +17,7 @@
         id="documents"
         type="file"
         @change="handleImageUpload($event)"
-        name="documents"
+        name="pitchDeckDocument"
       />
       <!--end::Input-->
     </div>
@@ -43,21 +43,12 @@ export default defineComponent({
       const file = event.target.files[0];
       const tempEvent = {
         target: {
-          name: "documents",
+          name: event.target.name,
           value: file,
         },
       };
       fieldChanged(tempEvent);
     };
-    const expertProfile = inject("expertProfile");
-    const fetchData = (value) => {
-      document.value = value.document;
-    };
-    watch(expertProfile as Record<string, unknown>, (value) => {
-      fetchData(value);
-    });
-    if ((expertProfile as Record<string, unknown>).value)
-      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);

@@ -215,10 +215,10 @@
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <UploadPitchDocument
+          <UploadPitchDeck
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></UploadPitchDocument>
+          ></UploadPitchDeck>
         </div>
         <!--end::Step 2-->
 
@@ -325,7 +325,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch, provide } from "vue";
 import Images from "@/components/wizard/steps/Images.vue";
-import UploadPitchDocument from "@/components/wizard/steps/UploadPitchDocument.vue";
+import UploadPitchDeck from "@/components/wizard/steps/UploadPitchDeck.vue";
 import BusinessDescription from "@/components/wizard/steps/BusinessDescription.vue";
 import BusinessDetails from "@/components/wizard/steps/BusinessDetails.vue";
 import AdvancedAssurance from "@/components/wizard/steps/AdvancedAssurance.vue";
@@ -365,11 +365,11 @@ interface IStep4 {
 interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "expert-profile",
+  name: "Investment-Oppertunity",
   components: {
     FundingRound,
     Images,
-    UploadPitchDocument,
+    UploadPitchDeck,
     BusinessDescription,
     BusinessDetails,
     AdvancedAssurance,
@@ -382,29 +382,6 @@ export default defineComponent({
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
-    const user = computed(() => store.getters.getUser);
-    const expertProfile = computed(() => store.getters.expertProfileGetter);
-    const doesExpertProfileExist = computed(() => {
-      if (expertProfile.value) return true;
-      else return false;
-    });
-    watch(user, () => {
-      if (!Object.keys(user).length) {
-        getExpertProfile();
-      }
-    });
-    const getExpertProfile = async () => {
-      if (!expertProfile.value)
-        try {
-          await store.dispatch(Actions.GET_EXPERT_PROFILE, {
-            id: user.value.id,
-          });
-        } catch (err) {
-          console.log(err);
-        }
-    };
-    getExpertProfile();
-    provide("expertProfile", expertProfile);
     const formData = ref<CreateAccount>({
       name: "",
       jobTitle: "",
@@ -482,18 +459,12 @@ export default defineComponent({
     const formSubmit = async () => {
       try {
         const response = await store.dispatch(
-          doesExpertProfileExist.value
-            ? Actions.UPDATE_EXPERT_PROFILE
-            : Actions.CREATE_EXPERT_PROFILE,
-          doesExpertProfileExist.value
-            ? { id: expertProfile.value.id, data: formDataTemp.value }
-            : formDataTemp.value
+          Actions.CREATE_FOUNDER_BUSINESS,
+          formDataTemp.value
         );
         if (response !== true) throw new Error();
         Swal.fire({
-          text: `Expert Profile ${
-            doesExpertProfileExist.value ? "Updated" : "Created"
-          }`,
+          text: `Investment Oppertunity${"Created"}`,
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -503,9 +474,7 @@ export default defineComponent({
         });
       } catch (err) {
         Swal.fire({
-          text: `Expert Profile ${
-            doesExpertProfileExist.value ? "Updation" : "Creation"
-          } Unsuccessful`,
+          text: `Investment Oppertunity Creation Unsuccessful`,
           icon: "error",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -517,7 +486,6 @@ export default defineComponent({
     };
 
     return {
-      doesExpertProfileExist,
       formDataTemp,
       verticalWizardRef,
       previousStep,

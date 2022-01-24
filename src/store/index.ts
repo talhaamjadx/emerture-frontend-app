@@ -6,6 +6,7 @@ import Auth from "@/store/modules/Auth";
 import Investor from "@/store/modules/Investor";
 import Role from "@/store/modules/Role";
 import Expert from "@/store/modules/Expert";
+import Business from "@/store/modules/Business";
 import BodyModule from "@/store/modules/BodyModule";
 import BreadcrumbsModule from "@/store/modules/BreadcrumbsModule";
 import ConfigModule from "@/store/modules/ConfigModule";
@@ -21,7 +22,8 @@ const store = createStore({
     BreadcrumbsModule,
     ConfigModule,
     Expert,
-    Investor
+    Investor,
+    Business
   },
 });
 

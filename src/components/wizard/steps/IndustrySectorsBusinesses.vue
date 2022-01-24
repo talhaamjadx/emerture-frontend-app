@@ -16,7 +16,6 @@
         class="form-check form-check-custom form-check-solid my-3"
       >
         <input
-          :checked="isSelected(is.id)"
           class="form-check-input"
           type="checkbox"
           value=""
@@ -35,49 +34,42 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  computed,
-    inject,
-    watch,
-} from "vue";
+import { defineComponent, ref, onMounted, computed, inject, watch } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
-
-interface IndustrySectorsInterface {
-  id: number;
-}
 
 export default defineComponent({
   name: "IndustrySectors",
   components: {},
   props: {
     formDataTemp: {
-      type: Object,
+      type: FormData,
       required: true,
     },
   },
   setup(props, { emit }) {
     const store = useStore();
     const industrySectors = computed(() => store.getters.industrySectorsGetter);
-    let formData = ref<Record<string, unknown>>(props.formDataTemp);
+    let formData = ref<FormData>(props.formDataTemp);
     let selectedIndustrySectors = ref<Array<number>>([]);
-    watch(() => props.formDataTemp, () => {
-      formData.value = props.formDataTemp
-    })
-    const fetchData = (value) => {
-        for(let i = 0; i < (value.industrySectors as Array<IndustrySectorsInterface>).length; i++){
-        selectedIndustrySectors.value = [...selectedIndustrySectors.value, (value.industrySectors as Array<IndustrySectorsInterface>)[i].id]
+    watch(
+      () => props.formDataTemp,
+      () => {
+        formData.value = props.formDataTemp;
       }
-    }
+    );
     const fieldChanged = () => {
-      formData.value["industrySectors"] = selectedIndustrySectors.value
+      if (formData.value.get("industrySectors")) {
+        formData.value.set(
+          "industrySectors",
+          JSON.stringify(selectedIndustrySectors.value)
+        );
+      } else
+        formData.value.append(
+          "industrySectors",
+          JSON.stringify(selectedIndustrySectors.value)
+        );
       emit("form-data", formData.value);
-    };
-    const isSelected = (id) => {
-      return selectedIndustrySectors.value.find((is) => is == id);
     };
     const addToIndustrySectors = (event) => {
       if (event.target.checked) {
@@ -86,18 +78,19 @@ export default defineComponent({
           event.target.dataset["id"],
         ];
       } else {
-        selectedIndustrySectors.value = selectedIndustrySectors.value.filter((i) => {
-          return i != event.target.dataset["id"];
-        });
+        selectedIndustrySectors.value = selectedIndustrySectors.value.filter(
+          (i) => {
+            return i != event.target.dataset["id"];
+          }
+        );
       }
-      fieldChanged()
+        fieldChanged()
     };
     onMounted(() => {
       if (!industrySectors.value.length)
         store.dispatch(Actions.GET_INDUSTRY_SECTORS);
     });
     return {
-      isSelected,
       formData,
       fieldChanged,
       industrySectors,

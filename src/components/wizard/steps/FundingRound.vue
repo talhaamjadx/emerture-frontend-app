@@ -16,14 +16,13 @@
 
       <!--begin::Input-->
       <Field
-        v-model="name"
         @input="fieldChanged($event)"
-        name="name"
+        name="fundingRoundName"
         class="form-control form-control-lg form-control-solid"
         value=""
       />
       <ErrorMessage
-        name="name"
+        name="fundingRoundName"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -48,15 +47,14 @@
 
       <!--begin::Input-->
       <Field
-        v-model="jobTitle"
         @input="fieldChanged($event)"
-        name="jobTitle"
+        name="fundingRoundInvestmentRequired"
         class="form-control form-control-lg form-control-solid"
         value=""
       />
       <!--end::Input-->
       <ErrorMessage
-        name="jobTitle"
+        name="fundingRoundInvestmentRequired"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
     </div>
@@ -80,10 +78,9 @@
 
       <!--begin::Input-->
       <Field
-        v-model="telephone"
         @input="fieldChanged($event)"
         type="text"
-        name="telephone"
+        name="fundingRoundPreMoneyValuation"
         class="form-control form-control-lg form-control-solid"
         rows="3"
       ></Field>
@@ -109,15 +106,14 @@
 
       <!--begin::Input-->
       <Field
-        v-model="linkedInProfileUrl"
         @input="fieldChanged($event)"
         type="text"
-        name="linkedInProfileUrl"
+        name="fundingRoundMinimumInvestment"
         class="form-control form-control-lg form-control-solid"
         rows="3"
       ></Field>
       <ErrorMessage
-        name="linkedInProfileUrl"
+        name="fundingRoundMinimumInvestment"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -136,7 +132,11 @@
         >
         </i>
       </label>
-      <input type="date" />
+      <input
+        name="fundingRoundOpensAt"
+        type="date"
+        @input="fieldChanged($event)"
+      />
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
@@ -151,7 +151,11 @@
         >
         </i>
       </label>
-      <input type="date" />
+      <input
+        name="fundingRoundClosesAt"
+        type="date"
+        @input="fieldChanged($event)"
+      />
     </div>
     <!--begin::Input group-->
   </div>
@@ -159,7 +163,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch } from "vue";
+import { defineComponent, ref } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
@@ -175,30 +179,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const name = ref<string | unknown>("");
-    const jobTitle = ref<string | unknown>("");
-    const telephone = ref<string | unknown>("");
-    const linkedInProfileUrl = ref<string | unknown>("");
     const formData = ref<FormData>(props.formDataTemp);
-    const expertProfile = inject("expertProfile");
-    const fetchData = (value) => {
-      name.value = value.name;
-      jobTitle.value = value.jobTitle;
-      telephone.value = value.telephone;
-      linkedInProfileUrl.value = value.linkedInProfileUrl;
-      formData.value.append("name", name.value as string);
-      formData.value.append("jobTitle", jobTitle.value as string);
-      formData.value.append("telephone", telephone.value as string);
-      formData.value.append(
-        "linkedInProfileUrl",
-        linkedInProfileUrl.value as string
-      );
-    };
-    watch(expertProfile as Record<string, unknown>, (value) => {
-      fetchData(value);
-    });
-    if ((expertProfile as Record<string, unknown>).value)
-      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -206,11 +187,6 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
-      name,
-      jobTitle,
-      telephone,
-      linkedInProfileUrl,
-      expertProfile,
       formData,
       fieldChanged,
     };

@@ -14,15 +14,14 @@
 
       <!--begin::Input-->
       <Field
-        v-model="introduction"
         @input="fieldChanged($event)"
         type="textarea"
-        name="introduction"
+        name="telephone"
         class="form-control form-control-lg form-control-solid"
         rows="10"
       ></Field>
       <ErrorMessage
-        name="introduction"
+        name="telephone"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -33,16 +32,15 @@
       <!--end::Label-->
 
       <Field
-        v-model="bio"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
-        name="bio"
+        name="website"
         placeholder=""
         value=""
       />
       <ErrorMessage
-        name="bio"
+        name="website"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -54,7 +52,6 @@
 
       <!--begin::Input-->
       <Field
-        v-model="currencyCode"
         @input="fieldChanged($event)"
         name="currencyCode"
         class="form-select form-select-lg form-select-solid"
@@ -81,9 +78,8 @@
 
       <!--begin::Input-->
       <Field
-        v-model="currencyCode"
         @input="fieldChanged($event)"
-        name="currencyCode"
+        name="geoFocusCountryCode"
         class="form-select form-select-lg form-select-solid"
         data-control="select2"
         data-placeholder="Select..."
@@ -91,13 +87,14 @@
         data-hide-search="true"
         as="select"
       >
-        <option selected value="pound">£ (Pounds Sterling)</option>
-        <option value="dollar">$ (US Dollars)</option>
-        <option value="euro">€ (Euros)</option>
+        <option selected value="uk">UK</option>
+        <option value="us">US</option>
+        <option value="eu">EU</option>
+        <option value="global">Global</option>
       </Field>
       <!--end::Input-->
       <ErrorMessage
-        name="currencyCode"
+        name="geoFocusCountryCode"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
     </div>
@@ -123,20 +120,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
-    const introduction = ref<string | unknown>("");
-    const bio = ref<string | unknown>("");
-    const expertProfile = inject("expertProfile");
-    const fetchData = (value) => {
-      bio.value = value.bio;
-      introduction.value = value.introduction;
-      formData.value.append("bio", bio.value as string);
-      formData.value.append("introduction", introduction.value as string);
-    };
-    watch(expertProfile as Record<string, unknown>, (value) => {
-      fetchData(value);
-    });
-    if ((expertProfile as Record<string, unknown>).value)
-      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -144,8 +127,6 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
-      bio,
-      introduction,
       formData,
       fieldChanged,
     };

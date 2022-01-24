@@ -14,15 +14,14 @@
 
       <!--begin::Input-->
       <Field
-        v-model="introduction"
         @input="fieldChanged($event)"
         type="textarea"
-        name="introduction"
+        name="name"
         class="form-control form-control-lg form-control-solid"
         rows="10"
       ></Field>
       <ErrorMessage
-        name="introduction"
+        name="name"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -33,16 +32,15 @@
       <!--end::Label-->
 
       <Field
-        v-model="bio"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
-        name="bio"
+        name="summary"
         placeholder=""
         value=""
       />
       <ErrorMessage
-        name="bio"
+        name="summary"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -53,16 +51,15 @@
       <!--end::Label-->
 
       <Field
-        v-model="bio"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
-        name="bio"
+        name="overview"
         placeholder=""
         value=""
       />
       <ErrorMessage
-        name="bio"
+        name="overview"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -73,16 +70,15 @@
       <!--end::Label-->
 
       <Field
-        v-model="bio"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
-        name="bio"
+        name="defensibleUsp"
         placeholder=""
         value=""
       />
       <ErrorMessage
-        name="bio"
+        name="defensibleUsp"
         class="fv-plugins-message-container invalid-feedback"
       ></ErrorMessage>
       <!--end::Input-->
@@ -92,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch } from "vue";
+import { defineComponent, ref } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
@@ -109,20 +105,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
-    const introduction = ref<string | unknown>("");
-    const bio = ref<string | unknown>("");
-    const expertProfile = inject("expertProfile");
-    const fetchData = (value) => {
-      bio.value = value.bio;
-      introduction.value = value.introduction;
-      formData.value.append("bio", bio.value as string);
-      formData.value.append("introduction", introduction.value as string);
-    };
-    watch(expertProfile as Record<string, unknown>, (value) => {
-      fetchData(value);
-    });
-    if ((expertProfile as Record<string, unknown>).value)
-      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -130,8 +112,6 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
-      bio,
-      introduction,
       formData,
       fieldChanged,
     };

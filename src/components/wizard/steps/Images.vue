@@ -17,7 +17,7 @@
         id="documents"
         type="file"
         @change="handleImageUpload($event)"
-        name="documents"
+        name="logo"
       />
       <!--end::Input-->
     </div>
@@ -31,7 +31,7 @@
         id="documents"
         type="file"
         @change="handleImageUpload($event)"
-        name="documents"
+        name="headerImage"
       />
       <!--end::Input-->
     </div>
@@ -40,10 +40,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  name: "ProfessionalSummary",
+  name: "Images",
   props: {
     formDataTemp: {
       type: FormData,
@@ -57,21 +57,12 @@ export default defineComponent({
       const file = event.target.files[0];
       const tempEvent = {
         target: {
-          name: "documents",
+          name: event.target.name,
           value: file,
         },
       };
       fieldChanged(tempEvent);
     };
-    const expertProfile = inject("expertProfile");
-    const fetchData = (value) => {
-      document.value = value.document;
-    };
-    watch(expertProfile as Record<string, unknown>, (value) => {
-      fetchData(value);
-    });
-    if ((expertProfile as Record<string, unknown>).value)
-      fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
       if (formData.value.get(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
