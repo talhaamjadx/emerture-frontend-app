@@ -166,6 +166,26 @@
             <div class="stepper-label">
               <h3 class="stepper-title">Industry Sectors</h3>
             </div>
+
+            <!--end::Label-->
+          </div>
+          <div class="stepper-item" data-kt-stepper-element="nav">
+            <!--begin::Line-->
+            <div class="stepper-line w-40px"></div>
+            <!--end::Line-->
+
+            <!--begin::Icon-->
+            <div class="stepper-icon w-40px h-40px">
+              <i class="stepper-check fas fa-check"></i>
+              <span class="stepper-number">8</span>
+            </div>
+            <!--end::Icon-->
+
+            <!--begin::Label-->
+            <div class="stepper-label">
+              <h3 class="stepper-title">Funding Round</h3>
+            </div>
+
             <!--end::Label-->
           </div>
         </div>
@@ -195,28 +215,52 @@
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <ProfessionalSummary
+          <UploadPitchDocument
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></ProfessionalSummary>
+          ></UploadPitchDocument>
         </div>
         <!--end::Step 2-->
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <ShowcaseYourExpertise
+          <BusinessDescription
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></ShowcaseYourExpertise>
+          ></BusinessDescription>
         </div>
         <!--end::Step 3-->
 
         <!--begin::Step 4-->
         <div data-kt-stepper-element="content">
-          <KeySkills
+          <BusinessDetails
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></KeySkills>
+          ></BusinessDetails>
+        </div>
+        <div data-kt-stepper-element="content">
+          <AdvancedAssurance
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></AdvancedAssurance>
+        </div>
+        <div data-kt-stepper-element="content">
+          <TeamMembers
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></TeamMembers>
+        </div>
+        <div data-kt-stepper-element="content">
+          <IndustrySectorsBusinesses
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></IndustrySectorsBusinesses>
+        </div>
+        <div data-kt-stepper-element="content">
+          <FundingRound
+            @form-data="formDataTemp = $event"
+            :formDataTemp="formDataTemp"
+          ></FundingRound>
         </div>
         <!--end::Step 4-->
         <!--begin::Actions-->
@@ -247,7 +291,7 @@
               @click="formSubmit()"
             >
               <span class="indicator-label">
-                {{ doesExpertProfileExist ? "Update" : "Submit" }}
+                Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
@@ -281,9 +325,13 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch, provide } from "vue";
 import Images from "@/components/wizard/steps/Images.vue";
-import ProfessionalSummary from "@/components/wizard/steps/ProfessionalSummary.vue";
-import ShowcaseYourExpertise from "@/components/wizard/steps/ShowcaseYourExpertise.vue";
-import KeySkills from "@/components/wizard/steps/KeySkills.vue";
+import UploadPitchDocument from "@/components/wizard/steps/UploadPitchDocument.vue";
+import BusinessDescription from "@/components/wizard/steps/BusinessDescription.vue";
+import BusinessDetails from "@/components/wizard/steps/BusinessDetails.vue";
+import AdvancedAssurance from "@/components/wizard/steps/AdvancedAssurance.vue";
+import IndustrySectorsBusinesses from "@/components/wizard/steps/IndustrySectorsBusinesses.vue";
+import TeamMembers from "@/components/wizard/steps/TeamMembers.vue";
+import FundingRound from "@/components/wizard/steps/FundingRound.vue";
 import { StepperComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
@@ -319,10 +367,14 @@ interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 export default defineComponent({
   name: "expert-profile",
   components: {
+    FundingRound,
     Images,
-    ProfessionalSummary,
-    ShowcaseYourExpertise,
-    KeySkills,
+    UploadPitchDocument,
+    BusinessDescription,
+    BusinessDetails,
+    AdvancedAssurance,
+    TeamMembers,
+    IndustrySectorsBusinesses,
   },
   setup() {
     const store = useStore();
@@ -371,21 +423,11 @@ export default defineComponent({
         verticalWizardRef.value as HTMLElement
       );
 
-      setCurrentPageBreadcrumbs("Create Investment Oppertunity", ["Businesses"]);
+      setCurrentPageBreadcrumbs("Create Investment Oppertunity", [
+        "Businesses",
+      ]);
     });
-    const createAccountSchema = [
-      Yup.object({
-        name: Yup.string().required().label("Name"),
-        jobTitle: Yup.string().required().label("Job Title"),
-        linkedInProfileUrl: Yup.string()
-          .required()
-          .label("LinkedIn Profile URL"),
-      }),
-      Yup.object({
-        introduction: Yup.string().required().label("Introduction"),
-        bio: Yup.string().required().label("Bio"),
-      }),
-    ];
+    const createAccountSchema = [];
 
     const currentSchema = computed(() => {
       return createAccountSchema[currentStepIndex.value];
