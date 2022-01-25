@@ -84,6 +84,10 @@
         class="form-control form-control-lg form-control-solid"
         rows="3"
       ></Field>
+      <ErrorMessage
+        name="fundingRoundPreMoneyValuation"
+        class="fv-plugins-message-container invalid-feedback"
+      ></ErrorMessage>
       <!--end::Input-->
     </div>
     <!--end::Input group-->
