@@ -48,7 +48,7 @@ export default defineComponent({
     const businesses = computed(() => store.getters.getBusinesses)
     store.commit(Mutations.SET_TOOLBAR_BUTTON, {
       shouldShow: true,
-      title: "create",
+      title: "Create",
       url: "/create-investment-oppertunity",
     });
     onMounted(() => {

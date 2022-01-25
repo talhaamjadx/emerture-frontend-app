@@ -1,30 +1,6 @@
 <template>
   <!--begin::List Widget 6-->
   <div class="card" :class="widgetClasses">
-    <!--begin::Header-->
-    <div class="card-header border-0">
-      <h3 class="card-title fw-bolder text-dark">Notifications</h3>
-
-      <div class="card-toolbar">
-        <!--begin::Menu-->
-        <button
-          type="button"
-          class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
-          data-kt-menu-trigger="click"
-          data-kt-menu-placement="bottom-end"
-          data-kt-menu-flip="top-end"
-        >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
-        </button>
-        <Dropdown3></Dropdown3>
-        <!--end::Menu-->
-      </div>
-    </div>
-    <!--end::Header-->
-
-    <!--begin::Body-->
     <div class="card-body pt-0">
       <template v-for="(item, index) in list" :key="index">
         <!--begin::Item-->
@@ -71,17 +47,17 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import Dropdown3 from "@/components/dropdown/Dropdown3.vue";
 
 export default defineComponent({
   name: "kt-widget-6",
-  components: {
-    Dropdown3,
-  },
   props: {
     widgetClasses: String,
+    fundingRounds: {
+      type: Array,
+      required: true
+    }
   },
-  setup() {
+  setup(props) {
     const list = ref([
       {
         color: "warning",
