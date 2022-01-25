@@ -11,12 +11,12 @@
       <!--begin::Heading-->
       <div class="text-center mb-10">
         <!--begin::Title-->
-        <h1 class="text-dark mb-3">Forgot Password ?</h1>
+        <h1 class="text-dark mb-3">Forgot Password?</h1>
         <!--end::Title-->
 
         <!--begin::Link-->
         <div class="text-gray-400 fw-bold fs-4">
-          Enter your email to reset your password.
+          Enter your email to reset your password
         </div>
         <!--end::Link-->
       </div>
@@ -58,7 +58,7 @@
         </button>
 
         <router-link
-          to="/sign-up"
+          to="/sign-in"
           class="btn btn-lg btn-light-primary fw-bolder"
           >Cancel</router-link
         >

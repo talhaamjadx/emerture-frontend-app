@@ -192,9 +192,18 @@ export default defineComponent({
           )
         ) {
           return true;
-        } else if (
+        }else if (
+          config.heading == "businesses" &&
+          user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "founder"
+          )
+        ) {
+          return true;
+        }
+         else if (
           config.heading !== "expert-profile" &&
-          config.heading !== "investor-profile"
+          config.heading !== "investor-profile" &&
+          config.heading !== "businesses"
         ) {
           return true;
         } else return false;

@@ -52,7 +52,7 @@ import ListsWidget2 from "@/components/widgets/lists/Widget2.vue";
 import ListsWidget3 from "@/components/widgets/lists/Widget3.vue";
 import ListsWidget4 from "@/components/widgets/lists/Widget4.vue";
 import ListsWidget5 from "@/components/widgets/lists/Widget5.vue";
-import ListsWidget6 from "@/components/widgets/lists/Widget6.vue";
+import ListsWidget6 from "@/components/widgets/lists/funding-rounds.vue";
 import ListsWidget7 from "@/components/widgets/lists/Widget7.vue";
 import ListsWidget8 from "@/components/widgets/lists/Widget8.vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";

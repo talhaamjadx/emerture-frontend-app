@@ -26,8 +26,6 @@
           <router-link
             :to="`/business/${business.id}`"
             class="btn btn-danger fw-bold px-6 py-3"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_modal_create_campaign"
             >View Business</router-link
           >
         </div>
@@ -50,7 +48,7 @@ export default defineComponent({
     const businesses = computed(() => store.getters.getBusinesses)
     store.commit(Mutations.SET_TOOLBAR_BUTTON, {
       shouldShow: true,
-      title: "create",
+      title: "Create",
       url: "/create-investment-oppertunity",
     });
     onMounted(() => {
