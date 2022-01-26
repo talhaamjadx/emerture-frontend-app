@@ -49,4 +49,17 @@ export default class Business extends VuexModule {
                 return err.response
             })
     }
+    @Action
+    [Actions.CREATE_FUNDING_ROUND](payload): Promise<AxiosResponse> {
+        ApiService.setHeader("multipart/form-data")
+        return ApiService.post(`/funding-rounds`, payload)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }

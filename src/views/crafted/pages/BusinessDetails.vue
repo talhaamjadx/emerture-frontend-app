@@ -218,7 +218,7 @@
       <div class="card-header">
         <h3 class="card-title">Funding Rounds</h3>
         <div class="card-toolbar">
-          <button type="button" class="btn btn-sm btn-primary">New</button>
+          <router-link :to="`/create-funding-round?businessId=${business.id}`" type="button" class="btn btn-sm btn-primary">New</router-link>
         </div>
       </div>
       <div class="card-body pt-0">

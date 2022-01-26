@@ -108,6 +108,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/create-funding-round",
+        name: "create-funding-round",
+        component: () => import("@/views/crafted/pages/wizards/CreateFundingRound.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/social",
         name: "social",
         component: () => import("@/views/crafted/authentication/basic-flow/social.vue"),

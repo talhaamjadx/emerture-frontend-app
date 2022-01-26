@@ -1,18 +1,15 @@
 <template>
   <!--begin::List Widget 6-->
   <div class="card" :class="widgetClasses">
-    <div class="card-body pt-0">
-      <template v-for="(item, index) in list" :key="index">
+    <div v-for="round in rounds" :key="round.id" class="card-body pt-0">
+      <div class="my-5">
         <!--begin::Item-->
         <div
-          :class="[
-            'mb-7' && list.length - 1 !== index,
-            `bg-light-${item.color}`,
-          ]"
+          :class="['mb-7', `bg-light-info`]"
           class="d-flex align-items-center rounded p-5 mb-7"
         >
           <!--begin::Icon-->
-          <span :class="`svg-icon-${item.color}`" class="svg-icon me-5">
+          <span :class="`svg-icon-info`" class="svg-icon me-5">
             <span class="svg-icon svg-icon-1">
               <inline-svg src="media/icons/duotune/abstract/abs027.svg" />
             </span>
@@ -21,24 +18,80 @@
 
           <!--begin::Title-->
           <div class="flex-grow-1 me-2">
-            <a
-              href="#"
-              class="fw-bolder text-gray-800 text-hover-primary fs-6"
-              >{{ item.title }}</a
+            <a href="#" class="fw-bolder text-gray-800 text-hover-primary fs-6"
+              >Funding Required</a
             >
-
-            <span class="text-muted fw-bold d-block">{{ item.text }}</span>
           </div>
           <!--end::Title-->
 
           <!--begin::Lable-->
-          <span :class="`text-${item.color}`" class="fw-bolder py-1">{{
-            item.number
+          <span :class="`text-info`" class="fw-bolder py-1">£{{
+            round.investment_required
           }}</span>
           <!--end::Lable-->
         </div>
         <!--end::Item-->
-      </template>
+      </div>
+      <div>
+        <!--begin::Item-->
+        <div
+          :class="['mb-7', `bg-light-info`]"
+          class="d-flex align-items-center rounded p-5 mb-7"
+        >
+          <!--begin::Icon-->
+          <span :class="`svg-icon-info`" class="svg-icon me-5">
+            <span class="svg-icon svg-icon-1">
+              <inline-svg src="media/icons/duotune/abstract/abs027.svg" />
+            </span>
+          </span>
+          <!--end::Icon-->
+
+          <!--begin::Title-->
+          <div class="flex-grow-1 me-2">
+            <a href="#" class="fw-bolder text-gray-800 text-hover-primary fs-6"
+              >Pre-Money Valuation</a
+            >
+          </div>
+          <!--end::Title-->
+
+          <!--begin::Lable-->
+          <span :class="`text-info`" class="fw-bolder py-1">£{{
+            round.preMoneyValuation
+          }}</span>
+          <!--end::Lable-->
+        </div>
+        <!--end::Item-->
+      </div>
+      <div>
+        <!--begin::Item-->
+        <div
+          :class="['mb-7', `bg-light-info`]"
+          class="d-flex align-items-center rounded p-5 mb-7"
+        >
+          <!--begin::Icon-->
+          <span :class="`svg-icon-info`" class="svg-icon me-5">
+            <span class="svg-icon svg-icon-1">
+              <inline-svg src="media/icons/duotune/abstract/abs027.svg" />
+            </span>
+          </span>
+          <!--end::Icon-->
+
+          <!--begin::Title-->
+          <div class="flex-grow-1 me-2">
+            <a href="#" class="fw-bolder text-gray-800 text-hover-primary fs-6"
+              >Minimum Investment</a
+            >
+          </div>
+          <!--end::Title-->
+
+          <!--begin::Lable-->
+          <span :class="`text-info`" class="fw-bolder py-1">£{{
+            round.minimumInvestment
+          }}</span>
+          <!--end::Lable-->
+        </div>
+        <!--end::Item-->
+      </div>
     </div>
     <!--end::Body-->
   </div>
@@ -46,51 +99,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 
 export default defineComponent({
-  name: "kt-widget-6",
+  name: "funding-rounds",
   props: {
     widgetClasses: String,
     fundingRounds: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
-    const list = ref([
-      {
-        color: "warning",
-        icon: "icons/duotune/abstract/abs027.svg",
-        title: "Group lunch celebration",
-        text: "Due in 2 Days",
-        number: "+28%",
-      },
-      {
-        color: "success",
-        icon: "icons/duotune/art/art005.svg",
-        title: "Navigation optimization",
-        text: "Due in 2 Days",
-        number: "+50%",
-      },
-      {
-        color: "danger",
-        icon: "icons/duotune/communication/com012.svg",
-        title: "Rebrand strategy planning",
-        text: "Due in 5 Days",
-        number: "-27%",
-      },
-      {
-        color: "info",
-        icon: "icons/duotune/communication/com012.svg",
-        title: "Product goals strategy",
-        text: "Due in 7 Days",
-        number: "+8%",
-      },
-    ]);
-
+    const rounds = ref(props.fundingRounds);
+    watch(
+      () => props.fundingRounds,
+      (value) => {
+        rounds.value = value;
+      }
+    );
     return {
-      list,
+      rounds,
     };
   },
 });
