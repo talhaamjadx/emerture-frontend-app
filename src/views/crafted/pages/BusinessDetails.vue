@@ -22,8 +22,8 @@
         <!--end::Card title-->
 
         <!--begin::Action-->
-        <a href="javascript:void(0)" class="btn btn-primary align-self-center"
-          >Edit</a
+        <router-link :to="`/update-investment-oppertunity/${route.params.id}`" class="btn btn-primary align-self-center"
+          >Edit</router-link
         >
         <!--end::Action-->
       </div>
@@ -267,7 +267,6 @@ export default defineComponent({
           business.value = businesses.value?.founderBusinesses.find(
             (b) => b.id == route.params.id
           );
-          console.log({ business });
         } catch (err) {
           console.log(err);
         }
@@ -281,6 +280,7 @@ export default defineComponent({
       business,
       toUpperCase,
       parseJSON,
+      route,
     };
   },
 });

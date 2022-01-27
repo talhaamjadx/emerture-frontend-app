@@ -88,7 +88,7 @@ export default defineComponent({
     if ((expertProfile as Record<string, unknown>).value)
       fetchData((expertProfile as Record<string, unknown>).value);
     const fieldChanged = (event) => {
-      if (formData.value.get(event.target.name)) {
+      if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);

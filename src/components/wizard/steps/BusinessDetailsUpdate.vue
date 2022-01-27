@@ -14,6 +14,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="telephone"
         @input="fieldChanged($event)"
         type="textarea"
         name="telephone"
@@ -32,6 +33,7 @@
       <!--end::Label-->
 
       <Field
+        v-model="website"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
@@ -52,6 +54,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="currencyCode"
         @input="fieldChanged($event)"
         name="currencyCode"
         class="form-select form-select-lg form-select-solid"
@@ -78,6 +81,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="geoFocusCountryCode"
         @input="fieldChanged($event)"
         name="geoFocusCountryCode"
         class="form-select form-select-lg form-select-solid"
@@ -120,6 +124,20 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
+    const telephone = ref<string>("");
+    const currencyCode = ref<string>("");
+    const geoFocusCountryCode = ref<string>("");
+    const website = ref<string>("");
+    const business = inject("business");
+    watch(business as Record<string, unknown>, (value) => {
+      syncData(value);
+    });
+    const syncData = (value) => {
+      telephone.value = value.telephone;
+      currencyCode.value = value.currencyCode;
+      geoFocusCountryCode.value = value.geoFocusCountryCode;
+      website.value = value.website;
+    };
     const fieldChanged = (event) => {
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -129,6 +147,10 @@ export default defineComponent({
     return {
       formData,
       fieldChanged,
+      telephone,
+      website,
+      currencyCode,
+      geoFocusCountryCode,
     };
   },
 });

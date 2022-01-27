@@ -34,7 +34,8 @@ enum Actions {
   GET_INDUSTRY_SECTORS = "getIndustrySectors",
   CREATE_FOUNDER_BUSINESS = "createFounderBusiness",
   GET_FOUNDER_BUSINESSES = "getFounderBusinesses",
-  CREATE_FUNDING_ROUND = "createFundingRound"
+  CREATE_FUNDING_ROUND = "createFundingRound",
+  UPDATE_FOUNDER_BUSINESS = "updateFounderBusiness"
 }
 
 enum Mutations {

@@ -4,12 +4,12 @@
     <!--begin::Heading-->
     <div class="pb-10 pb-lg-12">
       <!--begin::Title-->
-      <h2 class="fw-bolder text-dark">Images</h2>
+      <h2 class="fw-bolder text-dark">Upload Pitch Deck</h2>
     </div>
     <!--end::Heading-->
     <div class="fv-row mb-10 d-flex flex-column">
       <!--end::Label-->
-      <label class="form-label">Logo</label>
+      <label class="form-label">Documents</label>
       <!--end::Label-->
 
       <!--begin::Input-->
@@ -17,22 +17,11 @@
         id="documents"
         type="file"
         @change="handleImageUpload($event)"
-        name="logo"
+        name="pitchDeckDocument"
       />
-      <!--end::Input-->
-    </div>
-    <div class="fv-row mb-10 d-flex flex-column">
-      <!--end::Label-->
-      <label class="form-label">Header Image</label>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <input
-        id="documents"
-        type="file"
-        @change="handleImageUpload($event)"
-        name="headerImage"
-      />
+      <a v-if="document" target="_blank" :href="document" class="my-2"
+        >Uploaded Document</a
+      >
       <!--end::Input-->
     </div>
   </div>
@@ -40,10 +29,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, inject, watch } from "vue";
 
 export default defineComponent({
-  name: "Images",
+  name: "ProfessionalSummary",
   props: {
     formDataTemp: {
       type: FormData,
@@ -53,6 +42,13 @@ export default defineComponent({
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
     const document = ref<string | unknown>("");
+    const business = inject("business");
+    watch(business as Record<string, unknown>, (value) => {
+      syncData(value);
+    });
+    const syncData = (value) => {
+      document.value = value.pitchDeckDocument;
+    };
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
       const tempEvent = {
@@ -74,6 +70,7 @@ export default defineComponent({
       formData,
       fieldChanged,
       handleImageUpload,
+      business,
     };
   },
 });

@@ -14,6 +14,7 @@
 
       <!--begin::Input-->
       <Field
+        v-model="name"
         @input="fieldChanged($event)"
         type="textarea"
         name="name"
@@ -32,6 +33,7 @@
       <!--end::Label-->
 
       <Field
+        v-model="summary"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
@@ -51,6 +53,7 @@
       <!--end::Label-->
 
       <Field
+        v-model="overview"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
@@ -70,6 +73,7 @@
       <!--end::Label-->
 
       <Field
+        v-model="defensibleUsp"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
@@ -88,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, inject, watch } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
@@ -105,6 +109,20 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
+    const name = ref<string>("");
+    const summary = ref<string>("");
+    const overview = ref<string>("");
+    const defensibleUsp = ref<string>("");
+    const business = inject("business");
+    watch(business as Record<string, unknown>, (value) => {
+      syncData(value);
+    });
+    const syncData = (value) => {
+      name.value = value.name;
+      summary.value = value.summary;
+      overview.value = value.overview;
+      defensibleUsp.value = value.defensibleUsp;
+    };
     const fieldChanged = (event) => {
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -114,6 +132,10 @@ export default defineComponent({
     return {
       formData,
       fieldChanged,
+      name,
+      summary,
+      overview,
+      defensibleUsp,
     };
   },
 });

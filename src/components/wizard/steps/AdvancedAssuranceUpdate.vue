@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, ref, onMounted } from "vue";
+import { defineComponent, reactive, watch, ref, inject } from "vue";
 
 export default defineComponent({
   name: "investment-ticket-size",
@@ -47,12 +47,22 @@ export default defineComponent({
       { name: "advanceAssuranceEis", value: false },
       { name: "advanceAssuranceAppliedFor", value: false },
     ]);
-    onMounted(() => {
-      for (let i = 0; i < advancedAssuranceOptions.length; i++) {
-        if (!formData.value.has(advancedAssuranceOptions[i].name))
-          formData.value.append(advancedAssuranceOptions[i].name, "0");
-      }
+    const business = inject("business");
+    watch(business as Record<string, unknown>, (value) => {
+      syncData(value);
     });
+    const syncData = (value) => {
+      if (value.advanceAssuranceSeis) advancedAssuranceOptions[0].value = true;
+      if (value.advanceAssuranceEis) advancedAssuranceOptions[1].value = true;
+      if (value.advanceAssuranceAppliedFor)
+        advancedAssuranceOptions[2].value = true;
+      for (let i = 0; i < advancedAssuranceOptions.length; i++) {
+        if (
+          !eval(formData.value.get(advancedAssuranceOptions[i].name) as string)
+        )
+          formData.value.set(advancedAssuranceOptions[i].name, "0");
+      }
+    };
     watch(
       () => props.formDataTemp,
       () => {

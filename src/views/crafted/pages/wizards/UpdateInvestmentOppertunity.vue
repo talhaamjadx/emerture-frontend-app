@@ -169,25 +169,6 @@
 
             <!--end::Label-->
           </div>
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <!--begin::Line-->
-            <div class="stepper-line w-40px"></div>
-            <!--end::Line-->
-
-            <!--begin::Icon-->
-            <div class="stepper-icon w-40px h-40px">
-              <i class="stepper-check fas fa-check"></i>
-              <span class="stepper-number">8</span>
-            </div>
-            <!--end::Icon-->
-
-            <!--begin::Label-->
-            <div class="stepper-label">
-              <h3 class="stepper-title">Funding Round</h3>
-            </div>
-
-            <!--end::Label-->
-          </div>
         </div>
         <!--end::Nav-->
       </div>
@@ -206,64 +187,56 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <Images
+          <ImagesUpdate
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></Images>
+          ></ImagesUpdate>
         </div>
         <!--end::Step 1-->
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <UploadPitchDeck
+          <UploadPitchDeckUpdate
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></UploadPitchDeck>
+          ></UploadPitchDeckUpdate>
         </div>
         <!--end::Step 2-->
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <BusinessDescription
+          <BusinessDescriptionUpdate
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></BusinessDescription>
+          ></BusinessDescriptionUpdate>
         </div>
         <!--end::Step 3-->
 
         <!--begin::Step 4-->
         <div data-kt-stepper-element="content">
-          <BusinessDetails
+          <BusinessDetailsUpdate
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></BusinessDetails>
+          ></BusinessDetailsUpdate>
         </div>
         <div data-kt-stepper-element="content">
-          <AdvancedAssurance
+          <AdvancedAssuranceUpdate
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></AdvancedAssurance>
+          ></AdvancedAssuranceUpdate>
         </div>
         <div data-kt-stepper-element="content">
-          <TeamMembers
+          <TeamMembersUpdate
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></TeamMembers>
+          ></TeamMembersUpdate>
         </div>
         <div data-kt-stepper-element="content">
-          <IndustrySectorsBusinesses
+          <IndustrySectorsBusinessesUpdate
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></IndustrySectorsBusinesses>
+          ></IndustrySectorsBusinessesUpdate>
         </div>
-        <div data-kt-stepper-element="content">
-          <FundingRound
-            @form-data="formDataTemp = $event"
-            :formDataTemp="formDataTemp"
-          ></FundingRound>
-        </div>
-        <!--end::Step 4-->
-        <!--begin::Actions-->
         <div class="d-flex flex-stack pt-10">
           <!--begin::Wrapper-->
           <div class="mr-2">
@@ -323,15 +296,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
-import Images from "@/components/wizard/steps/Images.vue";
-import UploadPitchDeck from "@/components/wizard/steps/UploadPitchDeck.vue";
-import BusinessDescription from "@/components/wizard/steps/BusinessDescription.vue";
-import BusinessDetails from "@/components/wizard/steps/BusinessDetails.vue";
-import AdvancedAssurance from "@/components/wizard/steps/AdvancedAssurance.vue";
-import IndustrySectorsBusinesses from "@/components/wizard/steps/IndustrySectorsBusinesses.vue";
-import TeamMembers from "@/components/wizard/steps/TeamMembers.vue";
-import FundingRound from "@/components/wizard/steps/FundingRound.vue";
+import { computed, defineComponent, onMounted, ref, provide } from "vue";
+import ImagesUpdate from "@/components/wizard/steps/ImagesUpdate.vue";
+import UploadPitchDeckUpdate from "@/components/wizard/steps/UploadPitchDeckUpdate.vue";
+import BusinessDescriptionUpdate from "@/components/wizard/steps/BusinessDescriptionUpdate.vue";
+import BusinessDetailsUpdate from "@/components/wizard/steps/BusinessDetailsUpdate.vue";
+import AdvancedAssuranceUpdate from "@/components/wizard/steps/AdvancedAssuranceUpdate.vue";
+import IndustrySectorsBusinessesUpdate from "@/components/wizard/steps/IndustrySectorsBusinessesUpdate.vue";
+import TeamMembersUpdate from "@/components/wizard/steps/TeamMembersUpdate.vue";
 import { StepperComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
@@ -339,6 +311,7 @@ import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { Actions } from "@/store/enums/StoreEnums";
 
 interface IStep1 {
@@ -366,20 +339,22 @@ interface IStep4 {
 interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "Investment-Oppertunity",
+  name: "update-investment-oppertunity",
   components: {
-    FundingRound,
-    Images,
-    UploadPitchDeck,
-    BusinessDescription,
-    BusinessDetails,
-    AdvancedAssurance,
-    TeamMembers,
-    IndustrySectorsBusinesses,
+    ImagesUpdate,
+    UploadPitchDeckUpdate,
+    BusinessDescriptionUpdate,
+    BusinessDetailsUpdate,
+    AdvancedAssuranceUpdate,
+    TeamMembersUpdate,
+    IndustrySectorsBusinessesUpdate,
   },
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
+    const businesses = computed(() => store.getters.getBusinesses);
+    const business = ref<Record<string, unknown>>({});
     const formDataTemp = ref<FormData>(new FormData());
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
@@ -396,13 +371,49 @@ export default defineComponent({
       expertIndustrySectors: [],
       expertExpertise: [],
     });
-
-    onMounted(() => {
+    provide("business", business);
+    const syncData = () => {
+      for (const key in business.value) {
+        if (key == "industrySectors" && business.value[key]) {
+          formDataTemp.value.append(
+            key,
+            JSON.stringify(
+              (business.value[key] as Array<Record<string, unknown>>).map(
+                (sector) => sector.id
+              )
+            )
+          );
+        } else formDataTemp.value.append(key, business.value[key] as string);
+      }
+    };
+    onMounted(async () => {
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
-
-      setCurrentPageBreadcrumbs("Create Investment Oppertunity", [
+      if (!businesses.value?.founderBusinesses?.length) {
+        try {
+          const response = await store.dispatch(
+            Actions.GET_FOUNDER_BUSINESSES,
+            {
+              page: 1,
+              perPage: 10,
+            }
+          );
+          if (response !== true) throw new Error();
+          business.value = businesses.value?.founderBusinesses.find(
+            (b) => b.id == route.params.id
+          );
+          syncData();
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        business.value = businesses.value?.founderBusinesses.find(
+          (b) => b.id == route.params.id
+        );
+        syncData();
+      }
+      setCurrentPageBreadcrumbs("Update Investment Oppertunity", [
         "Businesses",
       ]);
     });
@@ -424,18 +435,6 @@ export default defineComponent({
       {},
       {},
       {},
-      Yup.object({
-        fundingRoundName: Yup.string().required().label("Name"),
-        fundingRoundInvestmentRequired: Yup.string()
-          .required()
-          .label("Investment Required"),
-        fundingRoundPreMoneyValuation: Yup.string()
-          .required()
-          .label("Pre-Money Valuation"),
-        fundingRoundMinimumInvestment: Yup.string()
-          .required()
-          .label("Minimum Investment"),
-      }),
     ];
 
     const currentSchema = computed(() => {
@@ -490,13 +489,13 @@ export default defineComponent({
 
     const formSubmit = async () => {
       try {
-        const response = await store.dispatch(
-          Actions.CREATE_FOUNDER_BUSINESS,
-          formDataTemp.value
-        );
+        const response = await store.dispatch(Actions.UPDATE_FOUNDER_BUSINESS, {
+          id: route.params.id,
+          payload: formDataTemp.value,
+        });
         if (response !== true) throw new Error();
         Swal.fire({
-          text: `Investment Oppertunity ${"Created"}`,
+          text: `Investment Oppertunity ${"Updated"}`,
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -508,7 +507,7 @@ export default defineComponent({
         });
       } catch (err) {
         Swal.fire({
-          text: `Investment Oppertunity Creation Unsuccessful`,
+          text: `Investment Oppertunity Updation Unsuccessful`,
           icon: "error",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -518,7 +517,6 @@ export default defineComponent({
         });
       }
     };
-
     return {
       formDataTemp,
       verticalWizardRef,
