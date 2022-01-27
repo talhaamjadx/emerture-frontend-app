@@ -15,7 +15,7 @@
 
     <div class="row g-10">
       <div v-for="role in roles" :key="role.id" class="col-xl-4">
-        <div class="card card-stretch card-bordered mb-5">
+        <div class="card card-bordered mb-5">
           <div class="card-header">
             <h3 class="card-title">
               <div class="mb-7 mt-7 text-center">
@@ -32,7 +32,7 @@
               </div>
             </h3>
           </div>
-          <div class="card-body">
+          <div style="min-height: 300px;" class="card-body">
             <div
               v-for="feature in op.get(role, 'roleFeatures', [])"
               :key="feature.id"
