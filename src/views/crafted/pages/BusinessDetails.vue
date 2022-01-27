@@ -3,7 +3,7 @@
   <div>
     <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
       <!--begin::Card header-->
-      <div class="card-header cursor-pointer">
+      <div class="card-header cursor-pointer px-0">
         <!--begin::Card title-->
         <div class="card-title m-0">
           <div
@@ -22,7 +22,7 @@
         <!--end::Card title-->
 
         <!--begin::Action-->
-        <router-link :to="`/update-investment-oppertunity/${route.params.id}`" class="btn btn-primary align-self-center"
+        <router-link :to="`/update-investment-oppertunity/${route.params.id}`" class="btn btn-primary align-self-center mx-5"
           >Edit</router-link
         >
         <!--end::Action-->

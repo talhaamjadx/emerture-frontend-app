@@ -7,19 +7,37 @@
       :style="[
         'background-color: #1b283f',
         'background-position: right',
-        `background-image: url('${business.headerImage}')`
-        ]
-      "
+        `background-image: url('${business.headerImage}')`,
+      ]"
     >
       <!--begin::Body-->
-      <div class="card-body d-flex flex-column justify-content-between">
+      <div style="padding: 1rem 2.25rem;" class="card-body d-flex flex-column justify-content-between">
         <!--begin::Title-->
+        <div class="row">
+        <div
+          class="image-input image-input-outline col-md-2"
+          data-kt-image-input="true"
+          style="background-image: url(media/avatars/blank.png)"
+        >
+          <!--begin::Preview existing avatar-->
+          <div
+            ref="profilePictureRef"
+            class="image-input-wrapper w-125px h-125px"
+            :style="`background-image: url(${business.logo}); border-radius: 50%`"
+          ></div>
+        </div>
+        <div class="col-md-4">
         <h2 class="text-white fw-bolder mb-5">
-          <span class="lh-lg"
-            >{{ business.name }}</span
-          >
+          <span class="lh-lg">{{ business.name }}</span>
         </h2>
         <p class="text-white">{{ business.summary }}</p>
+        
+        </div>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+        </div>
+        </div>
         <!--end::Title-->
         <!--begin::Action-->
         <div class="m-0">
@@ -45,19 +63,19 @@ import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 export default defineComponent({
   setup() {
     const store = useStore();
-    const businesses = computed(() => store.getters.getBusinesses)
+    const businesses = computed(() => store.getters.getBusinesses);
     store.commit(Mutations.SET_TOOLBAR_BUTTON, {
       shouldShow: true,
       title: "Create",
       url: "/create-investment-oppertunity",
     });
     onMounted(() => {
-      setCurrentPageBreadcrumbs("Businesses", [])
+      setCurrentPageBreadcrumbs("Businesses", []);
       store.dispatch(Actions.GET_FOUNDER_BUSINESSES, {
         page: 1,
-        perPage: 10
-      })
-    })
+        perPage: 10,
+      });
+    });
     onBeforeUnmount(() => {
       store.commit(Mutations.SET_TOOLBAR_BUTTON, {
         shouldShow: false,
@@ -65,9 +83,9 @@ export default defineComponent({
         url: "",
       });
     });
-    return{
-      businesses
-    }
+    return {
+      businesses,
+    };
   },
 });
 </script>
