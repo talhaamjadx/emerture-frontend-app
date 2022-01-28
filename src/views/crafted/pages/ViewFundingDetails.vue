@@ -155,15 +155,10 @@
               <div class="fv-row mb-10">
                 <!--begin::Label-->
                 <label class="form-label required">Add Investment</label>
-                <Field
-                  name="investment"
-                  class="form-control form-control-lg form-control-solid"
-                  value=""
-                />
-                <ErrorMessage
-                  name="investment"
-                  class="fv-plugins-message-container invalid-feedback"
-                ></ErrorMessage>
+                <el-input placeholder="0.00">
+                  <template #prepend>£</template>
+                  <template #append>GBP</template>
+                </el-input>
               </div>
             </div>
           </div>
@@ -182,14 +177,9 @@ import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
 import { mainFormatter } from "@/utils/index";
 import moment from "moment";
-import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
   name: "view-funding-round",
-  components: {
-    Field,
-    ErrorMessage,
-  },
   setup() {
     const store = useStore();
     const route = useRoute();
