@@ -124,6 +124,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/view-funding-round/:id",
+        name: "view-funding-round",
+        component: () => import("@/views/crafted/pages/ViewFundingDetails.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/social",
         name: "social",
         component: () => import("@/views/crafted/authentication/basic-flow/social.vue"),

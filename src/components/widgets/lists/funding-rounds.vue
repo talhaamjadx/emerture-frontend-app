@@ -9,10 +9,10 @@
           >
         </div>
         <div class="col text-end fa">
-          <a class="w-un" href="javascript:void(0)">
+          <router-link class="w-un" :to="`/view-funding-round/${round.id}?businessId=${round.businessId}`">
             <span><i class="fa fa-eye px-2" aria-hidden="true"></i></span>
-          </a>
-          <router-link class="w-un" :to="`/update-funding-round/${round.id}`">
+          </router-link>
+          <router-link class="w-un" :to="`/update-funding-round/${round.id}?businessId=${round.businessId}`">
             <span><i class="fa fa-edit px-2" aria-hidden="true"></i></span
           ></router-link>
           <a
@@ -177,7 +177,7 @@ export default defineComponent({
   },
   setup(props) {
     const rounds = ref(props.fundingRounds);
-    const formatDate = date => moment(date).format("YYYY-MM-DD")
+    const formatDate = (date) => moment(date).format("YYYY-MM-DD");
     const formatter = computed(() => mainFormatter);
     watch(
       () => props.fundingRounds,
@@ -188,7 +188,7 @@ export default defineComponent({
     return {
       rounds,
       formatter,
-      formatDate
+      formatDate,
     };
   },
 });
