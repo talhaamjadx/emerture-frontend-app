@@ -222,7 +222,7 @@
         </div>
       </div>
       <div class="card-body pt-0">
-      <FundingRounds :funding-rounds="business.fundingRounds"/>
+      <FundingRounds :businessId="business.id"/>
     </div>
     </div>
   </div>

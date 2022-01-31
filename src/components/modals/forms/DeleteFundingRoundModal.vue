@@ -112,65 +112,54 @@ export default defineComponent({
       required: true,
       type: Number,
     },
+    businessId:{
+      required: true,
+      type: Number
+    }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const store = useStore();
     const fundingRoundId = ref<number>(props.id);
     const formRef = ref<null | HTMLFormElement>(null);
     const newTargetModalRef = ref<null | HTMLElement>(null);
     const loading = ref<boolean>(false);
 
-    const submit = () => {
+    const submit = async () => {
       if (!formRef.value) {
         return;
       }
-
-      formRef.value.validate(async (valid) => {
-        if (valid) {
-          loading.value = true;
-          try {
-            const response = await store.dispatch(
-              Actions.DELETE_FUNDING_ROUND,
-              fundingRoundId.value
-            );
-            loading.value = false;
-            if (response !== true) throw new Error();
-            Swal.fire({
-              text: "Funding Round has been deleted successfully!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(newTargetModalRef.value);
-            });
-          } catch (err) {
-            Swal.fire({
-              text: "Sorry, looks like there are some errors detected, please try again.",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            });
-            return false;
-          }
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-          return false;
-        }
-      });
+      loading.value = true;
+      try {
+        const response = await store.dispatch(
+          Actions.DELETE_FUNDING_ROUND,
+          fundingRoundId.value
+        );
+        loading.value = false;
+        if (response !== true) throw new Error();
+        emit("round-deleted")
+        Swal.fire({
+          text: "Funding Round has been deleted successfully!",
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+        }).then(() => {
+          hideModal(newTargetModalRef.value);
+        });
+      } catch (err) {
+        Swal.fire({
+          text: "Sorry, looks like there are some errors detected, please try again.",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+        });
+        return false;
+      }
     };
 
     return {

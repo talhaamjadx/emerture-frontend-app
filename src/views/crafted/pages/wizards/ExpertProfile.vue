@@ -237,6 +237,7 @@ import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
+import objectPath from "object-path";
 
 interface IStep1 {
   name: string;
@@ -272,12 +273,16 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    let roleId = 0;
     const formDataTemp = ref<FormData>(new FormData());
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
     const user = computed(() => store.getters.getUser);
     const expertProfile = computed(() => store.getters.expertProfileGetter);
+    const roles = computed(() => {
+      return store.getters.getRolesData;
+    });
     const doesExpertProfileExist = computed(() => {
       if (expertProfile.value) return true;
       else return false;
@@ -312,7 +317,25 @@ export default defineComponent({
       expertExpertise: [],
     });
 
-    onMounted(() => {
+    onMounted(async () => {
+      try {
+        if (!roles.value.length) {
+          const response = await store.dispatch(Actions.GET_ROLES);
+          if (response !== true) throw new Error();
+          roleId = objectPath.get(
+            roles.value.find((role) => role.name.toLowerCase() === "expert"),
+            "id",
+            0
+          );
+        } else
+          roleId = objectPath.get(
+            roles.value.find((role) => role.name.toLowerCase() === "expert"),
+            "id",
+            0
+          );
+      } catch (err) {
+        console.log("error in fetching roles");
+      }
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
@@ -394,6 +417,33 @@ export default defineComponent({
             : formDataTemp.value
         );
         if (response !== true) throw new Error();
+        try {
+          const response = await store.dispatch(Actions.ATTACH_ROLE, {
+            id: roleId,
+          });
+          if (response !== true) throw new Error();
+          await store.dispatch(Actions.AUTH_USER);
+          Swal.fire({
+            text: "Role is pending for approval",
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn btn-primary",
+            },
+          });
+        } catch (err) {
+          const [error] = Object.keys(store.getters.getErrors);
+          Swal.fire({
+            text: store.getters.getErrors[error],
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Try again!",
+            customClass: {
+              confirmButton: "btn fw-bold btn-light-danger",
+            },
+          });
+        }
         Swal.fire({
           text: `Expert Profile ${
             doesExpertProfileExist.value ? "Updated" : "Created"

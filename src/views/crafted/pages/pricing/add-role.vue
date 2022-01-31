@@ -23,7 +23,7 @@
                 <h1 class="text-dark mb-5 fw-boldest">{{ role.name }}</h1>
                 <!--end::Title-->
                 <!--begin::Description-->
-                <div style="font-size:13px;" class="text-gray-400 fw-bold ">
+                <div style="font-size: 13px" class="text-gray-400 fw-bold">
                   {{ role.description }}
                 </div>
                 <!--end::Description-->
@@ -32,7 +32,7 @@
               </div>
             </h3>
           </div>
-          <div style="min-height: 300px;" class="card-body">
+          <div style="min-height: 300px" class="card-body">
             <div
               v-for="feature in op.get(role, 'roleFeatures', [])"
               :key="feature.id"
@@ -213,6 +213,7 @@ import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
 import Swal from "sweetalert2";
+import { useRouter } from "vue-router";
 
 interface RoleRequest {
   status: number;
@@ -221,6 +222,7 @@ interface RoleRequest {
 export default defineComponent({
   setup() {
     const store = useStore();
+    const router = useRouter();
     const roles = computed(() => {
       return store.getters.getRolesData;
     });
@@ -235,7 +237,7 @@ export default defineComponent({
         })!;
       return roleRequest?.status;
     };
-    const attachRole = async (id) => {
+    const createRole = async (id) => {
       try {
         const response = await store.dispatch(Actions.ATTACH_ROLE, {
           id: id,
@@ -262,6 +264,25 @@ export default defineComponent({
             confirmButton: "btn fw-bold btn-light-danger",
           },
         });
+      }
+    };
+    const attachRole = async (id) => {
+      let roleNameIdKeyValues = {};
+      for (let i = 0; i < roles.value.length; i++) {
+        roleNameIdKeyValues[roles.value[i].id] = roles.value[i].name;
+      }
+      if (roleNameIdKeyValues[id].toLowerCase() === "founder") {
+        //
+      } else if (roleNameIdKeyValues[id].toLowerCase() === "expert") {
+        if (!(user.value.expert instanceof Array)) {
+          return createRole(id);
+        }
+        router.push("expert-profile");
+      } else if (roleNameIdKeyValues[id].toLowerCase() === "investor") {
+        if (!(user.value.investor instanceof Array)) {
+          return createRole(id);
+        }
+        router.push("investor-profile");
       }
     };
     onMounted(async () => {

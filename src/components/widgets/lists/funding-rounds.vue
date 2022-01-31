@@ -9,10 +9,16 @@
           >
         </div>
         <div class="col text-end fa">
-          <router-link class="w-un" :to="`/view-funding-round/${round.id}?businessId=${round.businessId}`">
+          <router-link
+            class="w-un"
+            :to="`/view-funding-round/${round.id}?businessId=${round.businessId}`"
+          >
             <span><i class="fa fa-eye px-2" aria-hidden="true"></i></span>
           </router-link>
-          <router-link class="w-un" :to="`/update-funding-round/${round.id}?businessId=${round.businessId}`">
+          <router-link
+            class="w-un"
+            :to="`/update-funding-round/${round.id}?businessId=${round.businessId}`"
+          >
             <span><i class="fa fa-edit px-2" aria-hidden="true"></i></span
           ></router-link>
           <a
@@ -151,7 +157,11 @@
           >
         </div>
       </div>
-      <DeleteFundingRoundModal :id="round.id" />
+      <DeleteFundingRoundModal
+        @round-deleted="roundDeleted"
+        :businessId="round.businessId"
+        :id="round.id"
+      />
     </section>
   </div>
   <!--end::List Widget 6-->
@@ -162,13 +172,15 @@ import DeleteFundingRoundModal from "@/components/modals/forms/DeleteFundingRoun
 import { defineComponent, ref, watch, computed } from "vue";
 import { mainFormatter } from "@/utils/index";
 import moment from "moment";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "funding-rounds",
   props: {
     widgetClasses: String,
-    fundingRounds: {
-      type: Array,
+    businessId: {
+      type: Number,
       required: true,
     },
   },
@@ -176,19 +188,40 @@ export default defineComponent({
     DeleteFundingRoundModal,
   },
   setup(props) {
-    const rounds = ref(props.fundingRounds);
-    const formatDate = (date) => moment(date).format("YYYY-MM-DD");
-    const formatter = computed(() => mainFormatter);
+    const store = useStore();
+    const rounds = ref<Array<Record<string, unknown>>>([]);
+    const businessId = ref<number>(props.businessId);
+    const refresh = async () => {
+      try {
+        const response = await store.dispatch(
+          Actions.GET_FUNDING_ROUNDS,
+          businessId.value
+        );
+        if (response instanceof Array) {
+          rounds.value = response;
+        }
+      } catch (err) {
+        //
+      }
+    };
+    refresh();
+    const roundDeleted = () => {
+      refresh();
+    };
     watch(
-      () => props.fundingRounds,
-      (value) => {
-        rounds.value = value;
+      () => props.businessId,
+      async (value) => {
+        businessId.value = value;
+        refresh();
       }
     );
+    const formatDate = (date) => moment(date).format("YYYY-MM-DD");
+    const formatter = computed(() => mainFormatter);
     return {
       rounds,
       formatter,
       formatDate,
+      roundDeleted,
     };
   },
 });

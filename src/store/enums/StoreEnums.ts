@@ -38,6 +38,7 @@ enum Actions {
   UPDATE_FOUNDER_BUSINESS = "updateFounderBusiness",
   UPDATE_FUNDING_ROUND = "updateFundingRound",
   DELETE_FUNDING_ROUND = "deleteFundingRound",
+  GET_FUNDING_ROUNDS = "getFundingRounds"
 }
 
 enum Mutations {
