@@ -84,6 +84,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/founder-profile",
+        name: "founder-profile",
+        component: () => import("@/views/crafted/pages/wizards/FounderProfile.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/business/:id",
         name: "business",
         component: () => import("@/views/crafted/pages/BusinessDetails.vue"),

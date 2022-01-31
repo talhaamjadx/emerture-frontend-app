@@ -186,7 +186,7 @@ export default defineComponent({
       MainMenu[0].pages = MainMenu[0].pages.filter((config) => {
         if (
           config.heading == "expert-profile" &&
-          !(user.value?.expert instanceof Array)
+          !(user.value.expert instanceof Array)
         ) {
           return true;
         } else if (
@@ -195,16 +195,21 @@ export default defineComponent({
         ) {
           return true;
         } else if (
+          config.heading == "founder-profile" &&
+          user.value.founder
+        ) {
+          return true;
+        } 
+        else if (
           config.heading == "businesses" &&
-          user.value?.userRoles?.some(
-            (role) => role.name.toLowerCase() == "founder"
-          )
+          user.value.founder
         ) {
           return true;
         } else if (
           config.heading !== "expert-profile" &&
           config.heading !== "investor-profile" &&
-          config.heading !== "businesses"
+          config.heading !== "founder-profile" &&
+          config.heading !== "businesses" 
         ) {
           return true;
         } else return false;

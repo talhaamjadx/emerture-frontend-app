@@ -20,7 +20,12 @@
             <h3 class="card-title">
               <div class="mb-7 mt-7 text-center">
                 <!--begin::Title-->
-                <h1 class="text-dark mb-5 fw-boldest">{{ role.name }}</h1>
+                <h1
+                  class="text-dark mb-5 fw-boldest"
+                  style="text-transform: capitalize"
+                >
+                  {{ role.name }}
+                </h1>
                 <!--end::Title-->
                 <!--begin::Description-->
                 <div style="font-size: 13px" class="text-gray-400 fw-bold">
@@ -272,17 +277,20 @@ export default defineComponent({
         roleNameIdKeyValues[roles.value[i].id] = roles.value[i].name;
       }
       if (roleNameIdKeyValues[id].toLowerCase() === "founder") {
-        //
+        if (user.value.founder) {
+          return createRole(id);
+        }
+        router.push("/founder-profile");
       } else if (roleNameIdKeyValues[id].toLowerCase() === "expert") {
         if (!(user.value.expert instanceof Array)) {
           return createRole(id);
         }
-        router.push("expert-profile");
+        router.push("/expert-profile");
       } else if (roleNameIdKeyValues[id].toLowerCase() === "investor") {
         if (!(user.value.investor instanceof Array)) {
           return createRole(id);
         }
-        router.push("investor-profile");
+        router.push("/investor-profile");
       }
     };
     onMounted(async () => {

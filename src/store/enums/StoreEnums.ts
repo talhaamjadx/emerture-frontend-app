@@ -38,7 +38,8 @@ enum Actions {
   UPDATE_FOUNDER_BUSINESS = "updateFounderBusiness",
   UPDATE_FUNDING_ROUND = "updateFundingRound",
   DELETE_FUNDING_ROUND = "deleteFundingRound",
-  GET_FUNDING_ROUNDS = "getFundingRounds"
+  GET_FUNDING_ROUNDS = "getFundingRounds",
+  CREATE_FOUNDER = "createFounder"
 }
 
 enum Mutations {
@@ -63,7 +64,8 @@ enum Mutations {
   SET_EXPERTISE = "setExpertise",
   SET_INDUSTRY_SECTORS = "setIndustrySectors",
   SET_TOOLBAR_BUTTON = "setToolbarButton",
-  SET_FOUNDER_BUSINESSES = "setFounderBusinesses"
+  SET_FOUNDER_BUSINESSES = "setFounderBusinesses",
+  SET_FOUNDER = "setFounder"
 }
 
 export { Actions, Mutations };
