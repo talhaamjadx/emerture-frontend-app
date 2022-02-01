@@ -12,32 +12,48 @@
         <!--begin::Row-->
         <div class="row m-0">
           <div class="col bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
-            <span class="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-              <inline-svg src="media/icons/duotune/general/gen032.svg" />
-            </span>
-            <a href="#" class="text-warning fw-bold fs-6"> Weekly Sales </a>
+            <div class="row">
+              <div class="col-9">
+                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:rgb(207, 187, 88); font-size:15px;">
+                How many times their opportinity has been shared
+                </p>
+                </div>
+              <div class="col-3 display-2 text-center" style="color:rgb(226, 213, 147);">0</div>
+            </div>
           </div>
           <div class="col bg-light-primary px-6 py-8 rounded-2 mb-7">
-            <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
-              <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
-            </span>
-            <a href="#" class="text-primary fw-bold fs-6"> New Users </a>
+            <div class="row">
+              <div class="col-9">
+                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:#9bbfd3; font-size:15px;">
+                How many have looked at it 
+                </p>
+                </div>
+              <div class="col-3 display-2 text-center" style="color:#9bbfd3;">0</div>
+            </div>
           </div>
         </div>
         <!--end::Row-->
         <!--begin::Row-->
-        <div class="row m-0">
+        <div class="row m-0 mb-5">
           <div class="col bg-light-danger px-6 py-8 rounded-2 me-7">
-            <span class="svg-icon svg-icon-3x svg-icon-danger d-block my-2">
-              <inline-svg src="media/icons/duotune/abstract/abs027.svg" />
-            </span>
-            <a href="#" class="text-danger fw-bold fs-6 mt-2"> Item Orders </a>
+            <div class="row">
+              <div class="col-9">
+                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:#e2adbc; font-size:15px;">
+                How many have asked to connect with them
+                </p>
+                </div>
+              <div class="col-3 display-2 text-center" style="color:#e2adbc;">0</div>
+            </div>
           </div>
           <div class="col bg-light-success px-6 py-8 rounded-2">
-            <span class="svg-icon svg-icon-3x svg-icon-success d-block my-2">
-              <inline-svg src="media/icons/duotune/communication/com010.svg" />
-            </span>
-            <a href="#" class="text-success fw-bold fs-6 mt-2"> Bug Reports </a>
+            <div class="row">
+              <div class="col-9">
+                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:#9ae6c0; font-size:15px;">
+                How many times their opportinity has been shared
+                </p>
+                </div>
+              <div class="col-3 display-2 text-center" style="color:#9ae6c0;">0</div>
+            </div>
           </div>
         </div>
         <!--end::Row-->
