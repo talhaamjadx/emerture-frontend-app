@@ -84,9 +84,9 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "/founder-profile",
-        name: "founder-profile",
-        component: () => import("@/views/crafted/pages/wizards/FounderProfile.vue"),
+        path: "/find-experts",
+        name: "find-experts",
+        component: () => import("@/views/crafted/pages/FindExperts.vue"),
         meta: {
           loginRequired: true
         }

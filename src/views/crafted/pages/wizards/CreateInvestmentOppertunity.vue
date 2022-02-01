@@ -340,6 +340,7 @@ import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Actions } from "@/store/enums/StoreEnums";
+import objectPath from "object-path";
 
 interface IStep1 {
   name: string;
@@ -378,8 +379,13 @@ export default defineComponent({
     IndustrySectorsBusinesses,
   },
   setup() {
+    let roleId = 0;
+    const roles = computed(() => {
+      return store.getters.getRolesData;
+    });
     const router = useRouter();
     const store = useStore();
+    const user = computed(() => store.getters.getUser);
     const formDataTemp = ref<FormData>(new FormData());
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
@@ -397,11 +403,28 @@ export default defineComponent({
       expertExpertise: [],
     });
 
-    onMounted(() => {
+    onMounted(async () => {
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
-
+      try {
+        if (!roles.value.length) {
+          const response = await store.dispatch(Actions.GET_ROLES);
+          if (response !== true) throw new Error();
+          roleId = objectPath.get(
+            roles.value.find((role) => role.name.toLowerCase() === "founder"),
+            "id",
+            0
+          );
+        } else
+          roleId = objectPath.get(
+            roles.value.find((role) => role.name.toLowerCase() === "founder"),
+            "id",
+            0
+          );
+      } catch (err) {
+        console.log("error in fetching roles");
+      }
       setCurrentPageBreadcrumbs("Create Investment Oppertunity", [
         "Businesses",
       ]);
@@ -490,6 +513,23 @@ export default defineComponent({
 
     const formSubmit = async () => {
       try {
+        if (!objectPath.get(user.value, "founderBusiness.length")) {
+          const attachRoleResponse = await store.dispatch(Actions.ATTACH_ROLE, {
+            id: roleId,
+          });
+          if (attachRoleResponse !== true) {
+            Swal.fire({
+              text: `Error in Attaching Role`,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                confirmButton: "btn fw-bold btn-light-primary",
+              },
+            });
+            return;
+          }
+        }
         const response = await store.dispatch(
           Actions.CREATE_FOUNDER_BUSINESS,
           formDataTemp.value
@@ -503,8 +543,24 @@ export default defineComponent({
           customClass: {
             confirmButton: "btn fw-bold btn-light-primary",
           },
-        }).then(() => {
-          router.push("/businesses");
+        }).then(async () => {
+          try {
+            const response = await store.dispatch(Actions.AUTH_USER);
+            if (response !== true) throw new Error();
+            (objectPath.get(user.value, "founderBusiness.length", 0) as number) == 1
+              ? router.push("/find-experts")
+              : router.push("/businesses");
+          } catch (err) {
+            Swal.fire({
+              text: `Error in Business Creation`,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                confirmButton: "btn fw-bold btn-light-primary",
+              },
+            });
+          }
         });
       } catch (err) {
         Swal.fire({

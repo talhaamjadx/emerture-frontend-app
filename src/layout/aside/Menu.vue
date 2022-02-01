@@ -168,6 +168,7 @@ import { useStore } from "vuex";
 import { version } from "@/core/helpers/documentation";
 import { asideMenuIcons } from "@/core/helpers/config";
 import MainMenu from "@/core/config/MainMenuConfig";
+import objectPath from "object-path";
 
 export default defineComponent({
   name: "kt-menu",
@@ -196,19 +197,26 @@ export default defineComponent({
           return true;
         } else if (
           config.heading == "founder-profile" &&
-          user.value.founder
+          objectPath.get(user.value, 'founderBusiness.length', false)
+        ) {
+          return true;
+        } 
+        else if (
+          config.heading == "find-experts" &&
+          objectPath.get(user.value, 'founderBusiness.length', false)
         ) {
           return true;
         } 
         else if (
           config.heading == "businesses" &&
-          user.value.founder
+          objectPath.get(user.value, 'founderBusiness.length', false)
         ) {
           return true;
         } else if (
           config.heading !== "expert-profile" &&
           config.heading !== "investor-profile" &&
           config.heading !== "founder-profile" &&
+          config.heading !== "find-experts" &&
           config.heading !== "businesses" 
         ) {
           return true;

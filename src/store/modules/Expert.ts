@@ -8,6 +8,7 @@ import objectPath from "object-path";
 export default class Expert extends VuexModule {
     errors = []
     expert = null
+    filteredExperts = []
     expertise = []
     industrySectors = []
     get getErrorsRoles() {
@@ -22,6 +23,9 @@ export default class Expert extends VuexModule {
     get industrySectorsGetter() {
         return this.industrySectors
     }
+    get filteredExpertsGetter() {
+        return this.filteredExperts
+    }
     @Mutation
     [Mutations.SET_ERROR](payload): void {
         this.errors = payload
@@ -29,6 +33,10 @@ export default class Expert extends VuexModule {
     @Mutation
     [Mutations.SET_EXPERT_PROFILE](payload): void {
         this.expert = payload
+    }
+    @Mutation
+    [Mutations.SET_EXPERTS](payload): void {
+        this.filteredExperts = payload
     }
     @Mutation
     [Mutations.SET_EXPERTISE](payload): void {
@@ -98,6 +106,33 @@ export default class Expert extends VuexModule {
         return ApiService.get(`/industry-sectors`)
             .then(industrySectors => {
                 this.context.commit(Mutations.SET_INDUSTRY_SECTORS, industrySectors.data.data)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
+    [Actions.FIND_EXPERTS](payload): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.post(`/find-expert`, payload)
+            .then(experts => {
+                this.context.commit(Mutations.SET_EXPERTS, experts.data.data)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
+    [Actions.FOUNDER_REQUISITE_EXPERT](payload): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.post(`/founder-requisite-expert`, payload)
+            .then(() => {
                 return true
             })
             .catch(err => {

@@ -26,8 +26,8 @@ const DocMenuConfig = [
         fontIcon: "bi-layers",
       },
       {
-        heading: "founder-profile",
-        route: "/founder-profile",
+        heading: "find-experts",
+        route: "/find-experts",
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-layers",
       },

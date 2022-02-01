@@ -75,7 +75,7 @@ const messages = {
     "contact-us": "Contact Us",
     "expert-profile": "Expert Profile",
     "investor-profile": "Investor Profile",
-    "founder-profile": "Founder Profile",
+    "find-experts": "Find Experts",
     "businesses": "Businesses",
   },
   es: {
