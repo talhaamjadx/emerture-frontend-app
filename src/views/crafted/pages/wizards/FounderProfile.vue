@@ -41,55 +41,9 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Investment Ticket Size</h3>
+              <h3 class="stepper-title">Founder Details</h3>
 
               <!-- <div class="stepper-desc fw-bold">Setup Your Account Details</div> -->
-            </div>
-            <!--end::Label-->
-          </div>
-          <!--end::Step 1-->
-
-          <!--begin::Step 2-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <!--begin::Line-->
-            <div class="stepper-line w-40px"></div>
-            <!--end::Line-->
-
-            <!--begin::Icon-->
-            <div class="stepper-icon w-40px h-40px">
-              <i class="stepper-check fas fa-check"></i>
-              <span class="stepper-number">2</span>
-            </div>
-            <!--end::Icon-->
-
-            <!--begin::Label-->
-            <div class="stepper-label">
-              <h3 class="stepper-title">Notifications</h3>
-              <!-- <div class="stepper-desc fw-bold">
-                Setup Your Account Settings
-              </div> -->
-            </div>
-            <!--end::Label-->
-          </div>
-          <!--end::Step 2-->
-
-          <!--begin::Step 3-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <!--begin::Line-->
-            <div class="stepper-line w-40px"></div>
-            <!--end::Line-->
-
-            <!--begin::Icon-->
-            <div class="stepper-icon w-40px h-40px">
-              <i class="stepper-check fas fa-check"></i>
-              <span class="stepper-number">3</span>
-            </div>
-            <!--end::Icon-->
-
-            <!--begin::Label-->
-            <div class="stepper-label">
-              <h3 class="stepper-title">Industry Sectors</h3>
-              <!-- <div class="stepper-desc fw-bold">Your Business Related Info</div> -->
             </div>
             <!--end::Label-->
           </div>
@@ -111,28 +65,10 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <InvestmentTicketSize
+          <FounderDetailsStep
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-          ></InvestmentTicketSize>
-        </div>
-        <!--end::Step 1-->
-
-        <!--begin::Step 2-->
-        <div data-kt-stepper-element="content">
-          <Notifications
-            @form-data="formDataTemp = $event"
-            :formDataTemp="formDataTemp"
-          ></Notifications>
-        </div>
-        <!--end::Step 2-->
-
-        <!--begin::Step 3-->
-        <div data-kt-stepper-element="content">
-          <IndustrySectors
-            @form-data="formDataTemp = $event"
-            :formDataTemp="formDataTemp"
-          ></IndustrySectors>
+          ></FounderDetailsStep>
         </div>
         <div class="d-flex flex-stack pt-10">
           <!--begin::Wrapper-->
@@ -156,12 +92,10 @@
             <button
               type="button"
               class="btn btn-lg btn-primary me-3"
-              data-kt-stepper-action="submit"
-              v-if="currentStepIndex === totalSteps - 1"
               @click="formSubmit()"
             >
               <span class="indicator-label">
-                {{ doesInvestorProfileExist ? "Update" : "Submit" }}
+                Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
@@ -171,13 +105,6 @@
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
                 ></span>
-              </span>
-            </button>
-
-            <button v-else type="submit" class="btn btn-lg btn-primary">
-              Continue
-              <span class="svg-icon svg-icon-4 ms-1 me-0">
-                <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
             </button>
           </div>
@@ -200,11 +127,9 @@ import {
   ref,
   watch,
   provide,
-  reactive,
+  watchEffect,
 } from "vue";
-import InvestmentTicketSize from "@/components/wizard/steps/InvestmentTicketSize.vue";
-import Notifications from "@/components/wizard/steps/Notifications.vue";
-import IndustrySectors from "@/components/wizard/steps/IndustrySectors.vue";
+import FounderDetailsStep from "@/components/wizard/steps/FounderDetailsStep.vue";
 import { StepperComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
@@ -215,97 +140,91 @@ import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
 
 interface IStep1 {
-  currencyCode: string;
-  minInvestment: string;
-  maxInvestment: string;
+  name: string;
+  jobTitle: string;
+  telephone: string;
+  linkedInProfileUrl: string;
 }
 
 interface IStep2 {
-  notification: string;
+  introduction: string;
+  bio: string;
 }
 
-interface CreateAccount extends IStep1, IStep2 {}
+interface IStep3 {
+  linkToExternalDocuments: string;
+  documents: unknown;
+}
+
+interface IStep4 {
+  expertIndustrySectors: Array<number | string>;
+  expertExpertise: Array<number | string>;
+}
+
+interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "investor-profile",
+  name: "founder-profile",
   components: {
-    InvestmentTicketSize,
-    Notifications,
-    IndustrySectors,
+    FounderDetailsStep,
   },
   setup() {
     const store = useStore();
-    let formDataTemp = ref<Record<string, unknown>>({});
     let roleId = 0;
-    const roles = computed(() => {
-      return store.getters.getRolesData;
-    });
+    const formDataTemp = ref<Record<string, unknown>>({});
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
     const user = computed(() => store.getters.getUser);
-    const investorProfile = computed(() => store.getters.investorProfileGetter);
-    const doesInvestorProfileExist = computed(() => {
-      if (investorProfile.value) return true;
-      else return false;
+    watchEffect(() => {
+      formDataTemp.value = user.value.founder ?? {};
     });
-    watch(user, () => {
-      if (!Object.keys(user).length) {
-        getInvestorProfile();
-      }
+    const roles = computed(() => {
+      return store.getters.getRolesData;
     });
-    const getInvestorProfile = async () => {
-      if (!investorProfile.value)
-        try {
-          await store.dispatch(Actions.GET_INVESTOR_PROFILE, {
-            id: user.value.id,
-          });
-          formDataTemp.value = { ...investorProfile.value };
-        } catch (err) {
-          console.log(err);
-        }
-    };
-    getInvestorProfile();
-    provide("investorProfile", investorProfile);
     const formData = ref<CreateAccount>({
-      currencyCode: "",
-      minInvestment: "",
-      maxInvestment: "",
-      notification: "",
+      name: "",
+      jobTitle: "",
+      telephone: "",
+      linkedInProfileUrl: "",
+      introduction: "",
+      bio: "",
+      linkToExternalDocuments: "",
+      documents: null,
+      expertIndustrySectors: [],
+      expertExpertise: [],
     });
 
     onMounted(async () => {
-      _stepperObj.value = StepperComponent.createInsance(
-        verticalWizardRef.value as HTMLElement
-      );
       try {
         if (!roles.value.length) {
           const response = await store.dispatch(Actions.GET_ROLES);
           if (response !== true) throw new Error();
           roleId = objectPath.get(
-            roles.value.find((role) => role.name.toLowerCase() === "investor"),
+            roles.value.find((role) => role.name.toLowerCase() === "founder"),
             "id",
             0
           );
         } else
           roleId = objectPath.get(
-            roles.value.find((role) => role.name.toLowerCase() === "investor"),
+            roles.value.find((role) => role.name.toLowerCase() === "founder"),
             "id",
             0
           );
       } catch (err) {
         console.log("error in fetching roles");
       }
-      setCurrentPageBreadcrumbs("Investor Profile", []);
+      _stepperObj.value = StepperComponent.createInsance(
+        verticalWizardRef.value as HTMLElement
+      );
+
+      setCurrentPageBreadcrumbs("Founder Profile", []);
     });
     const createAccountSchema = [
       Yup.object({
-        currencyCode: Yup.string().required().label("Currency"),
-        minInvestment: Yup.string().required().label("Minimum Investment"),
-        maxInvestment: Yup.string().required().label("Maximum Investment"),
-      }),
-      Yup.object({
-        notification: Yup.string().required().label("Notification"),
+        name: Yup.string().required().label("Name"),
+        summary: Yup.string().required().label("Summary"),
+        website: Yup.string().required().label("Website"),
       }),
     ];
 
@@ -313,7 +232,9 @@ export default defineComponent({
       return createAccountSchema[currentStepIndex.value];
     });
 
-    const { resetForm, handleSubmit } = useForm<IStep1 | IStep2>({
+    const { resetForm, handleSubmit } = useForm<
+      IStep1 | IStep2 | IStep3 | IStep4
+    >({
       validationSchema: currentSchema,
     });
 
@@ -360,12 +281,8 @@ export default defineComponent({
     const formSubmit = async () => {
       try {
         const response = await store.dispatch(
-          doesInvestorProfileExist.value
-            ? Actions.UPDATE_INVESTOR_PROFILE
-            : Actions.CREATE_INVESTOR_PROFILE,
-          doesInvestorProfileExist.value
-            ? { id: investorProfile.value.id, data: formDataTemp.value }
-            : formDataTemp.value
+          Actions.CREATE_FOUNDER,
+          formDataTemp.value
         );
         if (response !== true) throw new Error();
         try {
@@ -396,9 +313,7 @@ export default defineComponent({
           });
         }
         Swal.fire({
-          text: `Investor Profile ${
-            doesInvestorProfileExist.value ? "Updated" : "Created"
-          }`,
+          text: `Founder Profile ${"Created"}`,
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -408,9 +323,7 @@ export default defineComponent({
         });
       } catch (err) {
         Swal.fire({
-          text: `Investor Profile ${
-            doesInvestorProfileExist.value ? "Updation" : "Creation"
-          } Unsuccessful`,
+          text: `Founder Profile ${"Creation"} Unsuccessful`,
           icon: "error",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -422,7 +335,6 @@ export default defineComponent({
     };
 
     return {
-      doesInvestorProfileExist,
       formDataTemp,
       verticalWizardRef,
       previousStep,

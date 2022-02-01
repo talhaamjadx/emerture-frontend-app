@@ -4,20 +4,29 @@
     <section v-for="round in rounds" :key="round.id" class="border rounded-5">
       <div class="row mt-3 mb-1 px-3">
         <div class="col">
-          <strong><span>{{ round.name }}</span></strong>
+          <strong
+            ><span>{{ round.name }}</span></strong
+          >
         </div>
         <div class="col text-end fa">
-          <a class="w-un" href="javascript:void(0)">
+          <router-link
+            class="w-un"
+            :to="`/view-funding-round/${round.id}?businessId=${round.businessId}`"
+          >
             <span><i class="fa fa-eye px-2" aria-hidden="true"></i></span>
-          </a>
-          <a class="w-un" href="javascript:void(0)">
-            <span
-              ><i
-                class="fa fa-edit px-2"
-                aria-hidden="true"
-              ></i></span
-          ></a>
-          <a class="w-un" href="javascript:void(0)">
+          </router-link>
+          <router-link
+            class="w-un"
+            :to="`/update-funding-round/${round.id}?businessId=${round.businessId}`"
+          >
+            <span><i class="fa fa-edit px-2" aria-hidden="true"></i></span
+          ></router-link>
+          <a
+            data-bs-toggle="modal"
+            :data-bs-target="`#kt_modal_delete_round_${round.id}`"
+            class="w-un"
+            href="javascript:void(0)"
+          >
             <span><i class="fa fa-trash px-2" aria-hidden="true"></i></span
           ></a>
         </div>
@@ -28,13 +37,13 @@
         <div class="col">
           <span
             ><i class="fa fa-calendar calender-green" aria-hidden="true"></i>
-            Opens {{ round.opensAt }}</span
+            Opens {{ formatDate(round.opensAt) }}</span
           >
         </div>
         <div class="col text-end">
           <span
             ><i class="fa fa-calendar calender-red" aria-hidden="true"></i>
-            closes {{ round.closesAt }}</span
+            closes {{ formatDate(round.closesAt) }}</span
           >
         </div>
       </div>
@@ -148,36 +157,71 @@
           >
         </div>
       </div>
+      <DeleteFundingRoundModal
+        @round-deleted="roundDeleted"
+        :businessId="round.businessId"
+        :id="round.id"
+      />
     </section>
   </div>
   <!--end::List Widget 6-->
 </template>
 
 <script lang="ts">
+import DeleteFundingRoundModal from "@/components/modals/forms/DeleteFundingRoundModal.vue";
 import { defineComponent, ref, watch, computed } from "vue";
 import { mainFormatter } from "@/utils/index";
+import moment from "moment";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "funding-rounds",
   props: {
     widgetClasses: String,
-    fundingRounds: {
-      type: Array,
+    businessId: {
+      type: Number,
       required: true,
     },
   },
+  components: {
+    DeleteFundingRoundModal,
+  },
   setup(props) {
-    const rounds = ref(props.fundingRounds);
-    const formatter = computed(() => mainFormatter);
+    const store = useStore();
+    const rounds = ref<Array<Record<string, unknown>>>([]);
+    const businessId = ref<number>(props.businessId);
+    const refresh = async () => {
+      try {
+        const response = await store.dispatch(
+          Actions.GET_FUNDING_ROUNDS,
+          businessId.value
+        );
+        if (response instanceof Array) {
+          rounds.value = response;
+        }
+      } catch (err) {
+        //
+      }
+    };
+    refresh();
+    const roundDeleted = () => {
+      refresh();
+    };
     watch(
-      () => props.fundingRounds,
-      (value) => {
-        rounds.value = value;
+      () => props.businessId,
+      async (value) => {
+        businessId.value = value;
+        refresh();
       }
     );
+    const formatDate = (date) => moment(date).format("YYYY-MM-DD");
+    const formatter = computed(() => mainFormatter);
     return {
       rounds,
       formatter,
+      formatDate,
+      roundDeleted,
     };
   },
 });

@@ -41,7 +41,7 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Investment Ticket Size</h3>
+              <h3 class="stepper-title">Funding Round (Stage)</h3>
 
               <!-- <div class="stepper-desc fw-bold">Setup Your Account Details</div> -->
             </div>
@@ -64,7 +64,7 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Notifications</h3>
+              <h3 class="stepper-title">Funding Requirements</h3>
               <!-- <div class="stepper-desc fw-bold">
                 Setup Your Account Settings
               </div> -->
@@ -88,7 +88,7 @@
 
             <!--begin::Label-->
             <div class="stepper-label">
-              <h3 class="stepper-title">Industry Sectors</h3>
+              <h3 class="stepper-title">Round Timeline</h3>
               <!-- <div class="stepper-desc fw-bold">Your Business Related Info</div> -->
             </div>
             <!--end::Label-->
@@ -111,28 +111,28 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <InvestmentTicketSize
-            @form-data="formDataTemp = $event"
-            :formDataTemp="formDataTemp"
-          ></InvestmentTicketSize>
+          <FundingRoundStageUpdate
+            @form-data="fundingRound = $event"
+            :fundingRound="fundingRound"
+          ></FundingRoundStageUpdate>
         </div>
         <!--end::Step 1-->
 
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
-          <Notifications
-            @form-data="formDataTemp = $event"
-            :formDataTemp="formDataTemp"
-          ></Notifications>
+          <FundingRequirementsUpdate
+            @form-data="fundingRound = $event"
+            :fundingRound="fundingRound"
+          ></FundingRequirementsUpdate>
         </div>
         <!--end::Step 2-->
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <IndustrySectors
-            @form-data="formDataTemp = $event"
-            :formDataTemp="formDataTemp"
-          ></IndustrySectors>
+          <RoundTimelineUpdate
+            @form-data="fundingRound = $event"
+            :fundingRound="fundingRound"
+          ></RoundTimelineUpdate>
         </div>
         <div class="d-flex flex-stack pt-10">
           <!--begin::Wrapper-->
@@ -161,7 +161,7 @@
               @click="formSubmit()"
             >
               <span class="indicator-label">
-                {{ doesInvestorProfileExist ? "Update" : "Submit" }}
+                Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
@@ -193,127 +193,161 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  ref,
-  watch,
-  provide,
-  reactive,
-} from "vue";
-import InvestmentTicketSize from "@/components/wizard/steps/InvestmentTicketSize.vue";
-import Notifications from "@/components/wizard/steps/Notifications.vue";
-import IndustrySectors from "@/components/wizard/steps/IndustrySectors.vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
+import FundingRoundStageUpdate from "@/components/wizard/steps/FundingRoundStageUpdate.vue";
+import FundingRequirementsUpdate from "@/components/wizard/steps/FundingRequirementsUpdate.vue";
+import RoundTimelineUpdate from "@/components/wizard/steps/RoundTimelineUpdate.vue";
 import { StepperComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { Actions } from "@/store/enums/StoreEnums";
-import objectPath from "object-path";
 
 interface IStep1 {
-  currencyCode: string;
-  minInvestment: string;
-  maxInvestment: string;
+  name: string;
+  jobTitle: string;
+  telephone: string;
+  linkedInProfileUrl: string;
 }
 
 interface IStep2 {
-  notification: string;
+  introduction: string;
+  bio: string;
 }
 
-interface CreateAccount extends IStep1, IStep2 {}
+interface IStep3 {
+  linkToExternalDocuments: string;
+  documents: unknown;
+}
+
+interface IStep4 {
+  expertIndustrySectors: Array<number | string>;
+  expertExpertise: Array<number | string>;
+}
+
+interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "investor-profile",
+  name: "update-funding-round",
   components: {
-    InvestmentTicketSize,
-    Notifications,
-    IndustrySectors,
+    FundingRoundStageUpdate,
+    FundingRequirementsUpdate,
+    RoundTimelineUpdate,
   },
   setup() {
+    const router = useRouter();
+    const route = useRoute();
     const store = useStore();
-    let formDataTemp = ref<Record<string, unknown>>({});
-    let roleId = 0;
-    const roles = computed(() => {
-      return store.getters.getRolesData;
+    const fundingRoundKeyEnums = ref<Record<string, unknown>>({
+      businessId: "businessId",
+      closesAt: "fundingRoundClosesAt",
+      founderBusinessId: "founderBusinessId",
+      id: "id",
+      investment_required: "fundingRoundInvestmentRequired",
+      minimumInvestment: "fundingRoundMinimumInvestment",
+      name: "fundingRoundName",
+      opensAt: "fundingRoundOpensAt",
+      preMoneyValuation: "fundingRoundPreMoneyValuation",
     });
+    const businesses = computed(() => store.getters.getBusinesses);
+    const business = ref<Record<string, unknown>>({});
+    const fundingRound = ref<Record<string, unknown>>({});
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
-    const user = computed(() => store.getters.getUser);
-    const investorProfile = computed(() => store.getters.investorProfileGetter);
-    const doesInvestorProfileExist = computed(() => {
-      if (investorProfile.value) return true;
-      else return false;
-    });
-    watch(user, () => {
-      if (!Object.keys(user).length) {
-        getInvestorProfile();
-      }
-    });
-    const getInvestorProfile = async () => {
-      if (!investorProfile.value)
-        try {
-          await store.dispatch(Actions.GET_INVESTOR_PROFILE, {
-            id: user.value.id,
-          });
-          formDataTemp.value = { ...investorProfile.value };
-        } catch (err) {
-          console.log(err);
-        }
-    };
-    getInvestorProfile();
-    provide("investorProfile", investorProfile);
     const formData = ref<CreateAccount>({
-      currencyCode: "",
-      minInvestment: "",
-      maxInvestment: "",
-      notification: "",
+      name: "",
+      jobTitle: "",
+      telephone: "",
+      linkedInProfileUrl: "",
+      introduction: "",
+      bio: "",
+      linkToExternalDocuments: "",
+      documents: null,
+      expertIndustrySectors: [],
+      expertExpertise: [],
     });
 
     onMounted(async () => {
+      if (!businesses.value?.founderBusinesses?.length) {
+        try {
+          const response = await store.dispatch(
+            Actions.GET_FOUNDER_BUSINESSES,
+            {
+              page: 1,
+              perPage: 10,
+            }
+          );
+          if (response !== true) throw new Error();
+          business.value = businesses.value?.founderBusinesses.find(
+            (b) => b.id == route.params.businessId
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      } else
+        business.value = businesses.value?.founderBusinesses.find(
+          (b) => b.id == route.params.businessId
+        );
+      fundingRound.value =
+        ((
+          business.value?.fundingRounds as Array<Record<string, unknown>>
+        )?.find((round) => round.id == route.params.id) as Record<
+          string,
+          unknown
+        >) ?? {};
+      for (let key in fundingRoundKeyEnums.value) {
+        if (key !== fundingRoundKeyEnums.value[key]) {
+          Object.defineProperty(
+            fundingRound.value,
+            fundingRoundKeyEnums.value[key] as symbol,
+            Object.getOwnPropertyDescriptor(
+              fundingRound.value,
+              key
+            ) as PropertyDescriptor
+          );
+          delete fundingRound.value[key];
+        }
+      }
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
-      try {
-        if (!roles.value.length) {
-          const response = await store.dispatch(Actions.GET_ROLES);
-          if (response !== true) throw new Error();
-          roleId = objectPath.get(
-            roles.value.find((role) => role.name.toLowerCase() === "investor"),
-            "id",
-            0
-          );
-        } else
-          roleId = objectPath.get(
-            roles.value.find((role) => role.name.toLowerCase() === "investor"),
-            "id",
-            0
-          );
-      } catch (err) {
-        console.log("error in fetching roles");
-      }
-      setCurrentPageBreadcrumbs("Investor Profile", []);
+
+      setCurrentPageBreadcrumbs("Update Funding Round", [
+        "Businesses",
+        "Business Details",
+      ]);
     });
     const createAccountSchema = [
       Yup.object({
-        currencyCode: Yup.string().required().label("Currency"),
-        minInvestment: Yup.string().required().label("Minimum Investment"),
-        maxInvestment: Yup.string().required().label("Maximum Investment"),
+        fundingRoundName: Yup.string().required().label("Name"),
       }),
       Yup.object({
-        notification: Yup.string().required().label("Notification"),
+        fundingRoundName: Yup.string().required().label("Name"),
+        fundingRoundInvestmentRequired: Yup.string()
+          .required()
+          .label("Investment Required"),
+        fundingRoundPreMoneyValuation: Yup.string()
+          .required()
+          .label("Pre-Money Valuation"),
+        fundingRoundMinimumInvestment: Yup.string()
+          .required()
+          .label("Minimum Investment"),
       }),
+      {},
     ];
 
     const currentSchema = computed(() => {
       return createAccountSchema[currentStepIndex.value];
     });
 
-    const { resetForm, handleSubmit } = useForm<IStep1 | IStep2>({
+    const { resetForm, handleSubmit } = useForm<
+      IStep1 | IStep2 | IStep3 | IStep4
+    >({
       validationSchema: currentSchema,
     });
 
@@ -359,58 +393,26 @@ export default defineComponent({
 
     const formSubmit = async () => {
       try {
-        const response = await store.dispatch(
-          doesInvestorProfileExist.value
-            ? Actions.UPDATE_INVESTOR_PROFILE
-            : Actions.CREATE_INVESTOR_PROFILE,
-          doesInvestorProfileExist.value
-            ? { id: investorProfile.value.id, data: formDataTemp.value }
-            : formDataTemp.value
-        );
+        fundingRound.value["founderBusinessId"] = business.value.id;
+        const response = await store.dispatch(Actions.UPDATE_FUNDING_ROUND, {
+          id: route.params.id,
+          data: fundingRound.value,
+        });
         if (response !== true) throw new Error();
-        try {
-          const response = await store.dispatch(Actions.ATTACH_ROLE, {
-            id: roleId,
-          });
-          if (response !== true) throw new Error();
-          await store.dispatch(Actions.AUTH_USER);
-          Swal.fire({
-            text: "Role is pending for approval",
-            icon: "success",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-        } catch (err) {
-          const [error] = Object.keys(store.getters.getErrors);
-          Swal.fire({
-            text: store.getters.getErrors[error],
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Try again!",
-            customClass: {
-              confirmButton: "btn fw-bold btn-light-danger",
-            },
-          });
-        }
         Swal.fire({
-          text: `Investor Profile ${
-            doesInvestorProfileExist.value ? "Updated" : "Created"
-          }`,
+          text: `Funding Round ${"Updated"}`,
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
           customClass: {
             confirmButton: "btn fw-bold btn-light-primary",
           },
+        }).then(() => {
+          router.push(`/business/${business.value.id}`);
         });
       } catch (err) {
         Swal.fire({
-          text: `Investor Profile ${
-            doesInvestorProfileExist.value ? "Updation" : "Creation"
-          } Unsuccessful`,
+          text: `Funding Round Updation Unsuccessful`,
           icon: "error",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -422,8 +424,7 @@ export default defineComponent({
     };
 
     return {
-      doesInvestorProfileExist,
-      formDataTemp,
+      fundingRound,
       verticalWizardRef,
       previousStep,
       handleStep,

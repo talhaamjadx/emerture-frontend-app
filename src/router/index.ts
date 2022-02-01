@@ -84,6 +84,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/founder-profile",
+        name: "founder-profile",
+        component: () => import("@/views/crafted/pages/wizards/FounderProfile.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/business/:id",
         name: "business",
         component: () => import("@/views/crafted/pages/BusinessDetails.vue"),
@@ -111,6 +119,22 @@ const routes: Array<RouteRecordRaw> = [
         path: "/create-funding-round",
         name: "create-funding-round",
         component: () => import("@/views/crafted/pages/wizards/CreateFundingRound.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
+        path: "/update-funding-round/:id",
+        name: "update-funding-round",
+        component: () => import("@/views/crafted/pages/wizards/UpdateFundingRound.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
+        path: "/view-funding-round/:id",
+        name: "view-funding-round",
+        component: () => import("@/views/crafted/pages/ViewFundingDetails.vue"),
         meta: {
           loginRequired: true
         }

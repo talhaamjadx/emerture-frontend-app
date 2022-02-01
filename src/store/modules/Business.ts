@@ -63,9 +63,48 @@ export default class Business extends VuexModule {
             })
     }
     @Action
+    [Actions.GET_FUNDING_ROUNDS](id): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.get(`/funding-rounds?founderBusinessId=${id}`)
+            .then(fundingRounds => {
+                return fundingRounds.data.data
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
     [Actions.CREATE_FUNDING_ROUND](payload): Promise<AxiosResponse> {
         ApiService.setHeader("multipart/form-data")
         return ApiService.post(`/funding-rounds`, payload)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.DELETE_FUNDING_ROUND](id): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.delete(`/funding-rounds/${id}`)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.UPDATE_FUNDING_ROUND]({ id, data }): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.put(`/funding-rounds/${id}`, data)
             .then(() => {
                 return true
             })
