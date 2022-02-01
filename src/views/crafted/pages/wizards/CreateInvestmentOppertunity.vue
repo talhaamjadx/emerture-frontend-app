@@ -547,7 +547,7 @@ export default defineComponent({
           try {
             const response = await store.dispatch(Actions.AUTH_USER);
             if (response !== true) throw new Error();
-            (objectPath.get(user.value, "founderBusiness.length", 0) as number) == 1
+            (objectPath.get(user.value, "founderBusiness.length", 0) as number) === 1
               ? router.push("/find-experts")
               : router.push("/businesses");
           } catch (err) {
