@@ -14,21 +14,34 @@
           <div class="col bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
             <div class="row">
               <div class="col-9">
-                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:rgb(207, 187, 88); font-size:15px;">
-                How many times their opportinity has been shared
+                <p
+                  class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
+                  style="color: rgb(207, 187, 88); font-size: 15px"
+                >
+                  Matched Investment Oppertunities
                 </p>
-                </div>
-              <div class="col-3 display-2 text-center" style="color:rgb(226, 213, 147);">0</div>
+              </div>
+              <div
+                class="col-3 display-2 text-center"
+                style="color: rgb(226, 213, 147)"
+              >
+                0
+              </div>
             </div>
           </div>
           <div class="col bg-light-primary px-6 py-8 rounded-2 mb-7">
             <div class="row">
               <div class="col-9">
-                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:#9bbfd3; font-size:15px;">
-                How many have looked at it 
+                <p
+                  class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
+                  style="color: #9bbfd3; font-size: 15px"
+                >
+                  Investment Oppertunities Pursued
                 </p>
-                </div>
-              <div class="col-3 display-2 text-center" style="color:#9bbfd3;">0</div>
+              </div>
+              <div class="col-3 display-2 text-center" style="color: #9bbfd3">
+                0
+              </div>
             </div>
           </div>
         </div>
@@ -38,21 +51,31 @@
           <div class="col bg-light-danger px-6 py-8 rounded-2 me-7">
             <div class="row">
               <div class="col-9">
-                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:#e2adbc; font-size:15px;">
-                How many have asked to connect with them
+                <p
+                  class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
+                  style="color: #e2adbc; font-size: 15px"
+                >
+                  Successful Investment Oppertunities
                 </p>
-                </div>
-              <div class="col-3 display-2 text-center" style="color:#e2adbc;">0</div>
+              </div>
+              <div class="col-3 display-2 text-center" style="color: #e2adbc">
+                0
+              </div>
             </div>
           </div>
           <div class="col bg-light-success px-6 py-8 rounded-2">
             <div class="row">
               <div class="col-9">
-                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:#9ae6c0; font-size:15px;">
-                How many times their opportinity has been shared
+                <p
+                  class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
+                  style="color: #9ae6c0; font-size: 15px"
+                >
+                  Declined Investment Oppertunities
                 </p>
-                </div>
-              <div class="col-3 display-2 text-center" style="color:#9ae6c0;">0</div>
+              </div>
+              <div class="col-3 display-2 text-center" style="color: #9ae6c0">
+                0
+              </div>
             </div>
           </div>
         </div>
@@ -71,8 +94,7 @@ import { getCSSVariableValue } from "@/assets/ts/_utils";
 
 export default defineComponent({
   name: "widget-1",
-  components: {
-  },
+  components: {},
   props: {
     widgetClasses: String,
     widgetColor: String,
