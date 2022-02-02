@@ -11,7 +11,7 @@
       <div class="card-p mt-n20 position-relative">
         <!--begin::Row-->
         <div class="row m-0">
-          <div class="col bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
+          <div class="col-md col-12 bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
             <div class="row">
               <div class="col-9">
                 <p
@@ -29,7 +29,7 @@
               </div>
             </div>
           </div>
-          <div class="col bg-light-primary px-6 py-8 rounded-2 mb-7">
+          <div class="col-md col-12 bg-light-primary px-6 py-8 rounded-2 mb-7">
             <div class="row">
               <div class="col-9">
                 <p
@@ -47,8 +47,8 @@
         </div>
         <!--end::Row-->
         <!--begin::Row-->
-        <div class="row m-0 mb-5">
-          <div class="col-6 bg-light-danger px-6 py-8 rounded-2 me-7">
+        <div class="row m-0 mb-xl-5 pb-2 mb-0">
+          <div class="col-md col-12 bg-light-danger px-6 py-8 rounded-2">
             <div class="row">
               <div class="col-9">
                 <p
@@ -62,6 +62,9 @@
                 0
               </div>
             </div>
+          </div>
+          <div class="col-md col-12 ms-md-11">
+
           </div>
         </div>
         <!--end::Row-->

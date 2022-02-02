@@ -11,13 +11,10 @@
       <div class="card-p mt-n20 position-relative">
         <!--begin::Row-->
         <div class="row m-0">
-          <div class="col bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
+          <div class="col-md col-12 bg-light-warning px-6 py-8 rounded-2 me-7 mb-xl-7 mb-2">
             <div class="row">
               <div class="col-9">
-                <p
-                  class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
-                  style="color: rgb(207, 187, 88); font-size: 15px"
-                >
+                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:rgb(207, 187, 88); font-size:15px;">
                   Number of Times You Showed Up
                 </p>
               </div>
@@ -29,13 +26,10 @@
               </div>
             </div>
           </div>
-          <div class="col bg-light-primary px-6 py-8 rounded-2 mb-7">
+          <div class="col-md col-12 bg-light-primary px-6 py-8 rounded-2 mb-xl-7 mb-2 mt-md-0 mt-5">
             <div class="row">
               <div class="col-9">
-                <p
-                  class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
-                  style="color: #9bbfd3; font-size: 15px"
-                >
+                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:#9bbfd3; font-size:15px;">
                   Total Profile Clicks
                 </p>
               </div>

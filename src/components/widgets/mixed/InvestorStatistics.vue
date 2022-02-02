@@ -11,13 +11,10 @@
       <div class="card-p mt-n20 position-relative">
         <!--begin::Row-->
         <div class="row m-0">
-          <div class="col bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
+          <div class="col-md col-12 bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
             <div class="row">
               <div class="col-9">
-                <p
-                  class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
-                  style="color: rgb(207, 187, 88); font-size: 15px"
-                >
+                <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:rgb(207, 187, 88); font-size:15px;">
                   Matched Investment Oppertunities
                 </p>
               </div>
@@ -29,7 +26,7 @@
               </div>
             </div>
           </div>
-          <div class="col bg-light-primary px-6 py-8 rounded-2 mb-7">
+          <div class="col-md col-12 bg-light-primary px-6 py-8 rounded-2 mb-7">
             <div class="row">
               <div class="col-9">
                 <p
@@ -47,8 +44,8 @@
         </div>
         <!--end::Row-->
         <!--begin::Row-->
-        <div class="row m-0 mb-5">
-          <div class="col bg-light-danger px-6 py-8 rounded-2 me-7">
+        <div class="row m-0 mb-xl-5 pb-2 mb-0">
+          <div class="col-md col-12 bg-light-danger px-6 py-8 rounded-2">
             <div class="row">
               <div class="col-9">
                 <p
@@ -63,7 +60,7 @@
               </div>
             </div>
           </div>
-          <div class="col bg-light-success px-6 py-8 rounded-2">
+          <div class="col-md col-12 bg-light-success px-6 py-8 rounded-2 ms-md-7 mt-md-0 mt-7">
             <div class="row">
               <div class="col-9">
                 <p
@@ -87,6 +84,7 @@
     <!--end::Mixed Widget 1-->
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
