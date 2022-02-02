@@ -53,7 +53,7 @@
         <!--end::Position-->
 
         <!--begin::Info-->
-        <div class="d-flex flex-center flex-wrap mb-5">
+        <div class="d-flex flex-center flex-wrap mb-5 flex-column">
           <!--begin::Stats-->
           <div class="min-w-125px py-3 px-4 mx-3 mb-3">
             <div

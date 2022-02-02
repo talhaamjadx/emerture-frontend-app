@@ -37,6 +37,11 @@
               <div
                 ref="profilePictureRef"
                 class="image-input-wrapper w-125px h-125px"
+                :style="`background-image: ${
+                  teamMembers[index].profilePicture
+                    ? `url(${teamMembers[index].profilePicture})`
+                    : 'url(media/avatars/blank.png)'
+                }`"
               ></div>
               <!--end::Preview existing avatar-->
 
@@ -202,6 +207,8 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { Actions } from "@/store/enums/StoreEnums";
+import { useStore } from "vuex";
 
 interface TeamMember {
   name: string;
@@ -224,6 +231,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const store = useStore();
     const teamMembers = ref<Array<TeamMember>>([]);
     const formData = ref<FormData>(props.formDataTemp);
     const addTeamMember = () => {
@@ -241,12 +249,16 @@ export default defineComponent({
     const removeTeamMember = (index) => {
       teamMembers.value.splice(index, 1);
     };
-    const fileAdded = (index, event) => {
-      var reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-      reader.onload = function () {
-        teamMembers.value[index].profilePicture = reader.result as string;
-      };
+    const fileAdded = async (index, event) => {
+      try {
+        const formData = new FormData();
+        formData.append("file", event.target.files[0]);
+        const response = await store.dispatch(Actions.UPLOAD_FILE, formData);
+        if (!response.includes("https://")) throw new Error();
+        teamMembers.value[index].profilePicture = response;
+      } catch (err) {
+        //}
+      }
     };
     const fieldChanged = () => {
       if (formData.value.get("teamMembers")) {

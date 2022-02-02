@@ -45,6 +45,7 @@
       <div class="col-md-6">
         <label class="form-label required">Minimum Investment</label>
         <Field
+          type="number"
           v-model="minInvestment"
           @input="fieldChanged($event)"
           name="minInvestment"
@@ -62,6 +63,7 @@
 
         <!--begin::Input-->
         <Field
+          type="number"
           v-model="maxInvestment"
           @input="fieldChanged($event)"
           name="maxInvestment"
@@ -242,7 +244,7 @@ export default defineComponent({
           taxReliefStatus[i].value = true;
       }
     };
-    if ((investorProfile as Record<string, unknown>)?.value){
+    if ((investorProfile as Record<string, unknown>)?.value) {
       fetchData((investorProfile as Record<string, unknown>)?.value);
     }
     const fieldChanged = (event) => {

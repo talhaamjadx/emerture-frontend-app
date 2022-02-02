@@ -23,6 +23,7 @@
         >Uploaded Document</a
       >
       <!--end::Input-->
+      <p v-if="!isDocumentAdded" style="color: red">Document is Required</p>
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
@@ -58,10 +59,18 @@ export default defineComponent({
       type: FormData,
       required: true,
     },
+    isDocumentAddedProp: {
+      type: Boolean,
+    },
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
     const document = ref<string | unknown>("");
+    const isDocumentAdded = ref<boolean>(props.isDocumentAddedProp);
+    watch(
+      () => props.isDocumentAddedProp,
+      (value) => (isDocumentAdded.value = value)
+    );
     const externalDocumentUrl = ref<string | unknown>("");
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
@@ -71,6 +80,7 @@ export default defineComponent({
           value: file,
         },
       };
+      isDocumentAdded.value = true;
       fieldChanged(tempEvent);
     };
     const expertProfile = inject("expertProfile");
@@ -94,6 +104,7 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
+      isDocumentAdded,
       document,
       externalDocumentUrl,
       formData,

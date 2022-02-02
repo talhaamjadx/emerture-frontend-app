@@ -14,6 +14,7 @@
 
       <!--begin::Input-->
       <Field
+        @keypress="limitInput($event)"
         @input="fieldChanged($event)"
         type="textarea"
         name="telephone"
@@ -120,6 +121,11 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
+    const limitInput = (event) => {
+      if (event.charCode < 48 || event.charCode > 57) {
+        event.preventDefault();
+      }
+    };
     const fieldChanged = (event) => {
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -129,6 +135,7 @@ export default defineComponent({
     return {
       formData,
       fieldChanged,
+      limitInput
     };
   },
 });

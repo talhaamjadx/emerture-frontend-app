@@ -10,30 +10,104 @@
     <div class="fv-row mb-10 d-flex flex-column">
       <!--end::Label-->
       <label class="form-label">Logo</label>
-      <!--end::Label-->
+      <div class="col-lg-8">
+        <!--begin::Image input-->
+        <div
+          class="image-input image-input-outline"
+          data-kt-image-input="true"
+          style="background-image: url(media/avatars/blank.png)"
+        >
+          <!--begin::Preview existing avatar-->
+          <div
+            ref="profilePictureRef"
+            class="image-input-wrapper w-125px h-125px"
+            :style="`background-image: ${`url(${tempImageLogo})`}`"
+          ></div>
+          <!--end::Preview existing avatar-->
 
-      <!--begin::Input-->
-      <input
-        id="documents"
-        type="file"
-        @change="handleImageUpload($event)"
-        name="logo"
-      />
-      <!--end::Input-->
+          <!--begin::Label-->
+          <label
+            class="
+              btn btn-icon btn-circle btn-active-color-primary
+              w-25px
+              h-25px
+              bg-white
+              shadow
+            "
+            data-kt-image-input-action="change"
+            data-bs-toggle="tooltip"
+            title="Change avatar"
+          >
+            <i class="bi bi-pencil-fill fs-7"></i>
+
+            <!--begin::Inputs-->
+            <input
+              @change="handleImageUpload($event)"
+              type="file"
+              name="logo"
+              accept=".png, .jpg, .jpeg"
+            />
+            <input type="hidden" name="avatar_remove" />
+            <!--end::Inputs-->
+          </label>
+        </div>
+        <!--end::Image input-->
+
+        <!--begin::Hint-->
+        <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+        <!--end::Hint-->
+      </div>
     </div>
     <div class="fv-row mb-10 d-flex flex-column">
       <!--end::Label-->
       <label class="form-label">Header Image</label>
-      <!--end::Label-->
+      <div class="col-lg-8">
+        <!--begin::Image input-->
+        <div
+          class="image-input image-input-outline"
+          data-kt-image-input="true"
+          style="background-image: url(media/avatars/blank.png)"
+        >
+          <!--begin::Preview existing avatar-->
+          <div
+            ref="profilePictureRef"
+            class="image-input-wrapper w-125px h-125px"
+            :style="`background-image: ${`url(${tempImageHeader})`}`"
+          ></div>
+          <!--end::Preview existing avatar-->
 
-      <!--begin::Input-->
-      <input
-        id="documents"
-        type="file"
-        @change="handleImageUpload($event)"
-        name="headerImage"
-      />
-      <!--end::Input-->
+          <!--begin::Label-->
+          <label
+            class="
+              btn btn-icon btn-circle btn-active-color-primary
+              w-25px
+              h-25px
+              bg-white
+              shadow
+            "
+            data-kt-image-input-action="change"
+            data-bs-toggle="tooltip"
+            title="Change avatar"
+          >
+            <i class="bi bi-pencil-fill fs-7"></i>
+
+            <!--begin::Inputs-->
+            <input
+              @change="handleImageUpload($event)"
+              type="file"
+              name="headerImage"
+              accept=".png, .jpg, .jpeg"
+            />
+            <input type="hidden" name="avatar_remove" />
+            <!--end::Inputs-->
+          </label>
+        </div>
+        <!--end::Image input-->
+
+        <!--begin::Hint-->
+        <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+        <!--end::Hint-->
+      </div>
     </div>
   </div>
   <!--end::Wrapper-->
@@ -53,8 +127,18 @@ export default defineComponent({
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
     const document = ref<string | unknown>("");
+    const tempImageLogo = ref<string>("");
+    const tempImageHeader = ref<string>("");
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        if (event.target.name == "logo")
+          tempImageLogo.value = reader.result as string;
+        else if (event.target.name == "headerImage")
+          tempImageHeader.value = reader.result as string;
+      };
       const tempEvent = {
         target: {
           name: event.target.name,
@@ -74,6 +158,8 @@ export default defineComponent({
       formData,
       fieldChanged,
       handleImageUpload,
+      tempImageLogo,
+      tempImageHeader,
     };
   },
 });

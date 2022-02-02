@@ -37,4 +37,17 @@ export default class Auth extends VuexModule {
                 return err.response
             })
     }
+    @Action
+    [Actions.UPLOAD_FILE](payload: AxiosRequestConfig): Promise<AxiosResponse> {
+        ApiService.setHeader("multipart/form-data")
+        return ApiService.post("/file", payload)
+            .then(fileUrl => {
+                return fileUrl.data
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }
