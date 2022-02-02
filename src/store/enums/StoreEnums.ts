@@ -41,7 +41,8 @@ enum Actions {
   GET_FUNDING_ROUNDS = "getFundingRounds",
   CREATE_FOUNDER = "createFounder",
   FIND_EXPERTS = "findExperts",
-  FOUNDER_REQUISITE_EXPERT = "founderRequisiteExpert"
+  FOUNDER_REQUISITE_EXPERT = "founderRequisiteExpert",
+  UPLOAD_FILE = "uploadFile"
 }
 
 enum Mutations {

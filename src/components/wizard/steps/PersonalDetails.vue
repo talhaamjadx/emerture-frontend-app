@@ -86,6 +86,7 @@
 
       <!--begin::Input-->
       <Field
+        @keypress="limitInput($event)"
         v-model="telephone"
         @input="fieldChanged($event)"
         type="text"
@@ -158,6 +159,11 @@ export default defineComponent({
     const linkedInProfileUrl = ref<string | unknown>("");
     const formData = ref<FormData>(props.formDataTemp);
     const expertProfile = inject("expertProfile");
+    const limitInput = (event) => {
+      if (event.charCode < 48 || event.charCode > 57) {
+        event.preventDefault();
+      }
+    };
     const fetchData = (value) => {
       name.value = value.name;
       jobTitle.value = value.jobTitle;
@@ -190,6 +196,7 @@ export default defineComponent({
       expertProfile,
       formData,
       fieldChanged,
+      limitInput,
     };
   },
 });

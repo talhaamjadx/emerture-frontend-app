@@ -47,6 +47,7 @@
 
       <!--begin::Input-->
       <Field
+        type="number"
         @input="fieldChanged($event)"
         name="fundingRoundInvestmentRequired"
         class="form-control form-control-lg form-control-solid"
@@ -78,8 +79,8 @@
 
       <!--begin::Input-->
       <Field
+        type="number"
         @input="fieldChanged($event)"
-        type="text"
         name="fundingRoundPreMoneyValuation"
         class="form-control form-control-lg form-control-solid"
         rows="3"
@@ -111,7 +112,7 @@
       <!--begin::Input-->
       <Field
         @input="fieldChanged($event)"
-        type="text"
+        type="number"
         name="fundingRoundMinimumInvestment"
         class="form-control form-control-lg form-control-solid"
         rows="3"

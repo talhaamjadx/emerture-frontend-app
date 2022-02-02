@@ -84,15 +84,22 @@
             </div>
           </div>
         </div>
+        <p v-if="showError" style="color: red">
+          Select Atleast One To Find Experts
+        </p>
         <div class="my-3">
           <button @click="findExperts" class="btn btn-primary float-end">
-            Filter
+            Find Experts
           </button>
         </div>
       </div>
     </div>
     <div class="row">
-      <div v-for="expert in filteredExperts" :key="expert.id" class="col-md-4 my-4">
+      <div
+        v-for="expert in filteredExperts"
+        :key="expert.id"
+        class="col-md-4 my-4"
+      >
         <ExpertDetailsCard
           :name="expert.name"
           :jobTitle="expert.jobTitle"
@@ -127,22 +134,24 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const user = computed(() => store.getters.getUser)
-    const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([])
+    const user = computed(() => store.getters.getUser);
+    const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
     watchEffect(() => {
-      founderRequisiteExperts.value = user.value.founderRequisiteExpert
-    })
-    const isAlreadyConnected = id => {
-      return founderRequisiteExperts.value.some(expert => {
-        return objectPath.get(expert, 'id', false) == id
-      })
-    }
+      founderRequisiteExperts.value = user.value.founderRequisiteExpert;
+    });
+    const isAlreadyConnected = (id) => {
+      return founderRequisiteExperts.value.some((expert) => {
+        return objectPath.get(expert, "id", false) == id;
+      });
+    };
     const expertise = computed(() => store.getters.expertiseGetter);
     const industrySectors = computed(() => store.getters.industrySectorsGetter);
     const selectedExpertise = ref<Array<number>>([]);
     const selectedIndustrySectors = ref<Array<number>>([]);
-    const filteredExperts = computed(() => store.getters.filteredExpertsGetter)
+    const filteredExperts = computed(() => store.getters.filteredExpertsGetter);
+    const showError = ref<boolean>(false);
     const addToExpertise = (event) => {
+      showError.value = false;
       if (event.target.checked) {
         selectedExpertise.value = [
           ...selectedExpertise.value,
@@ -155,6 +164,7 @@ export default defineComponent({
       }
     };
     const addToIndustrySectors = (event) => {
+      showError.value = false;
       if (event.target.checked) {
         selectedIndustrySectors.value = [
           ...selectedIndustrySectors.value,
@@ -169,6 +179,13 @@ export default defineComponent({
       }
     };
     const findExperts = async () => {
+      if (
+        !selectedIndustrySectors.value.length ||
+        !selectedExpertise.value.length
+      ) {
+        showError.value = true;
+        return;
+      }
       try {
         const response = await store.dispatch(Actions.FIND_EXPERTS, {
           industrySectorIds: selectedIndustrySectors.value,
@@ -187,13 +204,14 @@ export default defineComponent({
     });
 
     return {
+      showError,
       expertise,
       industrySectors,
       addToExpertise,
       addToIndustrySectors,
       findExperts,
       filteredExperts,
-      isAlreadyConnected
+      isAlreadyConnected,
     };
   },
 });
