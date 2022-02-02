@@ -161,7 +161,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed, watch } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  ref,
+  computed,
+  watch,
+  reactive,
+} from "vue";
 import { useI18n } from "vue-i18n/index";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -176,11 +183,15 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const user = computed(() => store.getters.getUser);
-    const MainMenuConfig = computed(() => MainMenu);
+    let MainMenuConfig = reactive(MainMenu);
     watch(
-      () => user.value.investor,
+      [
+        () => user.value.investor,
+        () => user.value.expert,
+        () => user.value.founderBusiness,
+      ],
       () => {
-        filterItems()
+        filterItems();
       }
     );
     const filterItems = () => {
@@ -196,20 +207,13 @@ export default defineComponent({
         ) {
           return true;
         } else if (
-          config.heading == "founder-profile" &&
-          objectPath.get(user.value, 'founderBusiness.length', false)
-        ) {
-          return true;
-        } 
-        else if (
           config.heading == "find-experts" &&
-          objectPath.get(user.value, 'founderBusiness.length', false)
+          objectPath.get(user.value, "founderBusiness.length", false)
         ) {
           return true;
-        } 
-        else if (
+        } else if (
           config.heading == "businesses" &&
-          objectPath.get(user.value, 'founderBusiness.length', false)
+          objectPath.get(user.value, "founderBusiness.length", false)
         ) {
           return true;
         } else if (
@@ -217,11 +221,12 @@ export default defineComponent({
           config.heading !== "investor-profile" &&
           config.heading !== "founder-profile" &&
           config.heading !== "find-experts" &&
-          config.heading !== "businesses" 
+          config.heading !== "businesses"
         ) {
           return true;
         } else return false;
       });
+      MainMenuConfig = MainMenu;
     };
     filterItems();
     const { t, te } = useI18n();

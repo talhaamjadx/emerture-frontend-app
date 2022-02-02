@@ -1,6 +1,6 @@
 <template>
   <div class="row gy-5 g-xl-8">
-    <div class="col-xxl-4">
+    <div class="col-xxl-12">
       <FounderStatistics
         widget-classes="card-xl-stretch mb-xl-8"
         widget-color="danger"
@@ -8,7 +8,7 @@
         stroke-color="#cb1e46"
       ></FounderStatistics>
     </div>
-    <div class="col-xxl-4">
+    <div class="col-xxl-12">
       <InvestorStatistics
         widget-classes="card-xl-stretch mb-xl-8"
         widget-color="danger"
@@ -16,7 +16,7 @@
         stroke-color="#cb1e46"
       ></InvestorStatistics>
     </div>
-    <div class="col-xxl-4">
+    <div class="col-xxl-12">
       <ExpertStatistics
         widget-classes="card-xl-stretch mb-xl-8"
         widget-color="danger"
