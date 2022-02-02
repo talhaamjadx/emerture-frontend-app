@@ -34,6 +34,7 @@
       <Field
         @input="fieldChanged($event)"
         type="text"
+        as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="summary"
         placeholder=""
@@ -53,6 +54,7 @@
       <Field
         @input="fieldChanged($event)"
         type="text"
+        as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="overview"
         placeholder=""
@@ -72,6 +74,7 @@
       <Field
         @input="fieldChanged($event)"
         type="text"
+        as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="defensibleUsp"
         placeholder=""
