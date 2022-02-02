@@ -88,7 +88,7 @@
       <Field
         @keypress="limitInput($event)"
         v-model="telephone"
-        @input="fieldChanged($event)"
+        @input="fieldChanged($event); formatTelephone($event)"
         type="text"
         name="telephone"
         class="form-control form-control-lg form-control-solid"
@@ -156,10 +156,19 @@ export default defineComponent({
     const name = ref<string | unknown>("");
     const jobTitle = ref<string | unknown>("");
     const telephone = ref<string | unknown>("");
+    const formatTelephone = e => {
+      if(e.target.value.charCodeAt(0) != 48 && e.target.value){
+        telephone.value = "0" + telephone.value
+      }
+      if(e.target.value.length == 6){
+        telephone.value = (telephone.value as string).substr(0,5) + " " + (telephone.value as string).substr(5)
+      }
+    }
     const linkedInProfileUrl = ref<string | unknown>("");
     const formData = ref<FormData>(props.formDataTemp);
     const expertProfile = inject("expertProfile");
     const limitInput = (event) => {
+      if(event.target.value.length > 11) event.preventDefault()
       if (event.charCode < 48 || event.charCode > 57) {
         event.preventDefault();
       }
@@ -197,6 +206,7 @@ export default defineComponent({
       formData,
       fieldChanged,
       limitInput,
+      formatTelephone,
     };
   },
 });

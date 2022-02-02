@@ -45,12 +45,15 @@
       <div class="col-md-6">
         <label class="form-label required">Minimum Investment</label>
         <Field
-          type="number"
-          v-model="minInvestment"
-          @input="fieldChanged($event)"
+          as="input"
+          type="text"
+          @input="
+            fieldChanged($event);
+            formatInput($event);
+          "
           name="minInvestment"
           class="form-control form-control-lg form-control-solid"
-          value=""
+          v-model="minInvestment"
         />
         <ErrorMessage
           name="minInvestment"
@@ -63,12 +66,15 @@
 
         <!--begin::Input-->
         <Field
-          type="number"
-          v-model="maxInvestment"
-          @input="fieldChanged($event)"
+          as="input"
+          type="text"
+          @input="
+            fieldChanged($event);
+            formatInput($event);
+          "
           name="maxInvestment"
           class="form-control form-control-lg form-control-solid"
-          value=""
+          v-model="maxInvestment"
         />
         <ErrorMessage
           name="maxInvestment"
@@ -173,6 +179,7 @@
 <script lang="ts">
 import { defineComponent, reactive, inject, watch, ref } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { numberFormatter } from "@/utils/index";
 
 export default defineComponent({
   name: "investment-ticket-size",
@@ -188,10 +195,24 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<Record<string, unknown>>(props.formDataTemp);
+    const formatter = numberFormatter;
     const investorProfile = inject("investorProfile");
     const currencyCode = ref<string | unknown>("");
     const minInvestment = ref<string | unknown>("");
     const maxInvestment = ref<string | unknown>("");
+    const formatInput = (e) => {
+      if (!e.target.value) return (minInvestment.value = "");
+      if (e.target.name == "minInvestment")
+        minInvestment.value = formatter(
+          parseFloat(e.target.value.replace(/,/g, "")).toString(),
+          "en-US"
+        );
+      else if (e.target.name == "maxInvestment")
+        maxInvestment.value = formatter(
+          parseFloat(e.target.value.replace(/,/g, "")).toString(),
+          "en-US"
+        );
+    };
     const stageOfEvolution = reactive([
       { name: "stageOfEvolutionPreSeed", value: false },
       { name: "stageOfEvolutionSeed", value: false },
@@ -226,8 +247,8 @@ export default defineComponent({
     });
     const fetchData = (value) => {
       currencyCode.value = value.currencyCode;
-      minInvestment.value = value.minInvestment;
-      maxInvestment.value = value.maxInvestment;
+      minInvestment.value = formatter(value.minInvestment, "en-US");
+      maxInvestment.value = formatter(value.maxInvestment, "en-US");
       for (let i = 0; i < stageOfEvolution.length; i++) {
         if (value[stageOfEvolution[i].name] == 1)
           stageOfEvolution[i].value = true;
@@ -250,7 +271,15 @@ export default defineComponent({
     const fieldChanged = (event) => {
       if (event.target.type == "checkbox")
         formData.value[event.target.name] = event.target.checked ? 1 : 0;
-      else formData.value[event.target.name] = event.target.value;
+      else if (
+        event.target.name == "minInvestment" ||
+        event.target.name == "maxInvestment"
+      ) {
+        formData.value[event.target.name] = event.target.value.replace(
+          /,/g,
+          ""
+        );
+      } else formData.value[event.target.name] = event.target.value;
       emit("form-data", formData.value);
     };
     const enums = reactive({
@@ -271,6 +300,7 @@ export default defineComponent({
       taxReliefStatusNa: "NA",
     });
     return {
+      formatInput,
       formData,
       fieldChanged,
       stageOfEvolution,
