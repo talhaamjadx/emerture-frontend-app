@@ -6,13 +6,33 @@
       <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
         <!--begin: Pic-->
         <div class="me-7 mb-4">
-          <div
+          <!-- <div
             class="
               symbol symbol-100px symbol-lg-160px symbol-fixed
               position-relative
             "
           >
             <img :src="op.get(user, 'profileImage', null) ?? require('@/assets/img/150-2.jpg') " alt="image" />
+          </div> -->
+          <div
+            class="image-input image-input-outline"
+            data-kt-image-input="true"
+            style="background-image: url(media/avatars/blank.png)"
+          >
+            <!--begin::Preview existing avatar-->
+            <div
+              ref="profilePictureRef"
+              class="image-input-wrapper w-125px h-125px"
+              :style="`background-image: url(${
+                op.get(user, 'profileImage', null) ??
+                require('@/assets/img/150-2.jpg')
+              })`"
+            ></div>
+            <!--end::Preview existing avatar-->
+
+            <!--begin::Label-->
+
+            <!--end::Inputs-->
           </div>
         </div>
         <!--end::Pic-->
@@ -36,7 +56,13 @@
                 <a
                   href="#"
                   class="text-gray-800 text-hover-primary fs-2 fw-bolder me-1"
-                  >{{ `${op.get(user, "firstName", "")} ${op.get(user, "lastName", "")}` }}</a
+                  >{{
+                    `${op.get(user, "firstName", "")} ${op.get(
+                      user,
+                      "lastName",
+                      ""
+                    )}`
+                  }}</a
                 >
                 <a href="#">
                   <span class="svg-icon svg-icon-1 svg-icon-primary">
@@ -120,17 +146,17 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
-import objectPath from "object-path"
+import objectPath from "object-path";
 
 export default defineComponent({
   name: "kt-account",
   setup() {
     const store = useStore();
     const user = computed(() => store.getters.getUser);
-    const op = computed(() => objectPath)
+    const op = computed(() => objectPath);
     return {
       user,
-      op
+      op,
     };
   },
 });

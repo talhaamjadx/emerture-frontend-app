@@ -21,7 +21,22 @@
       <div class="menu-content d-flex align-items-center px-3">
         <!--begin::Avatar-->
         <div class="symbol symbol-50px me-5">
-          <img alt="Logo" :src="op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'" />
+              <div
+                class="image-input image-input-outline "
+                data-kt-image-input="true"
+                style="background-image: url(media/avatars/blank.png)"
+              >
+                <!--begin::Preview existing avatar-->
+                <div
+                  ref="profilePictureRef"
+                  class="image-input-wrapper"
+                  :style="`width:60px; height:60px;background-image: url(${
+                    op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
+                  })`"
+                ></div>
+
+              </div>
+         
         </div>
         <!--end::Avatar-->
 
