@@ -84,7 +84,7 @@
             </div>
           </div>
         </div>
-        <div class="my-3">
+        <div class="mt-8">
           <button @click="findExperts" class="btn btn-primary float-end">
             Filter
           </button>

@@ -12,9 +12,7 @@
                   <img
                     class="rounded-circle my-2"
                     :src="`${ business.logo ?? '/media/avatars/blank.png' }`"
-                    width="120px"
-                    height="100px"
-                    style="border: 3px solid white; width: 120px; height:100px"
+                    style="border: 3px solid white; width: 120px; height:118px"
                   />
                 </div>
                 <router-link :to="`/business/${business.id}`" type="button" class="btn btn-danger my-sm-2 my-3">
@@ -41,7 +39,7 @@
           <div class="contnt">
             <img
               :src="`${business.headerImage}`"
-              style="width: 100%; height: 229px"
+              style="width: 100%; height: 244px"
             />
           </div>
         </div>
