@@ -215,7 +215,7 @@
       </div>
     </div>
     <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
-      <!-- <div class="card-header">
+      <div class="card-header">
         <h3 class="card-title">Funding Rounds</h3>
         <div class="card-toolbar">
           <router-link :to="`/create-funding-round?businessId=${business.id}`" type="button" class="btn btn-sm btn-primary">New</router-link>
@@ -223,7 +223,7 @@
       </div>
       <div class="card-body pt-0">
       <FundingRounds :businessId="business.id"/>
-    </div> -->
+    </div>
     </div>
   </div>
   <!--end::details View-->
@@ -232,7 +232,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, computed, ref } from "vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-// import FundingRounds from "@/components/widgets/lists/funding-rounds.vue"
+import FundingRounds from "@/components/widgets/lists/funding-rounds.vue"
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
@@ -240,7 +240,7 @@ import { useRoute } from "vue-router";
 export default defineComponent({
   name: "business-details",
   components: {
-    // FundingRounds
+    FundingRounds
   },
   setup() {
     const store = useStore();
