@@ -440,7 +440,10 @@ export default defineComponent({
       }),
       Yup.object({
         telephone: Yup.string().required().label("Telephone"),
-        website: Yup.string().required().label("Website"),
+        website: Yup.string().matches(
+            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+            'Enter correct url!'
+        ).required().label("Website"),
         currencyCode: Yup.string().required().label("Currency"),
         geoFocusCountryCode: Yup.string().required().label("Geo Focus"),
       }),

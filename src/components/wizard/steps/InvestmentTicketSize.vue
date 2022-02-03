@@ -201,7 +201,11 @@ export default defineComponent({
     const minInvestment = ref<string | unknown>("");
     const maxInvestment = ref<string | unknown>("");
     const formatInput = (e) => {
-      if (!e.target.value) return (minInvestment.value = "");
+      if (!e.target.value) {
+        minInvestment.value = ""
+        maxInvestment.value = ""
+        return;
+      }
       if (e.target.name == "minInvestment")
         minInvestment.value = formatter(
           parseFloat(e.target.value.replace(/,/g, "")).toString(),

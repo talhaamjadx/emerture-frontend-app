@@ -15,7 +15,11 @@
       <!--begin::Input-->
       <Field
         @keypress="limitInput($event)"
-        @input="fieldChanged($event)"
+        @input="
+          fieldChanged($event);
+          formatTelephone($event);
+        "
+        v-model="telephone"
         type="textarea"
         name="telephone"
         class="form-control form-control-lg form-control-solid"
@@ -121,9 +125,24 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
+    const telephone = ref<string>("");
     const limitInput = (event) => {
+      if (event.target.value.length > 11) {
+        event.preventDefault();
+      }
       if (event.charCode < 48 || event.charCode > 57) {
         event.preventDefault();
+      }
+    };
+    const formatTelephone = (e) => {
+      if (e.target.value.charCodeAt(0) != 48 && e.target.value) {
+        telephone.value = "0" + telephone.value;
+      }
+      if (e.target.value.length == 6) {
+        telephone.value =
+          (telephone.value as string).substr(0, 5) +
+          " " +
+          (telephone.value as string).substr(5);
       }
     };
     const fieldChanged = (event) => {
@@ -135,7 +154,9 @@ export default defineComponent({
     return {
       formData,
       fieldChanged,
-      limitInput
+      limitInput,
+      telephone,
+      formatTelephone,
     };
   },
 });
