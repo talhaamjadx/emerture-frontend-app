@@ -43,7 +43,9 @@ enum Actions {
   FIND_EXPERTS = "findExperts",
   FOUNDER_REQUISITE_EXPERT = "founderRequisiteExpert",
   UPLOAD_FILE = "uploadFile",
-  FIND_INVESTMENT_OPPERTUNITIES = "findInvestmentOppertunities"
+  FIND_INVESTMENT_OPPERTUNITIES = "findInvestmentOppertunities",
+  INVESTMENT_OPPERTUNITY_CONNECT = "investmentOppertunityConnect",
+  CONNECTED_INVESTMENT_OPPERTUNITIES = "connectedInvestmentOppertunity",
 }
 
 enum Mutations {

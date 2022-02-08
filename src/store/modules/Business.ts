@@ -136,4 +136,30 @@ export default class Business extends VuexModule {
                 return err.response
             })
     }
+    @Action
+    [Actions.INVESTMENT_OPPERTUNITY_CONNECT](payload): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.post(`/investor-business-connection`, payload)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.CONNECTED_INVESTMENT_OPPERTUNITIES](): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.get(`/investor-business-connection`)
+            .then(connectedInvestmentOppertunities => {
+                return connectedInvestmentOppertunities.data
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }

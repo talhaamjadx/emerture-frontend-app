@@ -84,7 +84,10 @@
           Select Atleast One To Find Experts
         </p>
         <div v-if="globalSearch" class="mt-8">
-          <button @click="findOppertunityInvestment" class="btn btn-primary float-end">
+          <button
+            @click="findOppertunityInvestment"
+            class="btn btn-primary float-end"
+          >
             Find Investment Oppertunities
           </button>
         </div>
@@ -112,6 +115,9 @@
         />
       </div>
     </div>
+    <InvestmentOppertunities
+      :investmentOppertunitiesMain="investmentOppertunities"
+    />
   </div>
 </template>
 
@@ -122,11 +128,13 @@ import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import ExpertDetailsCard from "@/components/cards/ExpertDetailsCard.vue";
 import objectPath from "object-path";
+import InvestmentOppertunities from "@/views/crafted/pages/investment-oppertunities.vue";
 
 export default defineComponent({
   name: "find-investment-oppertunities",
   components: {
     ExpertDetailsCard,
+    InvestmentOppertunities,
   },
   setup() {
     const globalSearch = ref<boolean>(false);
@@ -164,17 +172,18 @@ export default defineComponent({
       }
     };
     const findOppertunityInvestment = async () => {
-      try{
-        const response = await store.dispatch(Actions.FIND_INVESTMENT_OPPERTUNITIES, {
-          industrySectorIds: selectedIndustrySectors.value
-        })
-        if(response !== true) throw new Error()
-        console.log(response)
-      }
-      catch(err){
+      try {
+        const response = await store.dispatch(
+          Actions.FIND_INVESTMENT_OPPERTUNITIES, selectedIndustrySectors.value.length ?
+          {
+            industrySectorIds: selectedIndustrySectors.value,
+          } : null
+        );
+        if (response !== true) throw new Error();
+      } catch (err) {
         //
       }
-    }
+    };
     onMounted(async () => {
       setCurrentPageBreadcrumbs("Find Investment Oppertunities", []);
       if (!investmentOppertunities.value.length)
@@ -191,7 +200,7 @@ export default defineComponent({
       filteredExperts,
       isAlreadyConnected,
       investmentOppertunities,
-      findOppertunityInvestment
+      findOppertunityInvestment,
     };
   },
 });
