@@ -29,8 +29,8 @@
                   mt-3
                 "
               >
-                <h3 style="color: white !important">Preston Internation</h3>
-                <p>Summary</p>
+                <h3 style="color: white !important">{{ business.name }}</h3>
+                <p>{{ business.summary }}</p>
               </div>
             </div>
           </div>

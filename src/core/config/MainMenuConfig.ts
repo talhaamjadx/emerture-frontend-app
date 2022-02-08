@@ -4,7 +4,7 @@ const DocMenuConfig = [
       {
         heading: "dashboard",
         route: "/dashboard",
-        svgIcon: "media/icons/duotune/general/gen019.svg",
+        svgIcon: "media/icons/duotune/general/gen001.svg",
         fontIcon: "bi-layers",
       },
       {
@@ -28,6 +28,12 @@ const DocMenuConfig = [
       {
         heading: "find-experts",
         route: "/find-experts",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
+      {
+        heading: "find-investment-oppertunities",
+        route: "/find-investment-oppertunities",
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-layers",
       },

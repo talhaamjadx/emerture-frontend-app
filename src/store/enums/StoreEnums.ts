@@ -42,7 +42,8 @@ enum Actions {
   CREATE_FOUNDER = "createFounder",
   FIND_EXPERTS = "findExperts",
   FOUNDER_REQUISITE_EXPERT = "founderRequisiteExpert",
-  UPLOAD_FILE = "uploadFile"
+  UPLOAD_FILE = "uploadFile",
+  FIND_INVESTMENT_OPPERTUNITIES = "findInvestmentOppertunities"
 }
 
 enum Mutations {
@@ -69,7 +70,8 @@ enum Mutations {
   SET_TOOLBAR_BUTTON = "setToolbarButton",
   SET_FOUNDER_BUSINESSES = "setFounderBusinesses",
   SET_FOUNDER = "setFounder",
-  SET_EXPERTS = "setExperts"
+  SET_EXPERTS = "setExperts",
+  SET_INVESTMENT_OPPERTUNITIES = "setInvestmentOppertunities"
 }
 
 export { Actions, Mutations };

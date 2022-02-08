@@ -8,8 +8,12 @@ import objectPath from "object-path";
 export default class Business extends VuexModule {
     errors = []
     businesses = []
+    investmentOppertunities = []
     get getErrorsRoles() {
         return this.errors
+    }
+    get getInvestmentOppertunities() {
+        return this.investmentOppertunities
     }
     get getBusinesses() {
         return this.businesses
@@ -21,6 +25,10 @@ export default class Business extends VuexModule {
     @Mutation
     [Mutations.SET_FOUNDER_BUSINESSES](payload): void {
         this.businesses = payload
+    }
+    @Mutation
+    [Mutations.SET_INVESTMENT_OPPERTUNITIES](payload): void {
+        this.investmentOppertunities = payload
     }
     @Action
     [Actions.CREATE_FOUNDER_BUSINESS](payload: AxiosRequestConfig): Promise<AxiosResponse> {
@@ -106,6 +114,20 @@ export default class Business extends VuexModule {
         ApiService.setHeader("application/json")
         return ApiService.put(`/funding-rounds/${id}`, data)
             .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.FIND_INVESTMENT_OPPERTUNITIES](payload): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.post(`/investment-opportunities`, payload)
+            .then(investmentOppertunities => {
+                this.context.commit(Mutations.SET_INVESTMENT_OPPERTUNITIES, investmentOppertunities.data.data);
                 return true
             })
             .catch(err => {
