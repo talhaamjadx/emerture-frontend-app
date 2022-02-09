@@ -22,7 +22,7 @@
                 class="col-3 display-2 text-center"
                 style="color: rgb(226, 213, 147)"
               >
-                0
+                {{ op.get(user, "expertProfileShows", 0) }}
               </div>
             </div>
           </div>
@@ -34,7 +34,8 @@
                 </p>
               </div>
               <div class="col-3 display-2 text-center" style="color: #9bbfd3">
-                0
+                {{ op.get(user, "expertProfileClicks", 0) }}
+                
               </div>
             </div>
           </div>
@@ -49,8 +50,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { getCSSVariableValue } from "@/assets/ts/_utils";
+import { useStore } from "vuex"
+import objectPath from "object-path";
 
 export default defineComponent({
   name: "widget-1",
@@ -61,6 +64,9 @@ export default defineComponent({
     strokeColor: String,
   },
   setup(props) {
+    const store = useStore()
+    const user = computed(() => store.getters.getUser)
+    const op = computed(() => objectPath)
     const labelColor = getCSSVariableValue("--bs-gray-500");
     const borderColor = getCSSVariableValue("--bs-gray-200");
 
@@ -193,8 +199,10 @@ export default defineComponent({
     ];
 
     return {
+      op,
       series,
       chartOptions,
+      user
     };
   },
 });
