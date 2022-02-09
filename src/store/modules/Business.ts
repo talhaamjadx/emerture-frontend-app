@@ -162,4 +162,17 @@ export default class Business extends VuexModule {
                 return err.response
             })
     }
+    @Action
+    [Actions.GET_INVESTMENT_OPPERTUNITY_PROFILE](id): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.get(`/founder-business/${id}`)
+            .then(investmentOppertunity => {
+                return investmentOppertunity.data
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }

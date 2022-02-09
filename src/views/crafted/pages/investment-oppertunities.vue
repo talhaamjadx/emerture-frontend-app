@@ -19,7 +19,7 @@
                   />
                 </div>
                 <router-link
-                  :to="`/business/${oppertunity.id}`"
+                  :to="`/investment-oppertunity-profile/${oppertunity.id}`"
                   type="button"
                   class="btn btn-danger my-sm-2 my-3"
                 >

@@ -4,6 +4,7 @@ import { config } from "vuex-module-decorators";
 import AuthModule from "@/store/modules/AuthModule";
 import Auth from "@/store/modules/Auth";
 import Investor from "@/store/modules/Investor";
+import Configuration from "@/store/modules/Configuration";
 import Role from "@/store/modules/Role";
 import Expert from "@/store/modules/Expert";
 import Business from "@/store/modules/Business";
@@ -25,7 +26,8 @@ const store = createStore({
     Expert,
     Investor,
     Business,
-    Founder
+    Founder,
+    Configuration
   },
 });
 

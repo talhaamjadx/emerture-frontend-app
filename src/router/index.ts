@@ -108,6 +108,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/investment-oppertunity-profile/:id",
+        name: "investment-oppertunity-profile",
+        component: () => import("@/views/crafted/pages/InvestmentOppertunityDetails.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/expert/:id",
         name: "expert",
         component: () => import("@/views/crafted/pages/ExpertProfileGlobal.vue"),

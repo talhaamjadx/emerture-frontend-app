@@ -8,11 +8,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "terms-and-conditions",
   setup() {
+    const store = useStore()
+    let termsAndConditions = null
+    onMounted(async () => {
+      try{
+        const response = await store.dispatch(Actions.GET_CONFIGURATION_BY_KEY, "termsAndConditions")
+        if(!response.success) throw new Error()
+        termsAndConditions = response.data
+        console.log({termsAndConditions})
+      }
+      catch(err){
+        //
+      }
+    });
     return {};
   },
 });

@@ -93,28 +93,6 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div
-        v-for="expert in filteredExperts"
-        :key="expert.id"
-        class="col-md-4 my-4"
-      >
-        <ExpertDetailsCard
-          :name="expert.name"
-          :jobTitle="expert.jobTitle"
-          :profilePicture="expert.user.profileImage"
-          :linkedInProfile="expert.linkedInProfileUrl"
-          :introduction="expert.introduction"
-          :online="true"
-          :expertId="expert.id"
-          avatar="media/avatars/150-12.jpg"
-          :connected="false"
-          avg-earnings="$14,560"
-          total-sales="$236,400"
-          :isAlreadyConnected="isAlreadyConnected(expert.id)"
-        />
-      </div>
-    </div>
     <InvestmentOppertunities
       :investmentOppertunitiesMain="investmentOppertunities"
     />
@@ -126,14 +104,12 @@ import { defineComponent, onMounted, computed, ref, watchEffect } from "vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
-import ExpertDetailsCard from "@/components/cards/ExpertDetailsCard.vue";
 import objectPath from "object-path";
 import InvestmentOppertunities from "@/views/crafted/pages/investment-oppertunities.vue";
 
 export default defineComponent({
   name: "find-investment-oppertunities",
   components: {
-    ExpertDetailsCard,
     InvestmentOppertunities,
   },
   setup() {

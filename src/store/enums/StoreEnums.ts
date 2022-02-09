@@ -46,7 +46,9 @@ enum Actions {
   FIND_INVESTMENT_OPPERTUNITIES = "findInvestmentOppertunities",
   INVESTMENT_OPPERTUNITY_CONNECT = "investmentOppertunityConnect",
   CONNECTED_INVESTMENT_OPPERTUNITIES = "connectedInvestmentOppertunity",
-  GET_EXPERT_PROFILE_GLOBAL = "getExpertProfileGlobal"
+  GET_EXPERT_PROFILE_GLOBAL = "getExpertProfileGlobal",
+  GET_CONFIGURATION_BY_KEY = "getConfigurationByKey",
+  GET_INVESTMENT_OPPERTUNITY_PROFILE = "getInvestmentOppertunityProfile"
 }
 
 enum Mutations {
