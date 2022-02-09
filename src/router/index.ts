@@ -108,6 +108,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/expert/:id",
+        name: "expert",
+        component: () => import("@/views/crafted/pages/ExpertProfileGlobal.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/investor-profile",
         name: "investor-profile",
         component: () => import("@/views/crafted/pages/wizards/InvestorProfile.vue"),
@@ -404,6 +412,18 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
         beforeEnter: LoggedInGuard
+      },
+      {
+        path: "/terms-and-conditions",
+        name: "terms-and-conditions",
+        component: () =>
+          import("@/views/crafted/authentication/basic-flow/terms-and-conditions.vue"),
+      },
+      {
+        path: "/disclaimer",
+        name: "disclaimer",
+        component: () =>
+          import("@/views/crafted/authentication/basic-flow/disclaimer.vue"),
       },
       {
         path: "/sign-up",

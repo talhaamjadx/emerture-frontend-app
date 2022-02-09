@@ -87,6 +87,19 @@ export default class Expert extends VuexModule {
             })
     }
     @Action
+    [Actions.GET_EXPERT_PROFILE_GLOBAL](id): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/expert-profile/${id}`)
+            .then(expert => {
+                return expert.data
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
     [Actions.GET_EXPERTISE](): Promise<AxiosResponse> {
         ApiService.setHeader("appilcation/json")
         return ApiService.get(`/expertise`)
