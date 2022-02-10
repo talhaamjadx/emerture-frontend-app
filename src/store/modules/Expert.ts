@@ -104,7 +104,7 @@ export default class Expert extends VuexModule {
         ApiService.setHeader("appilcation/json")
         return ApiService.get(`/expertise`)
             .then(expertise => {
-                this.context.commit(Mutations.SET_EXPERTISE, expertise.data.data)
+                this.context.commit(Mutations.SET_EXPERTISE, objectPath.get(expertise, 'data.data', []).filter(e => (e as { isActive })?.isActive == 1))
                 return true
             })
             .catch(err => {
@@ -118,7 +118,7 @@ export default class Expert extends VuexModule {
         ApiService.setHeader("appilcation/json")
         return ApiService.get(`/industry-sectors`)
             .then(industrySectors => {
-                this.context.commit(Mutations.SET_INDUSTRY_SECTORS, industrySectors.data.data)
+                this.context.commit(Mutations.SET_INDUSTRY_SECTORS, objectPath.get(industrySectors, 'data.data', []).filter(is => (is as { isActive })?.isActive == 1))
                 return true
             })
             .catch(err => {

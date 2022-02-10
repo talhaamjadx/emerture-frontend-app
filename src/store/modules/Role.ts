@@ -28,7 +28,7 @@ export default class Role extends VuexModule {
         ApiService.setHeader("appilcation/json")
         return ApiService.get(`/roles`)
             .then(roles => {
-                this.context.commit(Mutations.SET_ROLES, objectPath.get(roles, "data.data", []));
+                this.context.commit(Mutations.SET_ROLES, objectPath.get(roles, "data.data", []).filter((role) => (role as { isActive })?.isActive == 1));
                 return true
             })
             .catch(err => {
