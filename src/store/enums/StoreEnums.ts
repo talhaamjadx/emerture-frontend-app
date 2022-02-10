@@ -48,7 +48,11 @@ enum Actions {
   CONNECTED_INVESTMENT_OPPERTUNITIES = "connectedInvestmentOppertunity",
   GET_EXPERT_PROFILE_GLOBAL = "getExpertProfileGlobal",
   GET_CONFIGURATION_BY_KEY = "getConfigurationByKey",
-  GET_INVESTMENT_OPPERTUNITY_PROFILE = "getInvestmentOppertunityProfile"
+  GET_INVESTMENT_OPPERTUNITY_PROFILE = "getInvestmentOppertunityProfile",
+  CREATE_FUNDING_ROUND_INVESTMENT = "createFundingRoundInvestment",
+  GET_FUNDING_ROUND_INVESTMENT = "getFundingRoundInvestment",
+  UPDATE_FUNDING_ROUND_INVESTMENT = "updateFundingRoundInvestment",
+  DELETE_FUNDING_ROUND_INVESTMENT = "deleteFundingRoundInvestment",
 }
 
 enum Mutations {

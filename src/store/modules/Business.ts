@@ -175,4 +175,54 @@ export default class Business extends VuexModule {
                 return err.response
             })
     }
+    @Action
+    [Actions.GET_FUNDING_ROUND_INVESTMENT](id): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.get(`/funding-round-investment/${id}`)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.UPDATE_FUNDING_ROUND_INVESTMENT]({ id, data }): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.put(`/funding-round-investment/${id}`, data)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    } @Action
+    [Actions.DELETE_FUNDING_ROUND_INVESTMENT](id): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.delete(`/funding-round-investment/${id}`)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    } @Action
+    [Actions.CREATE_FUNDING_ROUND_INVESTMENT](payload): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.post(`/funding-round-investment`, payload)
+            .then(() => {
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
 }
