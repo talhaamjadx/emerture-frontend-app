@@ -6,14 +6,6 @@ import objectPath from "object-path";
 
 @Module
 export default class Configuration extends VuexModule {
-    errors = []
-    get getErrorsRoles() {
-        return this.errors
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
-    }
     @Action
     [Actions.GET_CONFIGURATION_BY_KEY](key): Promise<AxiosResponse> {
         ApiService.setHeader("appilcation/json")

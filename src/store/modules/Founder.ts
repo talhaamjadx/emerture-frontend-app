@@ -6,17 +6,9 @@ import objectPath from "object-path";
 
 @Module
 export default class Auth extends VuexModule {
-    errors = []
     founder = {}
-    get getErrors() {
-        return this.errors
-    }
     get getFounder() {
         return this.founder
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Mutation
     [Mutations.SET_FOUNDER](payload): void {

@@ -12,10 +12,24 @@ import Founder from "@/store/modules/Founder";
 import BodyModule from "@/store/modules/BodyModule";
 import BreadcrumbsModule from "@/store/modules/BreadcrumbsModule";
 import ConfigModule from "@/store/modules/ConfigModule";
+import Miscellaneous from "@/store/modules/Miscellaneous"
 
 config.rawError = true;
 
 const store = createStore({
+  state:{
+    errors: []
+  },
+  mutations:{
+    setError(state, payload){
+      state.errors = payload
+    }
+  },
+  getters:{
+    getErrors(state){
+      return state.errors
+    }
+  },
   modules: {
     Role,
     Auth,
@@ -27,7 +41,8 @@ const store = createStore({
     Investor,
     Business,
     Founder,
-    Configuration
+    Configuration,
+    Miscellaneous
   },
 });
 

@@ -6,14 +6,10 @@ import objectPath from "object-path";
 
 @Module
 export default class Expert extends VuexModule {
-    errors = []
     expert = null
     filteredExperts = []
     expertise = []
     industrySectors = []
-    get getErrorsRoles() {
-        return this.errors
-    }
     get expertProfileGetter() {
         return this.expert
     }
@@ -25,10 +21,6 @@ export default class Expert extends VuexModule {
     }
     get filteredExpertsGetter() {
         return this.filteredExperts
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Mutation
     [Mutations.SET_EXPERT_PROFILE](payload): void {

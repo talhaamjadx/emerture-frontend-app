@@ -6,17 +6,9 @@ import objectPath from "object-path";
 
 @Module
 export default class Investor extends VuexModule {
-    errors = []
     investor = null
-    get getErrorsRoles() {
-        return this.errors
-    }
     get investorProfileGetter() {
         return this.investor
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Mutation
     [Mutations.SET_INVESTOR_PROFILE](payload): void {

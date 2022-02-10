@@ -6,18 +6,10 @@ import objectPath from "object-path";
 
 @Module
 export default class Role extends VuexModule {
-    errors = []
     roles = []
-    get getErrorsRoles() {
-        return this.errors
-    }
     get getRolesData() {
         console.log(this.roles, "in here")
         return this.roles
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Mutation
     [Mutations.SET_ROLES](payload): void {

@@ -6,7 +6,6 @@ import objectPath from "object-path";
 
 interface AuthInterface {
     isLoggedIn: boolean
-    errors: Array<unknown>
     user: AuthUser
 }
 
@@ -24,14 +23,21 @@ interface AuthUser {
     userRoles: Array<unknown>
 }
 
+const errorHandler = (err, context) => {
+    if (err?.response?.data?.code == 400 || err?.response?.data?.code == 500)
+        context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.message", []));
+    else if (err?.response?.data?.code == 422)
+        context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors[0]", []));
+    else {
+        context.commit(Mutations.SET_ERROR, 'An error has occured!');
+    }
+    return err.response
+}
+
 @Module
 export default class Auth extends VuexModule implements AuthInterface {
     isLoggedIn = false
-    errors = []
     user = {} as AuthUser
-    get getErrors() {
-        return this.errors
-    }
     get getIsLoggedIn() {
         return this.isLoggedIn
     }
@@ -42,7 +48,6 @@ export default class Auth extends VuexModule implements AuthInterface {
     [Mutations.SET_DEFAULT_AUTH]() {
         this.user = {} as AuthUser
         this.isLoggedIn = false
-        this.errors = []
     }
     @Mutation
     [Mutations.SET_AUTH_USER](payload) {
@@ -51,10 +56,6 @@ export default class Auth extends VuexModule implements AuthInterface {
     @Mutation
     [Mutations.IS_LOGGED_IN](payload) {
         this.isLoggedIn = payload
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Action
     [Actions.SIGNUP](payload: AxiosRequestConfig): Promise<AxiosResponse> {
@@ -70,8 +71,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log({ err })
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -85,8 +85,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -100,8 +99,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -114,8 +112,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -128,8 +125,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return resendCode
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -142,8 +138,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -156,8 +151,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -170,8 +164,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -184,8 +177,7 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                errorHandler(err, this.context)
                 return err.response
             })
     }
@@ -198,8 +190,8 @@ export default class Auth extends VuexModule implements AuthInterface {
                 return true
             })
             .catch(err => {
-                console.log(err)
-                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                console.log(err.response.data, "in here")
+                errorHandler(err, this.context)
                 return err.response
             })
     }

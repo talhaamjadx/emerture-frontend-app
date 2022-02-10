@@ -6,21 +6,13 @@ import objectPath from "object-path";
 
 @Module
 export default class Business extends VuexModule {
-    errors = []
     businesses = []
     investmentOppertunities = []
-    get getErrorsRoles() {
-        return this.errors
-    }
     get getInvestmentOppertunities() {
         return this.investmentOppertunities
     }
     get getBusinesses() {
         return this.businesses
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Mutation
     [Mutations.SET_FOUNDER_BUSINESSES](payload): void {
