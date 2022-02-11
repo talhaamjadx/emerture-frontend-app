@@ -198,7 +198,6 @@ import FundingRoundStageUpdate from "@/components/wizard/steps/FundingRoundStage
 import FundingRequirementsUpdate from "@/components/wizard/steps/FundingRequirementsUpdate.vue";
 import RoundTimelineUpdate from "@/components/wizard/steps/RoundTimelineUpdate.vue";
 import { StepperComponent } from "@/assets/ts/components";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
@@ -399,26 +398,23 @@ export default defineComponent({
           data: fundingRound.value,
         });
         if (response !== true) throw new Error();
-        Swal.fire({
-          text: `Funding Round ${"Updated"}`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        }).then(() => {
-          router.push(`/business/${business.value.id}`);
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: `Funding Round ${"Updated"}`,
+          variant: "primary",
+          duration: 4000,
+          show: true,
         });
+        setTimeout(() => {
+          router.push(`/business/${business.value.id}`);
+        }, 2000);
       } catch (err) {
-        Swal.fire({
-          text: `Funding Round Updation Unsuccessful`,
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: `Funding Round Updation Unsuccessful`,
+          variant: "danger",
+          duration: 4000,
+          show: true,
         });
       }
     };

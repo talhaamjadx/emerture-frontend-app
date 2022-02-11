@@ -95,7 +95,6 @@ import { useRouter } from "vue-router";
 import objectPath from "object-path";
 import { Actions } from "../../../../store/enums/StoreEnums";
 import * as Yup from "yup";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 
 export default defineComponent({
   components: {
@@ -144,16 +143,14 @@ export default defineComponent({
         timedOut.value = false;
         verificationCodeTime();
       } catch (err) {
-        const [error] = Object.keys(store.getters.getErrors);
-        Swal.fire({
-          text: store.getters.getErrors[error],
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-danger",
-          },
-        });
+        const error = store.getters.getErrors;
+        store.commit("setAlert", {
+              message: "Error",
+              subMessage: error,
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
       }
     };
     const verify = async (values) => {
@@ -162,31 +159,27 @@ export default defineComponent({
           code: values.verificationCode,
         });
         if (response[0] !== true) throw new Error();
-        Swal.fire({
-          text: "Verification Successful!",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        }).then(async () => {
+        store.commit("setAlert", {
+              message: "Success",
+              subMessage: "Verification Successful!",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
           await store.dispatch(Actions.AUTH_USER);
           nextTick(() => {
             router.push("/");
           });
-        });
       } catch (err) {
-        const [error] = Object.keys(store.getters.getErrors);
-        Swal.fire({
-          text: store.getters.getErrors[error],
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-danger",
-          },
-        });
+        const error = store.getters.getErrors;
+
+        store.commit("setAlert", {
+              message: "Error",
+              subMessage: error,
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
       }
     };
     const verificationCodeTime = () => {

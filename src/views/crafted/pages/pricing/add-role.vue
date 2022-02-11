@@ -217,7 +217,6 @@ import { defineComponent, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
-import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
 
 interface RoleRequest {
@@ -249,26 +248,23 @@ export default defineComponent({
         });
         if (response !== true) throw new Error();
         await store.dispatch(Actions.AUTH_USER);
-        Swal.fire({
-          text: "Role is pending for approval",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn btn-primary",
-          },
-        });
+
+        store.commit("setAlert", {
+              message: "Success",
+              subMessage: "Role is pending for approval",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
       } catch (err) {
-        const [error] = Object.keys(store.getters.getErrors);
-        Swal.fire({
-          text: store.getters.getErrors[error],
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-danger",
-          },
-        });
+        const error = store.getters.getErrors;
+        store.commit("setAlert", {
+              message: "Error",
+              subMessage: error,
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
       }
     };
     const attachRole = async (id) => {

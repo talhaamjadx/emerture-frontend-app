@@ -91,7 +91,6 @@ import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import * as Yup from "yup";
 import { Actions } from "@/store/enums/StoreEnums";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 
 export default defineComponent({
   name: "password-reset",
@@ -122,26 +121,27 @@ export default defineComponent({
           resetToken: route.query.token,
         });
         if (response !== true) throw new Error();
-        Swal.fire({
-          text: `Password has been reset successfully!`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        }).then(() => router.push("/sign-in"));
+
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: "`Password has been reset successfully!`",
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
+        setTimeout(() => {
+          router.push("/sign-in");
+        }, 2000);
       } catch (err) {
         store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-        const [error] = Object.keys(store.getters.getErrors);
-        Swal.fire({
-          text: store.getters.getErrors[error],
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-danger",
-          },
+        const error = store.getters.getErrors;
+
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: error,
+          variant: "danger",
+          duration: 4000,
+          show: true,
         });
       }
     };

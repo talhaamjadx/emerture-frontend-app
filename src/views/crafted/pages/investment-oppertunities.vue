@@ -77,7 +77,6 @@
 import { ref, watch, defineComponent, onMounted } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
-import Swal from "sweetalert2";
 
 export default defineComponent({
   props: {
@@ -100,25 +99,21 @@ export default defineComponent({
         );
         if (response !== true) throw new Error();
         refresh();
-        Swal.fire({
-          text: "Investment Oppertunity Connected",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        });
+        store.commit("setAlert", {
+              message: "Success",
+              subMessage: "Investment Oppertunity Connected",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
       } catch (err) {
-        Swal.fire({
-          text: "Investment Oppertunity Not Connected",
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-danger",
-          },
-        });
+        store.commit("setAlert", {
+              message: "Error",
+              subMessage: "Investment Oppertunity Not Connected",
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
       }
     };
     const refresh = async () => {

@@ -166,7 +166,6 @@ import KTLoader from "@/components/Loader.vue";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { loaderEnabled, loaderLogo } from "@/core/helpers/config";
 
@@ -232,16 +231,14 @@ export default defineComponent({
               areRolesAdded(store.getters.getUser) ? router.push({ name: "dashboard" }) : router.push("/add-role")
             } catch (err) {
               store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-              const [error] = Object.keys(store.getters.getErrors);
-              Swal.fire({
-                text: store.getters.getErrors[error],
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Try again!",
-                customClass: {
-                  confirmButton: "btn fw-bold btn-light-danger",
-                },
-              });
+              const error = store.getters.getErrors;
+              store.commit("setAlert", {
+              message: "Error",
+              subMessage: error,
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
             }
         })
         .catch(() => {

@@ -529,7 +529,12 @@
 
                     <!--begin::Switch-->
                     <label
-                      class="form-check form-switch form-check-custom form-check-solid"
+                      class="
+                        form-check
+                        form-switch
+                        form-check-custom
+                        form-check-solid
+                      "
                     >
                       <!--begin::Input-->
                       <input
@@ -607,12 +612,13 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { hideModal } from "@/core/helpers/dom";
-import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useStore } from "vuex"
 
 export default defineComponent({
   name: "add-customer-modal",
   components: {},
   setup() {
+    const store = useStore()
     const formRef = ref<null | HTMLFormElement>(null);
     const addCustomerModalRef = ref<null | HTMLElement>(null);
     const loading = ref<boolean>(false);
@@ -685,28 +691,23 @@ export default defineComponent({
           setTimeout(() => {
             loading.value = false;
 
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(addCustomerModalRef.value);
+            store.commit("setAlert", {
+              message: "Success",
+              subMessage: "Form has been successfully submitted!",
+              variant: "primary",
+              duration: 4000,
+              show: true,
             });
+            hideModal(addCustomerModalRef.value);
           }, 2000);
         } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
+          store.commit("setAlert", {
+              message: "Error",
+              subMessage: "Sorry, looks like there are some errors detected, please try again.",
+              variant: 'danger',
+              duration: 4000,
+              show: true,
+            });
           return false;
         }
       });

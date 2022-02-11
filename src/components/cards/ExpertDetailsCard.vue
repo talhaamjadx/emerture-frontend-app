@@ -82,7 +82,7 @@
         <router-link
           :to="`/expert/${expertId}`"
           class="btn btn-sm btn-light-primary my-2"
-          style="padding-right: 31px; padding-left: 31px;"
+          style="padding-right: 31px; padding-left: 31px"
         >
           View Profile
         </router-link>
@@ -120,7 +120,6 @@
 import { defineComponent, watch, ref } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
-import Swal from "sweetalert2";
 
 export default defineComponent({
   name: "card-3",
@@ -173,24 +172,22 @@ export default defineComponent({
         );
         if (response !== true) throw new Error();
         store.dispatch(Actions.AUTH_USER);
-        Swal.fire({
-          text: "A Request has been sent to the expert",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn btn-primary",
-          },
+
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: "A Request has been sent to the expert",
+          variant: "primary",
+          duration: 4000,
+          show: true,
         });
       } catch (err) {
-        Swal.fire({
-          text: "Sorry, looks like there are some errors detected, please try again.",
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn btn-primary",
-          },
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage:
+            "Sorry, looks like there are some errors detected, please try again.",
+          variant: "danger",
+          duration: 4000,
+          show: true,
         });
       }
     };

@@ -202,7 +202,6 @@ import { useRoute } from "vue-router";
 import { mainFormatter } from "@/utils/index";
 import moment from "moment";
 import objectPath from "object-path";
-import Swal from "sweetalert2";
 import InvestmentHistory from "@/components/widgets/lists/Widget5.vue";
 
 export default defineComponent({
@@ -243,15 +242,13 @@ export default defineComponent({
         if (response !== true) throw new Error("error in API");
         investmentAmount.value = "";
         await refresh();
-        Swal.fire({
-          text: "Investment Created",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn btn-primary",
-          },
-        });
+        store.commit("setAlert", {
+              message: "Success",
+              subMessage: "Investment Created",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
       } catch (err) {
         console.log(err);
       }

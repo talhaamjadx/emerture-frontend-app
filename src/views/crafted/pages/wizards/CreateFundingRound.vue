@@ -198,7 +198,6 @@ import FundingRoundStage from "@/components/wizard/steps/FundingRoundStage.vue";
 import FundingRequirements from "@/components/wizard/steps/FundingRequirements.vue";
 import RoundTimeline from "@/components/wizard/steps/RoundTimeline.vue";
 import { StepperComponent } from "@/assets/ts/components";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
@@ -240,7 +239,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const route = useRoute()
+    const route = useRoute();
     const store = useStore();
     const formDataTemp = ref<FormData>(new FormData());
     const _stepperObj = ref<StepperComponent | null>(null);
@@ -340,32 +339,33 @@ export default defineComponent({
 
     const formSubmit = async () => {
       try {
-        formDataTemp.value.append("founderBusinessId", route.query.businessId as string)
+        formDataTemp.value.append(
+          "founderBusinessId",
+          route.query.businessId as string
+        );
         const response = await store.dispatch(
           Actions.CREATE_FUNDING_ROUND,
           formDataTemp.value
         );
         if (response !== true) throw new Error();
-        Swal.fire({
-          text: `Funding Round ${"Created"}`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        }).then(() => {
-          router.push(`/business/${route.query.businessId}`);
+
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: `Funding Round ${"Created"}`,
+          variant: "primary",
+          duration: 4000,
+          show: true,
         });
+        setTimeout(() => {
+          router.push(`/business/${route.query.businessId}`);
+        }, 2000);
       } catch (err) {
-        Swal.fire({
-          text: `Funding Round Creation Unsuccessful`,
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: "`Funding Round Creation Unsuccessful`",
+          variant: "danger",
+          duration: 4000,
+          show: true,
         });
       }
     };

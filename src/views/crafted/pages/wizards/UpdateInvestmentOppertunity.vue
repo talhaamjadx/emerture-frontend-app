@@ -305,7 +305,6 @@ import AdvancedAssuranceUpdate from "@/components/wizard/steps/AdvancedAssurance
 import IndustrySectorsBusinessesUpdate from "@/components/wizard/steps/IndustrySectorsBusinessesUpdate.vue";
 import TeamMembersUpdate from "@/components/wizard/steps/TeamMembersUpdate.vue";
 import { StepperComponent } from "@/assets/ts/components";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
@@ -494,26 +493,23 @@ export default defineComponent({
           payload: formDataTemp.value,
         });
         if (response !== true) throw new Error();
-        Swal.fire({
-          text: `Investment Oppertunity ${"Updated"}`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        }).then(() => {
-          router.push("/businesses");
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: `Investment Oppertunity ${"Updated"}`,
+          variant: "primary",
+          duration: 4000,
+          show: true,
         });
+        setTimeout(() => {
+          router.push("/businesses");
+        }, 2000);
       } catch (err) {
-        Swal.fire({
-          text: `Investment Oppertunity Updation Unsuccessful`,
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: "`Investment Oppertunity Updation Unsuccessful`",
+          variant: "danger",
+          duration: 4000,
+          show: true,
         });
       }
     };

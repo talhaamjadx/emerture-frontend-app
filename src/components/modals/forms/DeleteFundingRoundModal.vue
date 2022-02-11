@@ -100,7 +100,6 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { hideModal } from "@/core/helpers/dom";
-import Swal from "sweetalert2/dist/sweetalert2.js";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 
@@ -137,27 +136,24 @@ export default defineComponent({
         loading.value = false;
         if (response !== true) throw new Error();
         emit("round-deleted")
-        Swal.fire({
-          text: "Funding Round has been deleted successfully!",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn btn-primary",
-          },
-        }).then(() => {
-          hideModal(newTargetModalRef.value);
-        });
+
+        store.commit("setAlert", {
+              message: "Success",
+              subMessage: "Funding Round has been deleted successfully!",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
+            hideModal(newTargetModalRef.value);
+ 
       } catch (err) {
-        Swal.fire({
-          text: "Sorry, looks like there are some errors detected, please try again.",
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn btn-primary",
-          },
-        });
+        store.commit("setAlert", {
+              message: "Error",
+              subMessage: "Sorry, looks like there are some errors detected, please try again.",
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
         return false;
       }
     };

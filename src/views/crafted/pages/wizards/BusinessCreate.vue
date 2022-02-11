@@ -231,7 +231,6 @@ import ProfessionalSummary from "@/components/wizard/steps/ProfessionalSummary.v
 import ShowcaseYourExpertise from "@/components/wizard/steps/ShowcaseYourExpertise.vue";
 import KeySkills from "@/components/wizard/steps/KeySkills.vue";
 import { StepperComponent } from "@/assets/ts/components";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
@@ -394,29 +393,27 @@ export default defineComponent({
             : formDataTemp.value
         );
         if (response !== true) throw new Error();
-        Swal.fire({
-          text: `Expert Profile ${
+
+        store.commit("setAlert", {
+              message: "Success",
+              subMessage: `Expert Profile ${
             doesExpertProfileExist.value ? "Updated" : "Created"
           }`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        });
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
+
       } catch (err) {
-        Swal.fire({
-          text: `Expert Profile ${
+        store.commit("setAlert", {
+              message: "Error",
+              subMessage: `Expert Profile ${
             doesExpertProfileExist.value ? "Updation" : "Creation"
           } Unsuccessful`,
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        });
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
       }
     };
 

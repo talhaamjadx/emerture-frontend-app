@@ -28,7 +28,11 @@
       <!--end::Heading-->
 
       <!--begin::Action-->
-      <button type="button" @click="googleLogin" class="btn btn-light-primary fw-bolder w-100 mb-10">
+      <button
+        type="button"
+        @click="googleLogin"
+        class="btn btn-light-primary fw-bolder w-100 mb-10"
+      >
         <img
           alt="Logo"
           src="media/svg/brand-logos/google-icon.svg"
@@ -134,13 +138,31 @@
             data-kt-password-meter-control="highlight"
           >
             <div
-              class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"
+              class="
+                flex-grow-1
+                bg-secondary bg-active-success
+                rounded
+                h-5px
+                me-2
+              "
             ></div>
             <div
-              class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"
+              class="
+                flex-grow-1
+                bg-secondary bg-active-success
+                rounded
+                h-5px
+                me-2
+              "
             ></div>
             <div
-              class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"
+              class="
+                flex-grow-1
+                bg-secondary bg-active-success
+                rounded
+                h-5px
+                me-2
+              "
             ></div>
             <div
               class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"
@@ -226,7 +248,6 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Actions } from "@/store/enums/StoreEnums";
 import { PasswordMeterComponent } from "@/assets/ts/components";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 
 export default defineComponent({
   name: "sign-up",
@@ -272,48 +293,45 @@ export default defineComponent({
       // Activate indicator
       submitButton.value?.setAttribute("data-kt-indicator", "on");
 
-      console.log({values});
+      console.log({ values });
 
-        store
-          .dispatch(Actions.SIGNUP, values)
-          .then((res) => {
-            if(res !== true) throw new Error()
-            Swal.fire({
-              text: "You have successfully created new account!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-primary",
-              },
-            }).then(function () {
-              // Go to page after successfully login
-              router.push({ name: "dashboard" });
-            });
-          })
-          .catch(() => {
-            const [error] = Object.keys(store.getters.getErrors);
-            Swal.fire({
-              text: store.getters.getErrors[error],
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-danger",
-              },
-            });
+      store
+        .dispatch(Actions.SIGNUP, values)
+        .then((res) => {
+          if (res !== true) throw new Error();
+          store.commit("setAlert", {
+            message: "Success",
+            subMessage: "You have successfully created new account!",
+            variant: "primary",
+            duration: 4000,
+            show: true,
           });
+          setTimeout(() => {
+            router.push({ name: "dashboard" });
+          }, 2000);
+        })
+        .catch(() => {
+          const error = store.getters.getErrors;
 
-        submitButton.value?.removeAttribute("data-kt-indicator");
-        // eslint-disable-next-line
-        submitButton.value!.disabled = false;
+          store.commit("setAlert", {
+            message: "Error",
+            subMessage: error,
+            variant: "danger",
+            duration: 4000,
+            show: true,
+          });
+        });
+
+      submitButton.value?.removeAttribute("data-kt-indicator");
+      // eslint-disable-next-line
+      submitButton.value!.disabled = false;
     };
 
     return {
       registration,
       onSubmitRegister,
       submitButton,
-      googleLogin
+      googleLogin,
     };
   },
 });

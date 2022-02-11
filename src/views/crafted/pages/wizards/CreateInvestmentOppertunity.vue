@@ -333,7 +333,6 @@ import IndustrySectorsBusinesses from "@/components/wizard/steps/IndustrySectors
 import TeamMembers from "@/components/wizard/steps/TeamMembers.vue";
 import FundingRound from "@/components/wizard/steps/FundingRound.vue";
 import { StepperComponent } from "@/assets/ts/components";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
@@ -440,10 +439,13 @@ export default defineComponent({
       }),
       Yup.object({
         telephone: Yup.string().required().label("Telephone"),
-        website: Yup.string().matches(
+        website: Yup.string()
+          .matches(
             /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            'Enter correct url!'
-        ).required().label("Website"),
+            "Enter correct url!"
+          )
+          .required()
+          .label("Website"),
         currencyCode: Yup.string().required().label("Currency"),
         geoFocusCountryCode: Yup.string().required().label("Geo Focus"),
       }),
@@ -521,14 +523,12 @@ export default defineComponent({
             id: roleId,
           });
           if (attachRoleResponse !== true) {
-            Swal.fire({
-              text: `Error in Attaching Role`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-primary",
-              },
+            store.commit("setAlert", {
+              message: "Error",
+              subMessage: "`Error in Attaching Role`",
+              variant: "danger",
+              duration: 4000,
+              show: true,
             });
             return;
           }
@@ -538,42 +538,41 @@ export default defineComponent({
           formDataTemp.value
         );
         if (response !== true) throw new Error();
-        Swal.fire({
-          text: `Investment Oppertunity ${"Created"}`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        }).then(async () => {
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: `Investment Oppertunity ${"Created"}`,
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
+        setTimeout(async () => {
           try {
             const response = await store.dispatch(Actions.AUTH_USER);
             if (response !== true) throw new Error();
-            (objectPath.get(user.value, "founderBusiness.length", 0) as number) === 1
+            (objectPath.get(
+              user.value,
+              "founderBusiness.length",
+              0
+            ) as number) === 1
               ? router.push("/find-experts")
               : router.push("/businesses");
           } catch (err) {
-            Swal.fire({
-              text: `Error in Business Creation`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              customClass: {
-                confirmButton: "btn fw-bold btn-light-primary",
-              },
+            store.commit("setAlert", {
+              message: "Error",
+              subMessage: "`Error in Business Creation`",
+              variant: "danger",
+              duration: 4000,
+              show: true,
             });
           }
-        });
+        }, 2000);
       } catch (err) {
-        Swal.fire({
-          text: `Investment Oppertunity Creation Unsuccessful`,
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: "`Investment Oppertunity Creation Unsuccessful`",
+          variant: "danger",
+          duration: 4000,
+          show: true,
         });
       }
     };

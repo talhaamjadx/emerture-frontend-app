@@ -812,7 +812,6 @@ import { Actions } from "../../../store/enums/StoreEnums";
 import { defineComponent, onMounted, ref, computed, Ref } from "vue";
 import { ErrorMessage, Field, Form } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-import Swal from "sweetalert2/dist/sweetalert2.js";
 import * as Yup from "yup";
 
 interface ProfileDetails {
@@ -995,17 +994,14 @@ export default defineComponent({
         setTimeout(() => {
           submitButton5.value?.removeAttribute("data-kt-indicator");
 
-          Swal.fire({
-            text: "Email is successfully changed!",
-            icon: "success",
-            confirmButtonText: "Ok",
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: "btn btn-light-primary",
-            },
-          }).then(() => {
-            emailFormDisplay.value = false;
-          });
+          store.commit("setAlert", {
+              message: "Sucess",
+              subMessage: "Email is successfully changed!",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
+emailFormDisplay.value = false;
         }, 2000);
       }
     };
@@ -1031,17 +1027,14 @@ export default defineComponent({
         setTimeout(() => {
           updatePasswordButton.value?.removeAttribute("data-kt-indicator");
 
-          Swal.fire({
-            text: "Password is successfully changed!",
-            icon: "success",
-            confirmButtonText: "Ok",
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: "btn btn-light-primary",
-            },
-          }).then(() => {
+          store.commit("setAlert", {
+              message: "Sucess",
+              subMessage: "Password is successfully changed!",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
             passwordFormDisplay.value = false;
-          });
         }, 2000);
       }
     };

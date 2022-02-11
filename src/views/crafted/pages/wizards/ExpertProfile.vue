@@ -231,14 +231,13 @@ import PersonalDetails from "@/components/wizard/steps/PersonalDetails.vue";
 import ProfessionalSummary from "@/components/wizard/steps/ProfessionalSummary.vue";
 import ShowcaseYourExpertise from "@/components/wizard/steps/ShowcaseYourExpertise.vue";
 import KeySkills from "@/components/wizard/steps/KeySkills.vue";
-import { StepperComponent } from "@/assets/ts/components";
-import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
+import { StepperComponent } from "@/assets/ts/components";
 
 interface IStep1 {
   name: string;
@@ -430,50 +429,44 @@ export default defineComponent({
           });
           if (response !== true) throw new Error();
           await store.dispatch(Actions.AUTH_USER);
-          Swal.fire({
-            text: "Role is pending for approval",
-            icon: "success",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
+          store.commit("setAlert", {
+              message: "Success",
+              subMessage: "Role is pending for approval",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
         } catch (err) {
-          const [error] = Object.keys(store.getters.getErrors);
-          Swal.fire({
-            text: store.getters.getErrors[error],
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Try again!",
-            customClass: {
-              confirmButton: "btn fw-bold btn-light-danger",
-            },
-          });
+          const error = store.getters.getErrors;
+          store.commit("setAlert", {
+              message: "Error",
+              subMessage: error,
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
         }
-        Swal.fire({
-          text: `Expert Profile ${
+
+        store.commit("setAlert", {
+              message: "Success",
+              subMessage: `Expert Profile ${
             doesExpertProfileExist.value ? "Updated" : "Created"
           }`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        });
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
       } catch (err) {
-        Swal.fire({
-          text: `Expert Profile ${
+
+        store.commit("setAlert", {
+              message: "Error",
+              subMessage: `Expert Profile ${
             doesExpertProfileExist.value ? "Updation" : "Creation"
           } Unsuccessful`,
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
-        });
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
       }
     };
 
