@@ -6,18 +6,10 @@ import objectPath from "object-path";
 
 @Module
 export default class Role extends VuexModule {
-    errors = []
     roles = []
-    get getErrorsRoles() {
-        return this.errors
-    }
     get getRolesData() {
         console.log(this.roles, "in here")
         return this.roles
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Mutation
     [Mutations.SET_ROLES](payload): void {
@@ -28,7 +20,7 @@ export default class Role extends VuexModule {
         ApiService.setHeader("appilcation/json")
         return ApiService.get(`/roles`)
             .then(roles => {
-                this.context.commit(Mutations.SET_ROLES, objectPath.get(roles, "data.data", []));
+                this.context.commit(Mutations.SET_ROLES, objectPath.get(roles, "data.data", []).filter((role) => (role as { isActive })?.isActive == 1));
                 return true
             })
             .catch(err => {

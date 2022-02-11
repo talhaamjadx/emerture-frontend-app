@@ -31,9 +31,10 @@
       <label class="form-label">Summary</label>
       <!--end::Label-->
 
-      <textarea
+      <Field
         @input="fieldChanged($event)"
         type="text"
+        as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="summary"
         placeholder=""
@@ -50,9 +51,10 @@
       <label class="form-label">Overview</label>
       <!--end::Label-->
 
-      <textarea
+      <Field
         @input="fieldChanged($event)"
         type="text"
+        as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="overview"
         placeholder=""
@@ -69,9 +71,10 @@
       <label class="form-label">Defensible USP</label>
       <!--end::Label-->
 
-      <textarea
+      <Field
         @input="fieldChanged($event)"
         type="text"
+        as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="defensibleUsp"
         placeholder=""

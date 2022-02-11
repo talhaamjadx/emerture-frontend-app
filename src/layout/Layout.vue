@@ -30,7 +30,7 @@
             id="kt_content_container"
             :class="{
               'container-fluid': contentWidthFluid,
-              'container': !contentWidthFluid,
+              container: !contentWidthFluid,
             }"
           >
             <router-view />
@@ -52,7 +52,7 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted, watch, nextTick } from "vue";
 import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import KTAside from "@/layout/aside/Aside.vue";
 import KTHeader from "@/layout/header/Header.vue";
 // import KTFooter from "@/layout/footer/Footer.vue";
@@ -63,7 +63,6 @@ import KTUserMenu from "@/layout/header/partials/ActivityDrawer.vue";
 import KTLoader from "@/components/Loader.vue";
 import KTCreateApp from "@/components/modals/wizards/CreateAppModal.vue";
 import KTDrawerMessenger from "@/layout/extras/DrawerMessenger.vue";
-import { Actions } from "@/store/enums/StoreEnums";
 import { MenuComponent } from "@/assets/ts/components/index";
 import { removeModalBackdrop } from "@/core/helpers/dom";
 import { reinitializeComponents } from "@/core/plugins/keenthemes";
@@ -94,12 +93,6 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
-
-    // show page loading
-    // store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");
-
-    // initialize html element classes
     HtmlClass.init();
 
     const pageTitle = computed(() => {
@@ -111,16 +104,9 @@ export default defineComponent({
     });
 
     onMounted(() => {
-
       nextTick(() => {
         reinitializeComponents();
       });
-
-      // Simulate the delay page loading
-      // setTimeout(() => {
-      //   // Remove page loader after some time
-      //   store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-      // }, 500);
     });
 
     watch(
@@ -146,6 +132,7 @@ export default defineComponent({
       breadcrumbs,
       themeLightLogo,
       themeDarkLogo,
+      alert,
     };
   },
 });

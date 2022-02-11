@@ -897,7 +897,7 @@ export default defineComponent({
     const saveChanges1 = async () => {
       try {
         let fd = new FormData();
-        fd.append("profileImage", file, file.name);
+        if(file) fd.append("profileImage", file, file.name);
         fd.append("firstName", profileDetails.value.firstName);
         fd.append("lastName", profileDetails.value.lastName);
         fd.append(
@@ -909,26 +909,22 @@ export default defineComponent({
         fd.append("introduction", profileDetails.value.introduction);
         const response = await store.dispatch(Actions.UPDATE_PROFILE, fd);
         if (response !== true) throw new Error();
-        store.dispatch(Actions.AUTH_USER)
-        Swal.fire({
-          text: "Profile Updated Successfully!",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
+        store.dispatch(Actions.AUTH_USER);
+        store.commit("setAlert", {
+          message: "Profile Updated",
+          subMessage: "Profile has been updated successfully",
+          variant: "primary",
+          duration: 4000,
+          show: true,
         });
       } catch (err) {
-        const [error] = Object.keys(store.getters.getErrors);
-        Swal.fire({
-          text: store.getters.getErrors[error],
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-danger",
-          },
+        const error = store.getters.getErrors;
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: error,
+          variant: "danger",
+          duration: 4000,
+          show: true,
         });
       }
     };
@@ -939,25 +935,21 @@ export default defineComponent({
         oldPasswordRef.value.reset();
         newPasswordRef.value.reset();
         passwordConfirmationRef.value.reset();
-        Swal.fire({
-          text: "Password Updated!",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-primary",
-          },
+        store.commit("setAlert", {
+          message: "Password Updated",
+          subMessage: "Password has been updated successfully",
+          variant: "primary",
+          duration: 4000,
+          show: true,
         });
       } catch (err) {
         const [error] = Object.keys(store.getters.getErrors);
-        Swal.fire({
-          text: store.getters.getErrors[error],
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          customClass: {
-            confirmButton: "btn fw-bold btn-light-danger",
-          },
+        store.commit("setAlert", {
+          message: "Password Updation Failure",
+          subMessage: "An error has occured",
+          variant: "primary",
+          duration: 4000,
+          show: true,
         });
       }
     };

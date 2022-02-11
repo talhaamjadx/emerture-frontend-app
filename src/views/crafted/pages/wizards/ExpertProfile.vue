@@ -384,8 +384,10 @@ export default defineComponent({
 
     const handleStep = handleSubmit((values) => {
       if (!formDataTemp.value.get("documents") && currentStepIndex.value == 2) {
-        isDocumentAdded.value = false;
-        return
+        if (!expertProfile.value.document) {
+          isDocumentAdded.value = false;
+          return;
+        }
       }
       formData.value = {
         ...formData.value,

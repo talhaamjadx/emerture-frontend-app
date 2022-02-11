@@ -216,18 +216,16 @@ export default defineComponent({
       }
       store
         .dispatch(Actions.SIGNIN, values)
-        .then((res) => {
+        .then(async (res) => {
           if (res !== true) throw new Error();
           store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-          Swal.fire({
-            text: "You have successfully logged in!",
-            icon: "success",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn fw-bold btn-light-primary",
-            },
-          }).then(async () => {
+          store.commit("setAlert", {
+              message: "Logged In",
+              subMessage: "You have logged in successfully!",
+              variant: "primary",
+              duration: 4000,
+              show: true,
+            });
             try {
               const response = await store.dispatch(Actions.AUTH_USER);
               if (response !== true) throw new Error();
@@ -245,20 +243,17 @@ export default defineComponent({
                 },
               });
             }
-          });
         })
         .catch(() => {
           store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-          const [error] = Object.keys(store.getters.getErrors);
-          Swal.fire({
-            text: store.getters.getErrors[error],
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Try again!",
-            customClass: {
-              confirmButton: "btn fw-bold btn-light-danger",
-            },
-          });
+          const error = store.getters.getErrors
+          store.commit("setAlert", {
+              message: "Error",
+              subMessage: error,
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
         });
 
       //Deactivate indicator

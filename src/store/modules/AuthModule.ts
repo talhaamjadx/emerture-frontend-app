@@ -13,14 +13,12 @@ export interface User {
 }
 
 export interface UserAuthInfo {
-  errors: unknown;
   user: User;
   isAuthenticated: boolean;
 }
 
 @Module
 export default class AuthModule extends VuexModule implements UserAuthInfo {
-  errors = {};
   user = {} as User;
   isAuthenticated = !!JwtService.getToken();
 
@@ -44,20 +42,10 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
    * Get authentification errors
    * @returns array
    */
-  get getErrorsOld() {
-    return this.errors;
-  }
-
-  @Mutation
-  [Mutations.SET_ERROR](error) {
-    this.errors = error;
-  }
-
   @Mutation
   [Mutations.SET_AUTH](user) {
     this.isAuthenticated = true;
     this.user = user;
-    this.errors = [];
     JwtService.saveToken(this.user.api_token);
   }
 
@@ -75,7 +63,6 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   [Mutations.PURGE_AUTH]() {
     this.isAuthenticated = false;
     this.user = {} as User;
-    this.errors = [];
     JwtService.destroyToken();
   }
 

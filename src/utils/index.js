@@ -25,3 +25,7 @@ export const mainFormatter = (text, currencyCode) => {
         return null
     }
 }
+
+export const numberFormatter = (text, currecyCode, minimumFractionDigits = 0) => {
+    return new Intl.NumberFormat(currecyCode, { minimumFractionDigits: minimumFractionDigits }).format(text)
+}

@@ -79,7 +79,18 @@
         <!--end::Info-->
 
         <!--begin::Follow-->
-        <a v-if="isConnected" href="javacript:void(0)" class="btn btn-sm btn-light-primary">
+        <router-link
+          :to="`/expert/${expertId}`"
+          class="btn btn-sm btn-light-primary my-2"
+          style="padding-right: 31px; padding-left: 31px;"
+        >
+          View Profile
+        </router-link>
+        <a
+          v-if="isConnected"
+          href="javacript:void(0)"
+          class="btn btn-sm btn-light-primary"
+        >
           <span class="svg-icon svg-icon-3">
             <inline-svg src="media/icons/duotune/arrows/arr012.svg" />
           </span>
@@ -185,7 +196,7 @@ export default defineComponent({
     };
     return {
       attachExpert,
-      isConnected
+      isConnected,
     };
   },
 });

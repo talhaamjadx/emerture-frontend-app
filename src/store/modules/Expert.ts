@@ -6,14 +6,10 @@ import objectPath from "object-path";
 
 @Module
 export default class Expert extends VuexModule {
-    errors = []
     expert = null
     filteredExperts = []
     expertise = []
     industrySectors = []
-    get getErrorsRoles() {
-        return this.errors
-    }
     get expertProfileGetter() {
         return this.expert
     }
@@ -25,10 +21,6 @@ export default class Expert extends VuexModule {
     }
     get filteredExpertsGetter() {
         return this.filteredExperts
-    }
-    @Mutation
-    [Mutations.SET_ERROR](payload): void {
-        this.errors = payload
     }
     @Mutation
     [Mutations.SET_EXPERT_PROFILE](payload): void {
@@ -87,11 +79,24 @@ export default class Expert extends VuexModule {
             })
     }
     @Action
+    [Actions.GET_EXPERT_PROFILE_GLOBAL](id): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/expert-profile/${id}`)
+            .then(expert => {
+                return expert.data
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
     [Actions.GET_EXPERTISE](): Promise<AxiosResponse> {
         ApiService.setHeader("appilcation/json")
         return ApiService.get(`/expertise`)
             .then(expertise => {
-                this.context.commit(Mutations.SET_EXPERTISE, expertise.data.data)
+                this.context.commit(Mutations.SET_EXPERTISE, objectPath.get(expertise, 'data.data', []).filter(e => (e as { isActive })?.isActive == 1))
                 return true
             })
             .catch(err => {
@@ -105,7 +110,7 @@ export default class Expert extends VuexModule {
         ApiService.setHeader("appilcation/json")
         return ApiService.get(`/industry-sectors`)
             .then(industrySectors => {
-                this.context.commit(Mutations.SET_INDUSTRY_SECTORS, industrySectors.data.data)
+                this.context.commit(Mutations.SET_INDUSTRY_SECTORS, objectPath.get(industrySectors, 'data.data', []).filter(is => (is as { isActive })?.isActive == 1))
                 return true
             })
             .catch(err => {

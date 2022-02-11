@@ -13,12 +13,27 @@
         data-kt-menu-placement="bottom-end"
         data-kt-menu-flip="bottom"
       >
-        <img
+        <div
+                class="image-input image-input-outline "
+                data-kt-image-input="true"
+                style="background-image: url(media/avatars/blank.png)"
+              >
+                <!--begin::Preview existing avatar-->
+                <div
+                  ref="profilePictureRef"
+                  class="image-input-wrapper"
+                  :style="`width:40px; height:40px;background-image: url(${
+                    op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
+                  })`"
+                ></div>
+
+              </div>
+        <!-- <img
           :src="
             op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
           "
           alt="metronic"
-        />
+        /> -->
       </div>
       <KTUserMenu></KTUserMenu>
       <!--end::Menu-->

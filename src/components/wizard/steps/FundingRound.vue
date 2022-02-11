@@ -47,11 +47,16 @@
 
       <!--begin::Input-->
       <Field
-        type="number"
-        @input="fieldChanged($event)"
+        as="input"
+        type="text"
+        @input="
+          fieldChanged($event);
+          formatInput($event);
+        "
+        @keypress="limitInput($event)"
         name="fundingRoundInvestmentRequired"
         class="form-control form-control-lg form-control-solid"
-        value=""
+        v-model="fundingRoundInvestmentRequired"
       />
       <!--end::Input-->
       <ErrorMessage
@@ -79,11 +84,16 @@
 
       <!--begin::Input-->
       <Field
-        type="number"
-        @input="fieldChanged($event)"
+        as="input"
+        type="text"
+        @input="
+          fieldChanged($event);
+          formatInput($event);
+        "
+        @keypress="limitInput($event)"
         name="fundingRoundPreMoneyValuation"
         class="form-control form-control-lg form-control-solid"
-        rows="3"
+        v-model="fundingRoundPreMoneyValuation"
       ></Field>
       <ErrorMessage
         name="fundingRoundPreMoneyValuation"
@@ -111,11 +121,16 @@
 
       <!--begin::Input-->
       <Field
-        @input="fieldChanged($event)"
-        type="number"
+        as="input"
+        type="text"
+        @input="
+          fieldChanged($event);
+          formatInput($event);
+        "
+        @keypress="limitInput($event)"
         name="fundingRoundMinimumInvestment"
         class="form-control form-control-lg form-control-solid"
-        rows="3"
+        v-model="fundingRoundMinimumInvestment"
       ></Field>
       <ErrorMessage
         name="fundingRoundMinimumInvestment"
@@ -170,6 +185,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { numberFormatter } from "@/utils/index";
 
 export default defineComponent({
   name: "PersonalDetails",
@@ -184,16 +200,77 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const formatter = numberFormatter;
+    const fundingRoundInvestmentRequired = ref<string>("");
+    const fundingRoundMinimumInvestment = ref<string>("");
+    const fundingRoundPreMoneyValuation = ref<string>("");
+    const formatInput = (e) => {
+      if (!e.target.value) {
+        fundingRoundInvestmentRequired.value = "";
+        fundingRoundMinimumInvestment.value = "";
+        fundingRoundPreMoneyValuation.value = "";
+        return;
+      }
+      if (e.target.name == "fundingRoundInvestmentRequired")
+        fundingRoundInvestmentRequired.value = formatter(
+          parseFloat(e.target.value.replace(/,/g, "")).toString(),
+          "en-US"
+        );
+      else if (e.target.name == "fundingRoundMinimumInvestment")
+        fundingRoundMinimumInvestment.value = formatter(
+          parseFloat(e.target.value.replace(/,/g, "")).toString(),
+          "en-US"
+        );
+      else if (e.target.name == "fundingRoundPreMoneyValuation")
+        fundingRoundPreMoneyValuation.value = formatter(
+          parseFloat(e.target.value.replace(/,/g, "")).toString(),
+          "en-US"
+        );
+    };
+    const limitInput = (event) => {
+      if (event.charCode < 48 || event.charCode > 57) {
+        event.preventDefault();
+      }
+    };
     const formData = ref<FormData>(props.formDataTemp);
     const fieldChanged = (event) => {
       if (formData.value.has(event.target.name)) {
-        formData.value.set(event.target.name, event.target.value);
-      } else formData.value.append(event.target.name, event.target.value);
+        if (
+          event.target.name == "fundingRoundInvestmentRequired" ||
+          event.target.name == "fundingRoundMinimumInvestment" ||
+          event.target.name == "fundingRoundPreMoneyValuation"
+        ) {
+          formData.value.set(
+            event.target.name,
+            event.target.value.replace(/,/g, "")
+          );
+        } else {
+          formData.value.set(event.target.name, event.target.value);
+        }
+      } else {
+        if (
+          event.target.name == "fundingRoundInvestmentRequired" ||
+          event.target.name == "fundingRoundMinimumInvestment" ||
+          event.target.name == "fundingRoundPreMoneyValuation"
+        ) {
+          formData.value.append(
+            event.target.name,
+            event.target.value.replace(/,/g, "")
+          );
+        } else {
+          formData.value.append(event.target.name, event.target.value);
+        }
+      }
       emit("form-data", formData.value);
     };
     return {
+      limitInput,
       formData,
       fieldChanged,
+      fundingRoundInvestmentRequired,
+      fundingRoundMinimumInvestment,
+      fundingRoundPreMoneyValuation,
+      formatInput,
     };
   },
 });

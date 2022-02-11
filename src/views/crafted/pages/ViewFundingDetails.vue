@@ -54,7 +54,10 @@
 
                 <!--begin::Lable-->
                 <span :class="`text-info`" class="fw-bolder py-1">{{
-                  formatter(fundingRound.investment_required, "GBP")
+                  formatter(
+                    fundingRound.investment_required,
+                    currencyCodeEnums[op.get(business, "currencyCode", "pound")]
+                  )
                 }}</span>
                 <!--end::Lable-->
               </div>
@@ -86,7 +89,10 @@
 
                 <!--begin::Lable-->
                 <span :class="`text-info`" class="fw-bolder py-1">{{
-                  formatter(fundingRound.preMoneyValuation, "GBP")
+                  formatter(
+                    fundingRound.preMoneyValuation,
+                    currencyCodeEnums[op.get(business, "currencyCode", "pound")]
+                  )
                 }}</span>
                 <!--end::Lable-->
               </div>
@@ -118,7 +124,10 @@
 
                 <!--begin::Lable-->
                 <span :class="`text-info`" class="fw-bolder py-1">{{
-                  formatter(fundingRound.minimumInvestment, "GBP")
+                  formatter(
+                    fundingRound.minimumInvestment,
+                    currencyCodeEnums[op.get(business, "currencyCode", "pound")]
+                  )
                 }}</span>
                 <!--end::Lable-->
               </div>
@@ -141,7 +150,14 @@
           <div class="row my-3"><h3>Investment History</h3></div>
           <div class="row mb-7">
             <!--begin::Col-->
-            <div class="d-flex justify-content-center">No Entries</div>
+            <InvestmentHistory
+              v-if="fundingRound?.fundingRoundInvestments ?? false"
+              :investments="fundingRound?.fundingRoundInvestments ?? []"
+              :currencyCode="
+                currencyCodeSymbolEnums[business?.currencyCode ?? 'pound']
+              "
+            />
+            <div v-else class="d-flex justify-content-center">No Entries</div>
             <!--end::Col-->
           </div>
         </div>
@@ -155,14 +171,22 @@
               <div class="fv-row mb-10">
                 <!--begin::Label-->
                 <label class="form-label required">Add Investment</label>
-                <el-input placeholder="0.00">
-                  <template #prepend>£</template>
-                  <template #append>GBP</template>
+                <el-input v-model="investmentAmount" placeholder="0.00">
+                  <template #prepend>{{
+                    currencyCodeSymbolEnums[
+                      op.get(business, "currencyCode", "pound")
+                    ]
+                  }}</template>
+                  <template #append>{{
+                    currencyCodeEnums[op.get(business, "currencyCode", "pound")]
+                  }}</template>
                 </el-input>
               </div>
             </div>
           </div>
-          <button class="btn btn-primary float-end">Save</button>
+          <button @click="createInvestment" class="btn btn-primary float-end">
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -177,37 +201,92 @@ import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
 import { mainFormatter } from "@/utils/index";
 import moment from "moment";
+import objectPath from "object-path";
+import Swal from "sweetalert2";
+import InvestmentHistory from "@/components/widgets/lists/Widget5.vue";
 
 export default defineComponent({
   name: "view-funding-round",
+  components: {
+    InvestmentHistory,
+  },
   setup() {
     const store = useStore();
     const route = useRoute();
     const business = ref<Record<string, unknown>>({});
     const businesses = computed(() => store.getters.getBusinesses);
+    const investmentAmount = ref<string>("");
     const fundingRound = ref<Record<string, unknown>>({});
+    const op = computed(() => objectPath);
+    const currencyCodeSymbolEnums = {
+      dollar: "$",
+      pound: "£",
+      euro: "€",
+    };
+    const currencyCodeEnums = {
+      dollar: "USD",
+      pound: "GBP",
+      euro: "EUR",
+    };
     const fundingRoundExists = computed(() =>
       Object.keys(fundingRound.value).length ? true : false
     );
+    const createInvestment = async () => {
+      try {
+        const response = await store.dispatch(
+          Actions.CREATE_FUNDING_ROUND_INVESTMENT,
+          {
+            fundingRoundId: route.params.id,
+            investment: investmentAmount.value,
+          }
+        );
+        if (response !== true) throw new Error("error in API");
+        investmentAmount.value = "";
+        await refresh();
+        Swal.fire({
+          text: "Investment Created",
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
     const formatDate = (date) => moment(date).format("YYYY-MM-DD");
     const formatter = computed(() => mainFormatter);
+    const refresh = async () => {
+      return new Promise((resolve, reject) => {
+        store
+          .dispatch(Actions.GET_FOUNDER_BUSINESSES, {
+            page: 1,
+            perPage: 10,
+          })
+          .then((response) => {
+            if (response !== true) throw new Error();
+            business.value = businesses.value?.founderBusinesses.find(
+              (b) => b.id == route.query.businessId
+            );
+            fundingRound.value =
+              ((
+                business.value?.fundingRounds as Array<Record<string, unknown>>
+              )?.find((round) => round.id == route.params.id) as Record<
+                string,
+                unknown
+              >) ?? {};
+            resolve("");
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    };
     onMounted(async () => {
       if (!businesses.value?.founderBusinesses?.length) {
-        try {
-          const response = await store.dispatch(
-            Actions.GET_FOUNDER_BUSINESSES,
-            {
-              page: 1,
-              perPage: 10,
-            }
-          );
-          if (response !== true) throw new Error();
-          business.value = businesses.value?.founderBusinesses.find(
-            (b) => b.id == route.query.businessId
-          );
-        } catch (err) {
-          console.log(err);
-        }
+        await refresh();
       } else
         business.value = businesses.value?.founderBusinesses.find(
           (b) => b.id == route.query.businessId
@@ -229,6 +308,11 @@ export default defineComponent({
       fundingRound,
       fundingRoundExists,
       formatDate,
+      currencyCodeEnums,
+      currencyCodeSymbolEnums,
+      op,
+      investmentAmount,
+      createInvestment,
     };
   },
 });

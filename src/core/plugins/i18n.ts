@@ -77,6 +77,7 @@ const messages = {
     "investor-profile": "Investor Profile",
     "find-experts": "Find Experts",
     "businesses": "Businesses",
+    "find-investment-oppertunities": "Find Investment Oppertunities"
   },
   es: {
     dashboard: "Tablero",
