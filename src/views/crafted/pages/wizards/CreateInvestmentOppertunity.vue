@@ -431,7 +431,9 @@ export default defineComponent({
     });
     const createAccountSchema = [
       {},
-      {},
+      Yup.object({
+        pitchDeckDocument: Yup.mixed().required().label("Pitch Deck Document"),
+      }),
       Yup.object({
         name: Yup.string().required().label("Name"),
         summary: Yup.string().required().label("Summary"),

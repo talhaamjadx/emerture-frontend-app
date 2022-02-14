@@ -61,9 +61,6 @@ export default class Auth extends VuexModule implements AuthInterface {
     [Actions.SIGNUP](payload: AxiosRequestConfig): Promise<AxiosResponse> {
         return ApiService.post("/register", payload)
             .then(signup => {
-                console.log(signup)
-                console.log(objectPath.get(signup, "data.data.sendTime", ""))
-                console.log(objectPath.get(signup, "data.data.timeLimit", ""))
                 window.localStorage.setItem("access_token", objectPath.get(signup, "data.data.accessToken", ""))
                 window.localStorage.setItem('verification_code_time', objectPath.get(signup, "data.data.sendTime", ""))
                 window.localStorage.setItem('verification_code_limit', objectPath.get(signup, "data.data.timeLimit", ""))
@@ -135,6 +132,18 @@ export default class Auth extends VuexModule implements AuthInterface {
         return ApiService.get("/logout")
             .then(logout => {
                 console.log({ logout })
+                return true
+            })
+            .catch(err => {
+                errorHandler(err, this.context)
+                return err.response
+            })
+    }
+    @Action
+    [Actions.DEACTIVATE](): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.get("/deactivate-account")
+            .then(() => {
                 return true
             })
             .catch(err => {

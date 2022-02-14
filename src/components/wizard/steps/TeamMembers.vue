@@ -11,7 +11,7 @@
           class="btn btn-primary col-md-4"
           @click="addTeamMember"
         >
-          Add Member
+          Add Another Member
         </a>
       </div>
     </div>

@@ -1,4 +1,11 @@
 <template>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-end">
+      <router-link to="/create-investment-oppertunity" class="btn btn-primary mx-3"
+        >Create</router-link
+      >
+    </div>
+  </div>
   <div v-for="business in businesses.founderBusinesses" :key="business.id">
     <div class="container-fluid p-0">
       <div class="row m-3 g-0">
@@ -11,11 +18,15 @@
                 <div>
                   <img
                     class="rounded-circle my-2"
-                    :src="`${ business.logo ?? '/media/avatars/blank.png' }`"
-                    style="border: 3px solid white; width: 120px; height:118px"
+                    :src="`${business.logo ?? '/media/avatars/blank.png'}`"
+                    style="border: 3px solid white; width: 120px; height: 118px"
                   />
                 </div>
-                <router-link :to="`/business/${business.id}`" type="button" class="btn btn-danger my-sm-2 my-3">
+                <router-link
+                  :to="`/business/${business.id}`"
+                  type="button"
+                  class="btn btn-danger my-sm-2 my-3"
+                >
                   View Business
                 </router-link>
               </div>
@@ -83,3 +94,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.content {
+  padding: 30px 0;
+}
+</style>

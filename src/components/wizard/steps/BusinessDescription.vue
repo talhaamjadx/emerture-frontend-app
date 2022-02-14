@@ -32,14 +32,17 @@
       <!--end::Label-->
 
       <Field
+        @keypress="limitInput($event)"
         @input="fieldChanged($event)"
         type="text"
+        v-model="summary"
         as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="summary"
         placeholder=""
         value=""
       />
+      <p class="float-end my-1">{{ summary?.length }}/{{ limitLength }}</p>
       <ErrorMessage
         name="summary"
         class="fv-plugins-message-container invalid-feedback"
@@ -52,7 +55,9 @@
       <!--end::Label-->
 
       <Field
+        @keypress="limitInput($event)"
         @input="fieldChanged($event)"
+        v-model="overview"
         type="text"
         as="textarea"
         class="form-control form-control-lg form-control-solid"
@@ -60,6 +65,7 @@
         placeholder=""
         value=""
       />
+      <p class="float-end my-1">{{ overview?.length }}/{{ limitLength }}</p>
       <ErrorMessage
         name="overview"
         class="fv-plugins-message-container invalid-feedback"
@@ -72,14 +78,19 @@
       <!--end::Label-->
 
       <Field
+        @keypress="limitInput($event)"
         @input="fieldChanged($event)"
         type="text"
+        v-model="defensibleUsp"
         as="textarea"
         class="form-control form-control-lg form-control-solid"
         name="defensibleUsp"
         placeholder=""
         value=""
       />
+      <p class="float-end my-1">
+        {{ defensibleUsp?.length }}/{{ limitLength }}
+      </p>
       <ErrorMessage
         name="defensibleUsp"
         class="fv-plugins-message-container invalid-feedback"
@@ -107,6 +118,13 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const limitLength = 200;
+    const summary = ref<string>("");
+    const defensibleUsp = ref<string>("");
+    const overview = ref<string>("");
+    const limitInput = (e) => {
+      if (e.target.value.length >= limitLength) e.preventDefault();
+    };
     const formData = ref<FormData>(props.formDataTemp);
     const fieldChanged = (event) => {
       if (formData.value.has(event.target.name)) {
@@ -117,6 +135,11 @@ export default defineComponent({
     return {
       formData,
       fieldChanged,
+      limitInput,
+      limitLength,
+      summary,
+      defensibleUsp,
+      overview,
     };
   },
 });

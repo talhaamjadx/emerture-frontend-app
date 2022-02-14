@@ -53,6 +53,7 @@ enum Actions {
   GET_FUNDING_ROUND_INVESTMENT = "getFundingRoundInvestment",
   UPDATE_FUNDING_ROUND_INVESTMENT = "updateFundingRoundInvestment",
   DELETE_FUNDING_ROUND_INVESTMENT = "deleteFundingRoundInvestment",
+  DEACTIVATE = "deactivate"
 }
 
 enum Mutations {
