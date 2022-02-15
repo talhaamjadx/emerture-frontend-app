@@ -53,7 +53,9 @@ enum Actions {
   GET_FUNDING_ROUND_INVESTMENT = "getFundingRoundInvestment",
   UPDATE_FUNDING_ROUND_INVESTMENT = "updateFundingRoundInvestment",
   DELETE_FUNDING_ROUND_INVESTMENT = "deleteFundingRoundInvestment",
-  DEACTIVATE = "deactivate"
+  DEACTIVATE = "deactivate",
+  CREATE_BUSINESS_DRAFT = "createBusinessDraft",
+  GET_BUSINESS_DRAFT = "getBusinessDraft"
 }
 
 enum Mutations {
@@ -81,7 +83,8 @@ enum Mutations {
   SET_FOUNDER_BUSINESSES = "setFounderBusinesses",
   SET_FOUNDER = "setFounder",
   SET_EXPERTS = "setExperts",
-  SET_INVESTMENT_OPPERTUNITIES = "setInvestmentOppertunities"
+  SET_INVESTMENT_OPPERTUNITIES = "setInvestmentOppertunities",
+  SET_BUSINESS_DRAFT = "setBusinessDraft"
 }
 
 export { Actions, Mutations };

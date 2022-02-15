@@ -13,7 +13,7 @@
             "
           >
             <img
-              :src="business.logo ?? require('@/assets/img/150-2.jpg')"
+              :src="business.logo ?? require('@/assets/img/blank.png')"
               alt="image"
             />
           </div>

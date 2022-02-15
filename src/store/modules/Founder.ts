@@ -7,12 +7,20 @@ import objectPath from "object-path";
 @Module
 export default class Auth extends VuexModule {
     founder = {}
+    businessDraft = {}
     get getFounder() {
         return this.founder
+    }
+    get businessDraftGetter() {
+        return this.businessDraft
     }
     @Mutation
     [Mutations.SET_FOUNDER](payload): void {
         this.founder = payload
+    }
+    @Mutation
+    [Mutations.SET_BUSINESS_DRAFT](payload): void {
+        this.businessDraft = payload
     }
     @Action
     [Actions.CREATE_FOUNDER](payload: AxiosRequestConfig): Promise<AxiosResponse> {
@@ -21,6 +29,34 @@ export default class Auth extends VuexModule {
             .then(founder => {
                 console.log({ founder })
                 this.context.commit(Mutations.SET_FOUNDER, founder.data.data)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.CREATE_BUSINESS_DRAFT](data): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.post("/business-draft", data)
+            .then(() => {
+                // this.context.commit(Mutations.SET_BUSINESS_DRAFT, businessDraft.data.data)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.GET_BUSINESS_DRAFT](): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.get("/business-draft")
+            .then(businessDraft => {
+                this.context.commit(Mutations.SET_BUSINESS_DRAFT, businessDraft.data.data)
                 return true
             })
             .catch(err => {

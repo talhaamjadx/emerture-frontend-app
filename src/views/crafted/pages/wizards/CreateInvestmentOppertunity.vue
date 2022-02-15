@@ -216,6 +216,7 @@
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
           <UploadPitchDeck
+            @file-size-error="fileSizeError = $event"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></UploadPitchDeck>
@@ -271,10 +272,14 @@
               type="button"
               class="btn btn-lg me-3"
               data-kt-stepper-action="previous"
-              @click="previousStep"  style="color: #FFFFFF; background-color: #236DB5;"
+              @click="previousStep"
+              style="color: #ffffff; background-color: #236db5"
             >
               <span class="svg-icon svg-icon-4 me-1">
-                <inline-svg src="media/icons/duotune/arrows/arr063.svg" style="color: #ffffff" />
+                <inline-svg
+                  src="media/icons/duotune/arrows/arr063.svg"
+                  style="color: #ffffff"
+                />
               </span>
               Back
             </button>
@@ -288,11 +293,16 @@
               class="btn btn-lg me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
-              @click="formSubmit()" style="color: #FFFFFF; background-color: #236DB5;">
+              @click="formSubmit()"
+              style="color: #ffffff; background-color: #236db5"
+            >
               <span class="indicator-label">
                 Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
-                  <inline-svg src="media/icons/duotune/arrows/arr064.svg" style="color: #ffffff" />
+                  <inline-svg
+                    src="media/icons/duotune/arrows/arr064.svg"
+                    style="color: #ffffff"
+                  />
                 </span>
               </span>
               <span class="indicator-progress">
@@ -303,10 +313,18 @@
               </span>
             </button>
 
-            <button v-else type="submit" class="btn btn-lg" style="color: #FFFFFF; background-color: #236DB5;">
+            <button
+              v-else
+              type="submit"
+              class="btn btn-lg"
+              style="color: #ffffff; background-color: #236db5"
+            >
               Continue
               <span class="svg-icon svg-icon-4 ms-1 me-0">
-                <inline-svg src="media/icons/duotune/arrows/arr064.svg" style="color: #ffffff" />
+                <inline-svg
+                  src="media/icons/duotune/arrows/arr064.svg"
+                  style="color: #ffffff"
+                />
               </span>
             </button>
           </div>
@@ -322,7 +340,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import Images from "@/components/wizard/steps/Images.vue";
 import UploadPitchDeck from "@/components/wizard/steps/UploadPitchDeck.vue";
 import BusinessDescription from "@/components/wizard/steps/BusinessDescription.vue";
@@ -381,6 +399,8 @@ export default defineComponent({
     const roles = computed(() => {
       return store.getters.getRolesData;
     });
+    const fileSizeError = ref<boolean>(false)
+    const businessDraft = computed(() => store.getters.businessDraftGetter);
     const router = useRouter();
     const store = useStore();
     const user = computed(() => store.getters.getUser);
@@ -406,6 +426,7 @@ export default defineComponent({
         verticalWizardRef.value as HTMLElement
       );
       try {
+        await store.dispatch(Actions.GET_BUSINESS_DRAFT);
         if (!roles.value.length) {
           const response = await store.dispatch(Actions.GET_ROLES);
           if (response !== true) throw new Error();
@@ -439,7 +460,7 @@ export default defineComponent({
         defensibleUsp: Yup.string().required().label("Defensible USP"),
       }),
       Yup.object({
-        telephone: Yup.string().required().label("Telephone"),
+        telephone: Yup.string().required().min(12, 'Telephone must be 11 characters long.').label("Telephone"),
         website: Yup.string()
           .matches(
             /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
@@ -493,6 +514,7 @@ export default defineComponent({
 
     const handleStep = handleSubmit((values) => {
       console.log({ values });
+      if(fileSizeError.value) return
       formData.value = {
         ...formData.value,
         ...values,
@@ -586,6 +608,7 @@ export default defineComponent({
       formSubmit,
       totalSteps,
       currentStepIndex,
+      fileSizeError
     };
   },
 });

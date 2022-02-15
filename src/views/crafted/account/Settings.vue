@@ -367,11 +367,7 @@
     <!--begin::Content-->
     <div id="kt_account_deactivate" class="collapse show">
       <!--begin::Form-->
-      <form
-        id="kt_account_deactivate_form"
-        class="form"
-        @submit.prevent="deactivateAccount()"
-      >
+      <form id="kt_account_deactivate_form" class="form" @submit.prevent="">
         <!--begin::Card body-->
         <div class="card-body border-top p-9">
           <div
@@ -435,7 +431,13 @@
             type="submit"
             class="btn btn-danger fw-bold"
           >
-            <span class="indicator-label"> Deactivate Account </span>
+            <span
+              data-bs-toggle="modal"
+              :data-bs-target="`#kt_modal_deactivate`"
+              class="indicator-label"
+            >
+              Deactivate Account
+            </span>
             <span class="indicator-progress">
               Please wait...
               <span
@@ -450,7 +452,7 @@
     </div>
     <!--end::Content-->
   </div>
-  <!--end::Deactivate Account-->
+  <DeactivateAccountModal/>
 </template>
 
 <script lang="ts">
@@ -461,6 +463,7 @@ import { ErrorMessage, Field, Form } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import * as Yup from "yup";
 import { useRouter } from "vue-router";
+import DeactivateAccountModal from "@/views/crafted/modals/forms/DeactivateAccountModal.vue"
 
 interface ProfileDetails {
   firstName: string;
@@ -478,6 +481,7 @@ export default defineComponent({
     ErrorMessage,
     Field,
     Form,
+    DeactivateAccountModal
   },
   setup() {
     const router = useRouter();
@@ -635,35 +639,6 @@ export default defineComponent({
       }
     };
 
-    const deactivateAccount = async () => {
-      if (submitButton5.value) {
-        // Activate indicator
-        submitButton5.value.setAttribute("data-kt-indicator", "on");
-        try {
-          const response = await store.dispatch(Actions.DEACTIVATE);
-          submitButton5.value?.removeAttribute("data-kt-indicator");
-          if (response !== true) throw new Error("API error");
-          store.commit("setAlert", {
-            message: "Success",
-            subMessage: "Account deactivated!",
-            variant: "primary",
-            duration: 4000,
-            show: true,
-          });
-          localStorage.removeItem("access_token");
-          router.push("/sign-in");
-        } catch (err) {
-          store.commit("setAlert", {
-            message: "Error",
-            subMessage: "Error in deactivation",
-            variant: "danger",
-            duration: 4000,
-            show: true,
-          });
-        }
-      }
-    };
-
     const updateEmail = () => {
       if (updateEmailButton.value) {
         // Activate indicator
@@ -686,13 +661,13 @@ export default defineComponent({
           updatePasswordButton.value?.removeAttribute("data-kt-indicator");
 
           store.commit("setAlert", {
-              message: "Sucess",
-              subMessage: "Password is successfully changed!",
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
-            passwordFormDisplay.value = false;
+            message: "Sucess",
+            subMessage: "Password is successfully changed!",
+            variant: "primary",
+            duration: 4000,
+            show: true,
+          });
+          passwordFormDisplay.value = false;
         }, 2000);
       }
     };
@@ -723,7 +698,6 @@ export default defineComponent({
       saveChanges2,
       saveChanges3,
       saveChanges4,
-      deactivateAccount,
       profileDetails,
       emailFormDisplay,
       passwordFormDisplay,
