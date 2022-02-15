@@ -9,7 +9,7 @@
   <div v-for="business in businesses.founderBusinesses" :key="business.id">
     <div class="container-fluid p-0">
       <div class="row m-3 g-0">
-        <div class="col-xl-7 col-12 order-xl-first order-last">
+        <div class="col-12 order-xl-first order-last">
           <div class="content" style="background-color: #1b283f">
             <div class="row">
               <div
@@ -46,14 +46,14 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-5 col-12 order-xl-last order-first">
+        <!-- <div class="col-xl-5 col-12 order-xl-last order-first">
           <div class="contnt">
             <img
               :src="`${business.headerImage}`"
               style="width: 100%; height: 247px"
             />
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

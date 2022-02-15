@@ -269,12 +269,12 @@
           <div class="mr-2">
             <button
               type="button"
-              class="btn btn-lg btn-light-primary me-3"
+              class="btn btn-lg me-3"
               data-kt-stepper-action="previous"
-              @click="previousStep"
+              @click="previousStep"  style="color: #FFFFFF; background-color: #236DB5;"
             >
               <span class="svg-icon svg-icon-4 me-1">
-                <inline-svg src="media/icons/duotune/arrows/arr063.svg" />
+                <inline-svg src="media/icons/duotune/arrows/arr063.svg" style="color: #ffffff" />
               </span>
               Back
             </button>
@@ -285,15 +285,14 @@
           <div>
             <button
               type="button"
-              class="btn btn-lg btn-primary me-3"
+              class="btn btn-lg me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
-              @click="formSubmit()"
-            >
+              @click="formSubmit()" style="color: #FFFFFF; background-color: #236DB5;">
               <span class="indicator-label">
                 Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
-                  <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
+                  <inline-svg src="media/icons/duotune/arrows/arr064.svg" style="color: #ffffff" />
                 </span>
               </span>
               <span class="indicator-progress">
@@ -304,10 +303,10 @@
               </span>
             </button>
 
-            <button v-else type="submit" class="btn btn-lg btn-primary">
+            <button v-else type="submit" class="btn btn-lg" style="color: #FFFFFF; background-color: #236DB5;">
               Continue
               <span class="svg-icon svg-icon-4 ms-1 me-0">
-                <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
+                <inline-svg src="media/icons/duotune/arrows/arr064.svg" style="color: #ffffff" />
               </span>
             </button>
           </div>

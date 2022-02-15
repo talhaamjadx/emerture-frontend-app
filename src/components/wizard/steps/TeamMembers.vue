@@ -8,8 +8,8 @@
         <h2 class="fw-bolder text-dark col-md-8">Team Members</h2>
         <a
           href="javascript:void(0)"
-          class="btn btn-primary col-md-4"
-          @click="addTeamMember"
+          class="btn col-md-4"
+          @click="addTeamMember" style="color: #FFFFFF; background-color: #236DB5;"
         >
           Add Another Member
         </a>
