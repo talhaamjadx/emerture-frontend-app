@@ -81,17 +81,16 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <Field
+        <input
           v-model="teamMembers[index].name"
           @input="fieldChanged($event)"
           name="name"
           class="form-control form-control-lg form-control-solid"
-          value=""
         />
-        <ErrorMessage
+        <!-- <ErrorMessage
           name="name"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage>
+        ></ErrorMessage> -->
         <!--end::Input-->
       </div>
       <!--end::Input group-->
@@ -113,23 +112,18 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <Field
+        <input
           v-model="teamMembers[index].jobTitle"
           @input="fieldChanged($event)"
           name="jobTitle"
           class="form-control form-control-lg form-control-solid"
-          value=""
         />
         <!--end::Input-->
-        <ErrorMessage
+        <!-- <ErrorMessage
           name="jobTitle"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage>
+        ></ErrorMessage> -->
 
-        <!--begin::Hint-->
-        <div class="form-text">
-          Customers will see this shortened version of your statement descriptor
-        </div>
         <!--end::Hint-->
       </div>
       <!--end::Input group-->
@@ -150,18 +144,18 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <Field
+        <input
           v-model="teamMembers[index].linkedInProfileUrl"
           @input="fieldChanged($event)"
           type="text"
           name="linkedInProfileUrl"
           class="form-control form-control-lg form-control-solid"
           rows="3"
-        ></Field>
-        <ErrorMessage
+        />
+        <!-- <ErrorMessage
           name="linkedInProfileUrl"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage>
+        ></ErrorMessage> -->
         <!--end::Input-->
       </div>
       <!--end::Input group-->
@@ -181,22 +175,22 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <Field
+        <input
           v-model="teamMembers[index].introduction"
           @input="fieldChanged($event)"
           type="text"
           name="introduction"
           class="form-control form-control-lg form-control-solid"
           rows="3"
-        ></Field>
-        <ErrorMessage
+        />
+        <!-- <ErrorMessage
           name="introduction"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage>
+        ></ErrorMessage> -->
         <!--end::Input-->
       </div>
       <div class="row float-end">
-        <i class="fas fa-trash" @click="removeTeamMember(index)"></i>
+        <i style="cursor: pointer;" class="fas fa-trash" @click="removeTeamMember(index)"></i>
       </div>
     </div>
     <!--begin::Input group-->
@@ -206,7 +200,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { Field, ErrorMessage } from "vee-validate";
+// import { Field, ErrorMessage } from "vee-validate";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useStore } from "vuex";
 
@@ -221,8 +215,8 @@ interface TeamMember {
 export default defineComponent({
   name: "PersonalDetails",
   components: {
-    Field,
-    ErrorMessage,
+    // Field,
+    // ErrorMessage,
   },
   props: {
     formDataTemp: {
@@ -235,16 +229,13 @@ export default defineComponent({
     const teamMembers = ref<Array<TeamMember>>([]);
     const formData = ref<FormData>(props.formDataTemp);
     const addTeamMember = () => {
-      teamMembers.value = [
-        ...teamMembers.value,
-        {
-          name: "",
-          profilePicture: "",
-          linkedInProfileUrl: "",
-          jobTitle: "",
-          introduction: "",
-        },
-      ];
+      teamMembers.value.unshift({
+        name: "",
+        profilePicture: "",
+        linkedInProfileUrl: "",
+        jobTitle: "",
+        introduction: "",
+      });
     };
     const removeTeamMember = (index) => {
       teamMembers.value.splice(index, 1);
