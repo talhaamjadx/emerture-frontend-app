@@ -22,6 +22,7 @@
           id="flexCheckDefault"
           :data-id="is.id"
           @input="addToIndustrySectors($event)"
+          :checked="isChecked(is.id)"
         />
         <label class="form-check-label" for="flexCheckDefault">
           {{ is.name }}
@@ -52,13 +53,26 @@ export default defineComponent({
     const industrySectors = computed(() => store.getters.industrySectorsGetter);
     let formData = ref<FormData>(props.formDataTemp);
     let selectedIndustrySectors = ref<Array<number>>([]);
+    const businessDraft = computed(() => store.getters.businessDraftGetter);
+    let tempBusinessDraft = { ...businessDraft.value };
+    watch(businessDraft, (value) => {
+      tempBusinessDraft = { ...value };
+    });
+    const isChecked = (id) => {
+      try {
+        return businessDraft.value?.industrySectors.includes(id);
+      } catch (err) {
+        return false;
+      }
+    };
     watch(
       () => props.formDataTemp,
       () => {
         formData.value = props.formDataTemp;
       }
     );
-    const fieldChanged = () => {
+    const fieldChanged = async () => {
+      tempBusinessDraft["industrySectors"] = selectedIndustrySectors.value;
       if (formData.value.get("industrySectors")) {
         formData.value.set(
           "industrySectors",
@@ -70,6 +84,15 @@ export default defineComponent({
           JSON.stringify(selectedIndustrySectors.value)
         );
       emit("form-data", formData.value);
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
+      }
     };
     const addToIndustrySectors = (event) => {
       if (event.target.checked) {
@@ -84,7 +107,7 @@ export default defineComponent({
           }
         );
       }
-        fieldChanged()
+      fieldChanged();
     };
     onMounted(() => {
       if (!industrySectors.value.length)
@@ -96,6 +119,7 @@ export default defineComponent({
       industrySectors,
       addToIndustrySectors,
       selectedIndustrySectors,
+      isChecked,
     };
   },
 });

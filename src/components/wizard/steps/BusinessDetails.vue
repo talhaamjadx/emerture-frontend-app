@@ -42,7 +42,7 @@
         class="form-control form-control-lg form-control-solid"
         name="website"
         placeholder=""
-        value=""
+        v-model="website"
       />
       <ErrorMessage
         name="website"
@@ -65,6 +65,7 @@
         data-allow-clear="true"
         data-hide-search="true"
         as="select"
+        v-model="currency"
       >
         <option selected value="pound">£ (Pounds Sterling)</option>
         <option value="dollar">$ (US Dollars)</option>
@@ -91,6 +92,7 @@
         data-allow-clear="true"
         data-hide-search="true"
         as="select"
+        v-model="geoFocus"
       >
         <option selected value="uk">UK</option>
         <option value="us">US</option>
@@ -108,8 +110,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch } from "vue";
+import { defineComponent, ref, inject, watch, computed } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "ProfessionalSummary",
@@ -124,8 +128,21 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const store = useStore();
+    const businessDraft = computed(() => store.getters.businessDraftGetter);
+    let tempBusinessDraft = { ...businessDraft.value };
+    watch(businessDraft, (value) => {
+      tempBusinessDraft = { ...value };
+      telephone.value = value?.telephone
+      website.value = value?.website
+      currency.value = value?.currencyCode
+      geoFocus.value = value?.geoFocusCountryCode
+    });
     const formData = ref<FormData>(props.formDataTemp);
     const telephone = ref<string>("");
+    const website = ref<string>("");
+    const currency = ref<string>("");
+    const geoFocus = ref<string>("");
     const limitInput = (event) => {
       if (event.target.value.length > 11) {
         event.preventDefault();
@@ -145,11 +162,21 @@ export default defineComponent({
           (telephone.value as string).substr(5);
       }
     };
-    const fieldChanged = (event) => {
+    const fieldChanged = async (event) => {
+      tempBusinessDraft[event.target.name] = event.target.value;
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
+      }
     };
     return {
       formData,
@@ -157,6 +184,10 @@ export default defineComponent({
       limitInput,
       telephone,
       formatTelephone,
+      businessDraft,
+      website,
+      geoFocus,
+      currency,
     };
   },
 });

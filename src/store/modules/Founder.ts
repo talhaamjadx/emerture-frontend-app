@@ -56,7 +56,7 @@ export default class Auth extends VuexModule {
         ApiService.setHeader("application/json")
         return ApiService.get("/business-draft")
             .then(businessDraft => {
-                this.context.commit(Mutations.SET_BUSINESS_DRAFT, businessDraft.data.data)
+                this.context.commit(Mutations.SET_BUSINESS_DRAFT, JSON.parse(businessDraft?.data?.data?.business ?? '{}'))
                 return true
             })
             .catch(err => {

@@ -21,7 +21,9 @@
           <div
             ref="profilePictureRef"
             class="image-input-wrapper w-125px h-125px"
-            :style="`background-image: ${`url(${tempImageLogo})`}`"
+            :style="`background-image: ${`url(${
+              businessDraft?.logo ?? tempImageLogo
+            })`}`"
           ></div>
           <!--end::Preview existing avatar-->
 
@@ -72,7 +74,9 @@
           <div
             ref="profilePictureRef"
             class="image-input-wrapper w-125px h-125px"
-            :style="`background-image: ${`url(${tempImageHeader})`}`"
+            :style="`background-image: ${`url(${
+              businessDraft?.headerImage ?? tempImageHeader
+            })`}`"
           ></div>
           <!--end::Preview existing avatar-->
 
@@ -114,7 +118,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 
@@ -129,7 +133,8 @@ export default defineComponent({
   setup(props, { emit }) {
     const store = useStore();
     const businessDraft = computed(() => store.getters.businessDraftGetter);
-    const tempBusinessDraft = { ...businessDraft.value };
+    let tempBusinessDraft = { ...businessDraft.value };
+    watch(businessDraft, (value) => (tempBusinessDraft = { ...value }));
     const formData = ref<FormData>(props.formDataTemp);
     const document = ref<string | unknown>("");
     const tempImageLogo = ref<string>("");
@@ -161,7 +166,8 @@ export default defineComponent({
       }
     };
     const fieldChanged = async (event) => {
-      tempBusinessDraft[event.target.value] = event.target.value;
+      tempBusinessDraft[event.target.name] = event.target.value;
+      console.log({ tempBusinessDraft });
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);
@@ -171,6 +177,7 @@ export default defineComponent({
           business: JSON.stringify(tempBusinessDraft),
         });
         if (response !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
       } catch (err) {
         console.log({ err });
       }
@@ -182,6 +189,7 @@ export default defineComponent({
       handleImageUpload,
       tempImageLogo,
       tempImageHeader,
+      businessDraft,
     };
   },
 });

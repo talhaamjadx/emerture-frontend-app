@@ -19,6 +19,7 @@
           type="checkbox"
           :name="i.name"
           id="flexCheckDefault"
+          :checked="isChecked(i.name)"
         />
         <label class="form-check-label" for="flexCheckDefault">
           {{ enums[i.name] }}
@@ -30,7 +31,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, ref, onMounted } from "vue";
+import {
+  defineComponent,
+  reactive,
+  watch,
+  ref,
+  onMounted,
+  computed,
+} from "vue";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "investment-ticket-size",
@@ -41,7 +51,13 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const store = useStore();
     const formData = ref<FormData>(props.formDataTemp);
+    const businessDraft = computed(() => store.getters.businessDraftGetter);
+    let tempBusinessDraft = { ...businessDraft.value };
+    watch(businessDraft, (value) => {
+      tempBusinessDraft = { ...value };
+    });
     const advancedAssuranceOptions = reactive([
       { name: "advanceAssuranceSeis", value: false },
       { name: "advanceAssuranceEis", value: false },
@@ -59,7 +75,15 @@ export default defineComponent({
         formData.value = props.formDataTemp;
       }
     );
-    const fieldChanged = (event) => {
+    const isChecked = (name) => {
+      try {
+        return businessDraft.value[name] ? true : false;
+      } catch (err) {
+        return false;
+      }
+    };
+    const fieldChanged = async (event) => {
+      tempBusinessDraft[event.target.name] = event.target.value;
       if (formData.value.has(event.target.name))
         formData.value.set(event.target.name, event.target.checked ? "1" : "0");
       else
@@ -68,6 +92,15 @@ export default defineComponent({
           event.target.checked ? "1" : "0"
         );
       emit("form-data", formData.value);
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
+      }
     };
     const enums = reactive({
       advanceAssuranceSeis: "SEIS",
@@ -79,6 +112,7 @@ export default defineComponent({
       fieldChanged,
       advancedAssuranceOptions,
       enums,
+      isChecked,
     };
   },
 });

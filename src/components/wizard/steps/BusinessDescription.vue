@@ -19,7 +19,8 @@
         name="name"
         class="form-control form-control-lg form-control-solid"
         rows="10"
-      ></Field>
+        v-model="businessName"
+      />
       <ErrorMessage
         name="name"
         class="fv-plugins-message-container invalid-feedback"
@@ -40,7 +41,6 @@
         class="form-control form-control-lg form-control-solid"
         name="summary"
         placeholder=""
-        value=""
       />
       <p class="float-end my-1">{{ summary?.length }}/{{ limitLength }}</p>
       <ErrorMessage
@@ -63,7 +63,7 @@
         class="form-control form-control-lg form-control-solid"
         name="overview"
         placeholder=""
-        value=""
+        :value="businessDraft?.overview ?? ''"
       />
       <p class="float-end my-1">{{ overview?.length }}/{{ limitLength }}</p>
       <ErrorMessage
@@ -86,7 +86,7 @@
         class="form-control form-control-lg form-control-solid"
         name="defensibleUsp"
         placeholder=""
-        value=""
+        :value="businessDraft?.defensibleUsp ?? ''"
       />
       <p class="float-end my-1">
         {{ defensibleUsp?.length }}/{{ limitLength }}
@@ -102,8 +102,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed, watch } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "ProfessionalSummary",
@@ -118,19 +120,40 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const limitLength = 200;
+    const businessName = ref<string>("");
     const summary = ref<string>("");
     const defensibleUsp = ref<string>("");
     const overview = ref<string>("");
+    const limitLength = 200;
+    const store = useStore();
+    const businessDraft = computed(() => store.getters.businessDraftGetter);
+    let tempBusinessDraft = { ...businessDraft.value };
+    watch(businessDraft, (value) => {
+      tempBusinessDraft = { ...value };
+      businessName.value = value?.name;
+      summary.value = value?.summary;
+      overview.value = value?.overview;
+      defensibleUsp.value = value?.defensibleUsp;
+    });
     const limitInput = (e) => {
       if (e.target.value.length >= limitLength) e.preventDefault();
     };
     const formData = ref<FormData>(props.formDataTemp);
-    const fieldChanged = (event) => {
+    const fieldChanged = async (event) => {
+      tempBusinessDraft[event.target.name] = event.target.value;
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
+      }
     };
     return {
       formData,
@@ -140,6 +163,8 @@ export default defineComponent({
       summary,
       defensibleUsp,
       overview,
+      businessDraft,
+      businessName,
     };
   },
 });
