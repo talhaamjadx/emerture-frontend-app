@@ -9,7 +9,8 @@
         <a
           href="javascript:void(0)"
           class="btn col-md-4"
-          @click="addTeamMember" style="color: #FFFFFF; background-color: #236DB5;"
+          @click="addTeamMember"
+          style="color: #ffffff; background-color: #236db5"
         >
           Add Another Member
         </a>
@@ -190,7 +191,11 @@
         <!--end::Input-->
       </div>
       <div class="row float-end">
-        <i style="cursor: pointer;" class="fas fa-trash" @click="removeTeamMember(index)"></i>
+        <i
+          style="cursor: pointer"
+          class="fas fa-trash"
+          @click="removeTeamMember(index)"
+        ></i>
       </div>
     </div>
     <!--begin::Input group-->
@@ -199,7 +204,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch, computed } from "vue";
 // import { Field, ErrorMessage } from "vee-validate";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useStore } from "vuex";
@@ -226,6 +231,12 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const store = useStore();
+    const businessDraft = computed(() => store.getters.businessDraftGetter);
+    let tempBusinessDraft = { ...businessDraft.value };
+    watch(businessDraft, (value) => {
+      tempBusinessDraft = { ...value };
+      teamMembers.value = [...(businessDraft.value?.teamMembers ?? [])];
+    });
     const teamMembers = ref<Array<TeamMember>>([]);
     const formData = ref<FormData>(props.formDataTemp);
     const addTeamMember = () => {
@@ -236,9 +247,11 @@ export default defineComponent({
         jobTitle: "",
         introduction: "",
       });
+      fieldChanged();
     };
     const removeTeamMember = (index) => {
       teamMembers.value.splice(index, 1);
+      fieldChanged();
     };
     const fileAdded = async (index, event) => {
       try {
@@ -247,16 +260,27 @@ export default defineComponent({
         const response = await store.dispatch(Actions.UPLOAD_FILE, formData);
         if (!response.includes("https://")) throw new Error();
         teamMembers.value[index].profilePicture = response;
+        fieldChanged();
       } catch (err) {
         //}
       }
     };
-    const fieldChanged = () => {
+    const fieldChanged = async () => {
+      tempBusinessDraft["teamMembers"] = teamMembers.value;
       if (formData.value.get("teamMembers")) {
         formData.value.set("teamMembers", JSON.stringify(teamMembers.value));
       } else
         formData.value.append("teamMembers", JSON.stringify(teamMembers.value));
       emit("form-data", formData.value);
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
+      }
     };
     return {
       fileAdded,
