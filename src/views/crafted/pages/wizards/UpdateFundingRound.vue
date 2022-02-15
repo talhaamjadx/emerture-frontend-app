@@ -283,14 +283,14 @@ export default defineComponent({
           );
           if (response !== true) throw new Error();
           business.value = businesses.value?.founderBusinesses.find(
-            (b) => b.id == route.params.businessId
+            (b) => b.id == route.query.businessId
           );
         } catch (err) {
           console.log(err);
         }
       } else
         business.value = businesses.value?.founderBusinesses.find(
-          (b) => b.id == route.params.businessId
+          (b) => b.id == route.query.businessId
         );
       fundingRound.value =
         ((

@@ -31,7 +31,7 @@
                   ref="profilePictureRef"
                   class="image-input-wrapper"
                   :style="`width:60px; height:60px;background-image: url(${
-                    op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
+                    op.get(user, 'profileImage', null) ?? require('@/assets/img/blank.png')
                   })`"
                 ></div>
 

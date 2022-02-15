@@ -169,7 +169,7 @@
 
 <script lang="ts">
 import DeleteFundingRoundModal from "@/components/modals/forms/DeleteFundingRoundModal.vue";
-import { defineComponent, ref, watch, computed } from "vue";
+import { defineComponent, ref, watch, computed, onMounted } from "vue";
 import { mainFormatter } from "@/utils/index";
 import moment from "moment";
 import { useStore } from "vuex";
@@ -204,7 +204,7 @@ export default defineComponent({
         //
       }
     };
-    refresh();
+    onMounted(() => refresh());
     const roundDeleted = () => {
       refresh();
     };

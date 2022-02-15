@@ -17,11 +17,11 @@
       <!-- begin:: Content -->
       <div id="kt_content" class="content d-flex flex-column flex-column-fluid">
         <!-- begin:: Content Head -->
-        <KTToolbar
+        <!-- <KTToolbar
           v-if="subheaderDisplay"
           :breadcrumbs="breadcrumbs"
           :title="pageTitle"
-        />
+        /> -->
         <!-- end:: Content Head -->
 
         <!-- begin:: Content Body -->
@@ -57,7 +57,7 @@ import KTAside from "@/layout/aside/Aside.vue";
 import KTHeader from "@/layout/header/Header.vue";
 // import KTFooter from "@/layout/footer/Footer.vue";
 import HtmlClass from "@/core/services/LayoutService";
-import KTToolbar from "@/layout/toolbar/Toolbar.vue";
+// import KTToolbar from "@/layout/toolbar/Toolbar.vue";
 import KTScrollTop from "@/layout/extras/ScrollTop.vue";
 import KTUserMenu from "@/layout/header/partials/ActivityDrawer.vue";
 import KTLoader from "@/components/Loader.vue";
@@ -83,7 +83,7 @@ export default defineComponent({
     KTAside,
     KTHeader,
     // KTFooter,
-    KTToolbar,
+    // KTToolbar,
     KTScrollTop,
     KTCreateApp,
     KTUserMenu,

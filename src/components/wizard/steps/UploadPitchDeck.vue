@@ -13,12 +13,17 @@
       <!--end::Label-->
 
       <!--begin::Input-->
-      <input
+      <Field
         id="documents"
         type="file"
         @change="handleImageUpload($event)"
         name="pitchDeckDocument"
       />
+      <div class="fv-plugins-message-container">
+        <div class="fv-help-block">
+          <ErrorMessage name="pitchDeckDocument" />
+        </div>
+      </div>
       <!--end::Input-->
     </div>
   </div>
@@ -27,9 +32,14 @@
 
 <script lang="ts">
 import { defineComponent, ref, inject, watch } from "vue";
+import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
   name: "ProfessionalSummary",
+  components: {
+    Field,
+    ErrorMessage,
+  },
   props: {
     formDataTemp: {
       type: FormData,

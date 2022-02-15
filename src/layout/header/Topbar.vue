@@ -23,14 +23,14 @@
                   ref="profilePictureRef"
                   class="image-input-wrapper"
                   :style="`width:40px; height:40px;background-image: url(${
-                    op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
+                    op.get(user, 'profileImage', null) ?? require('@/assets/img/blank.png')
                   })`"
                 ></div>
 
               </div>
         <!-- <img
           :src="
-            op.get(user, 'profileImage', null) ?? 'media/avatars/150-26.jpg'
+            op.get(user, 'profileImage', null) ?? require('@/assets/img/blank.png')
           "
           alt="metronic"
         /> -->

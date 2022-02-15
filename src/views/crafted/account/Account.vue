@@ -14,25 +14,77 @@
           >
             <img :src="op.get(user, 'profileImage', null) ?? require('@/assets/img/150-2.jpg') " alt="image" />
           </div> -->
-          <div
-            class="image-input image-input-outline"
-            data-kt-image-input="true"
-            style="background-image: url(media/avatars/blank.png)"
-          >
-            <!--begin::Preview existing avatar-->
+          <div class="col-lg-8">
+            <!--begin::Image input-->
             <div
-              ref="profilePictureRef"
-              class="image-input-wrapper w-125px h-125px"
-              :style="`background-image: url(${
-                op.get(user, 'profileImage', null) ??
-                require('@/assets/img/150-2.jpg')
-              })`"
-            ></div>
-            <!--end::Preview existing avatar-->
+              class="image-input image-input-outline"
+              data-kt-image-input="true"
+              style="background-image: url(media/avatars/blank.png)"
+            >
+              <!--begin::Preview existing avatar-->
+              <div
+                ref="profilePictureRef"
+                class="image-input-wrapper w-125px h-125px"
+                :style="`background-image: ${
+                  newImageAdded
+                    ? `url(${tempImage})`
+                    : `url(${
+                        user.profileImage ?? require('@/assets/img/blank.png')
+                      })`
+                }`"
+              ></div>
+              <!--end::Preview existing avatar-->
 
-            <!--begin::Label-->
+              <!--begin::Label-->
+              <label
+                class="
+                  btn btn-icon btn-circle btn-active-color-primary
+                  w-25px
+                  h-25px
+                  bg-white
+                  shadow
+                "
+                data-kt-image-input-action="change"
+                data-bs-toggle="tooltip"
+                title="Change avatar"
+              >
+                <i class="bi bi-pencil-fill fs-7"></i>
 
-            <!--end::Inputs-->
+                <!--begin::Inputs-->
+                <input
+                  @change="handleImageUpload($event)"
+                  type="file"
+                  name="avatar"
+                  accept=".png, .jpg, .jpeg"
+                />
+                <input type="hidden" name="avatar_remove" />
+                <!--end::Inputs-->
+              </label>
+              <!--end::Label-->
+
+              <!--begin::Remove-->
+              <!-- <span
+                  class="
+                    btn btn-icon btn-circle btn-active-color-primary
+                    w-25px
+                    h-25px
+                    bg-white
+                    shadow
+                  "
+                  data-kt-image-input-action="remove"
+                  data-bs-toggle="tooltip"
+                  @click="removeImage()"
+                  title="Remove avatar"
+                >
+                  <i class="bi bi-x fs-2"></i>
+                </span> -->
+              <!--end::Remove-->
+            </div>
+            <!--end::Image input-->
+
+            <!--begin::Hint-->
+            <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+            <!--end::Hint-->
           </div>
         </div>
         <!--end::Pic-->
@@ -144,9 +196,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref, nextTick } from "vue";
 import { useStore } from "vuex";
 import objectPath from "object-path";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "kt-account",
@@ -154,9 +207,56 @@ export default defineComponent({
     const store = useStore();
     const user = computed(() => store.getters.getUser);
     const op = computed(() => objectPath);
+    const tempImage = ref<string>("");
+    const newImageAdded = ref<boolean>(false);
+    let file: File;
+    const saveChanges1 = async () => {
+      try {
+        let fd = new FormData();
+        if (file) fd.append("profileImage", file, file.name);
+        fd.append("firstName", user.value.firstName);
+        fd.append("lastName", user.value.lastName);
+        fd.append("linkedInProfileUrl", user.value.linkedInProfileUrl);
+        fd.append("jobTitle", user.value.jobTitle);
+        fd.append("telephone", user.value.telephone);
+        fd.append("introduction", user.value.introduction);
+        const response = await store.dispatch(Actions.UPDATE_PROFILE, fd);
+        if (response !== true) throw new Error();
+        store.dispatch(Actions.AUTH_USER);
+        store.commit("setAlert", {
+          message: "Profile Picture Updated",
+          subMessage: "Profile Picture has been updated successfully",
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
+      } catch (err) {
+        const error = store.getters.getErrors;
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: error,
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
+      }
+    };
+    const handleImageUpload = (event) => {
+      file = event.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        tempImage.value = reader.result as string;
+        newImageAdded.value = true;
+      };
+      nextTick(() => {
+        saveChanges1();
+      });
+    };
     return {
       user,
       op,
+      handleImageUpload,
     };
   },
 });
