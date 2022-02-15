@@ -22,7 +22,7 @@
           id="flexCheckDefault"
           :data-id="is.id"
           @input="addToIndustrySectors($event)"
-          :checked="isChecked(is.id)"
+          :checked="checkedIndustrySectors[is.id]"
         />
         <label class="form-check-label" for="flexCheckDefault">
           {{ is.name }}
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed, inject, watch } from "vue";
+import { defineComponent, ref, onMounted, computed, reactive, watch } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 
@@ -55,16 +55,15 @@ export default defineComponent({
     let selectedIndustrySectors = ref<Array<number>>([]);
     const businessDraft = computed(() => store.getters.businessDraftGetter);
     let tempBusinessDraft = { ...businessDraft.value };
+    const checkedIndustrySectors = reactive<Record<string, boolean>>({})
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-    });
-    const isChecked = (id) => {
-      try {
-        return businessDraft.value?.industrySectors.includes(id);
-      } catch (err) {
-        return false;
+      const temp = [...(businessDraft.value?.industrySectors ?? [])]
+      selectedIndustrySectors.value = temp.length ? [...temp] : [...selectedIndustrySectors.value]
+      for(let i = 0; i < (businessDraft.value?.industrySectors?.length ?? 0); i++){
+        checkedIndustrySectors[businessDraft.value?.industrySectors[i]] = true
       }
-    };
+    });
     watch(
       () => props.formDataTemp,
       () => {
@@ -109,9 +108,9 @@ export default defineComponent({
       }
       fieldChanged();
     };
-    onMounted(() => {
+    onMounted(async () => {
       if (!industrySectors.value.length)
-        store.dispatch(Actions.GET_INDUSTRY_SECTORS);
+        await store.dispatch(Actions.GET_INDUSTRY_SECTORS);
     });
     return {
       formData,
@@ -119,7 +118,7 @@ export default defineComponent({
       industrySectors,
       addToIndustrySectors,
       selectedIndustrySectors,
-      isChecked,
+      checkedIndustrySectors
     };
   },
 });

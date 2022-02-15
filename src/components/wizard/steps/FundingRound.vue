@@ -19,7 +19,7 @@
         @input="fieldChanged($event)"
         name="fundingRoundName"
         class="form-control form-control-lg form-control-solid"
-        value=""
+        v-model="fundingRoundName"
       />
       <ErrorMessage
         name="fundingRoundName"
@@ -187,10 +187,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref, watch, computed } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 import { numberFormatter } from "@/utils/index";
 import moment from "moment";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "PersonalDetails",
@@ -205,12 +207,29 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const formatter = numberFormatter;
-    const fundingRoundInvestmentRequired = ref<string>("");
+    const store = useStore();
+    const businessDraft = computed(() => store.getters.businessDraftGetter);
+    const fundingRoundName = ref<string>("");
     const fundingRoundMinimumInvestment = ref<string>("");
     const fundingRoundPreMoneyValuation = ref<string>("");
+    const fundingRoundInvestmentRequired = ref<string>("");
     const opensAt = ref<string>("");
     const closesAt = ref<string>("");
+    let tempBusinessDraft = { ...businessDraft.value };
+    watch(businessDraft, (value) => {
+      console.log({value})
+      tempBusinessDraft = { ...value };
+      fundingRoundName.value = businessDraft.value?.fundingRoundName;
+      fundingRoundMinimumInvestment.value =
+        businessDraft.value?.fundingRoundMinimumInvestment;
+      fundingRoundPreMoneyValuation.value =
+        businessDraft.value?.fundingRoundPreMoneyValuation;
+      fundingRoundInvestmentRequired.value =
+        businessDraft.value?.fundingRoundInvestmentRequired;
+      opensAt.value = businessDraft.value?.fundingRoundOpensAt ?? "";
+      closesAt.value = businessDraft.value?.fundingRoundClosesAt ?? "";
+    });
+    const formatter = numberFormatter;
     watch(opensAt, (value) => {
       const event = {
         target: {
@@ -220,7 +239,7 @@ export default defineComponent({
       };
       fieldChanged(event);
     });
-    watch(opensAt, (value) => {
+    watch(closesAt, (value) => {
       const event = {
         target: {
           name: "fundingRoundClosesAt",
@@ -258,8 +277,8 @@ export default defineComponent({
       }
     };
     const formData = ref<FormData>(props.formDataTemp);
-    const fieldChanged = (event) => {
-      console.log({ event }, "date check");
+    const fieldChanged = async (event) => {
+      tempBusinessDraft[event.target.name] = event.target.value;
       if (formData.value.has(event.target.name)) {
         if (
           event.target.name == "fundingRoundInvestmentRequired" ||
@@ -288,6 +307,15 @@ export default defineComponent({
         }
       }
       emit("form-data", formData.value);
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
+      }
     };
     return {
       limitInput,
@@ -299,6 +327,7 @@ export default defineComponent({
       formatInput,
       opensAt,
       closesAt,
+      fundingRoundName,
     };
   },
 });
