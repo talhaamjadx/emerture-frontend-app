@@ -14,6 +14,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         @input="fieldChanged($event)"
         type="textarea"
         name="name"
@@ -33,6 +34,7 @@
       <!--end::Label-->
 
       <Field
+        @blur="createDraft"
         @keypress="limitInput($event)"
         @input="fieldChanged($event)"
         type="text"
@@ -55,6 +57,7 @@
       <!--end::Label-->
 
       <Field
+        @blur="createDraft"
         @keypress="limitInput($event)"
         @input="fieldChanged($event)"
         v-model="overview"
@@ -78,6 +81,7 @@
       <!--end::Label-->
 
       <Field
+        @blur="createDraft"
         @keypress="limitInput($event)"
         @input="fieldChanged($event)"
         type="text"
@@ -145,17 +149,29 @@ export default defineComponent({
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);
-      try {
-        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
-          business: JSON.stringify(tempBusinessDraft),
-        });
-        if (res !== true) throw new Error("error in API");
-        store.dispatch(Actions.GET_BUSINESS_DRAFT);
-      } catch (err) {
-        console.log({ err });
+    };
+    let timeoutQueue: Array<number> = [];
+    const createDraft = () => {
+      for (let i = 0; i < timeoutQueue.length; i++) {
+        clearTimeout(timeoutQueue[i]);
       }
+      timeoutQueue = [
+        ...timeoutQueue,
+        setTimeout(async () => {
+          try {
+            const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+              business: JSON.stringify(tempBusinessDraft),
+            });
+            if (res !== true) throw new Error("error in API");
+            store.dispatch(Actions.GET_BUSINESS_DRAFT);
+          } catch (err) {
+            console.log({ err });
+          }
+        }, 1000),
+      ];
     };
     return {
+      createDraft,
       formData,
       fieldChanged,
       limitInput,

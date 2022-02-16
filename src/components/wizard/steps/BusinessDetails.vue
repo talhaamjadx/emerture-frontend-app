@@ -14,6 +14,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         @keypress="limitInput($event)"
         @input="
           fieldChanged($event);
@@ -37,6 +38,7 @@
       <!--end::Label-->
 
       <Field
+        @blur="createDraft"
         @input="fieldChanged($event)"
         type="text"
         class="form-control form-control-lg form-control-solid"
@@ -57,6 +59,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         @input="fieldChanged($event)"
         name="currencyCode"
         class="form-select form-select-lg form-select-solid"
@@ -84,6 +87,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         @input="fieldChanged($event)"
         name="geoFocusCountryCode"
         class="form-select form-select-lg form-select-solid"
@@ -133,10 +137,10 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      telephone.value = value?.telephone
-      website.value = value?.website
-      currency.value = value?.currencyCode
-      geoFocus.value = value?.geoFocusCountryCode
+      telephone.value = value?.telephone;
+      website.value = value?.website;
+      currency.value = value?.currencyCode;
+      geoFocus.value = value?.geoFocusCountryCode;
     });
     const formData = ref<FormData>(props.formDataTemp);
     const telephone = ref<string>("");
@@ -168,17 +172,29 @@ export default defineComponent({
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);
-      try {
-        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
-          business: JSON.stringify(tempBusinessDraft),
-        });
-        if (res !== true) throw new Error("error in API");
-        store.dispatch(Actions.GET_BUSINESS_DRAFT);
-      } catch (err) {
-        console.log({ err });
+    };
+    let timeoutQueue: Array<number> = [];
+    const createDraft = () => {
+      for (let i = 0; i < timeoutQueue.length; i++) {
+        clearTimeout(timeoutQueue[i]);
       }
+      timeoutQueue = [
+        ...timeoutQueue,
+        setTimeout(async () => {
+          try {
+            const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+              business: JSON.stringify(tempBusinessDraft),
+            });
+            if (res !== true) throw new Error("error in API");
+            store.dispatch(Actions.GET_BUSINESS_DRAFT);
+          } catch (err) {
+            console.log({ err });
+          }
+        }, 1000),
+      ];
     };
     return {
+      createDraft,
       formData,
       fieldChanged,
       limitInput,

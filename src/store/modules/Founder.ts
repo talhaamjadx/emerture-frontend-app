@@ -42,7 +42,19 @@ export default class Auth extends VuexModule {
         ApiService.setHeader("application/json")
         return ApiService.post("/business-draft", data)
             .then(() => {
-                // this.context.commit(Mutations.SET_BUSINESS_DRAFT, businessDraft.data.data)
+                return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
+    [Actions.DELETE_BUSINESS_DRAFT](): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.delete("/business-draft-delete")
+            .then(() => {
                 return true
             })
             .catch(err => {
@@ -60,7 +72,8 @@ export default class Auth extends VuexModule {
                 return true
             })
             .catch(err => {
-                console.log(err)
+                if(err?.response?.status == 400)
+                this.context.commit(Mutations.SET_BUSINESS_DRAFT, {})
                 this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
                 return err.response
             })

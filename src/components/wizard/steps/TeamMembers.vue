@@ -83,6 +83,7 @@
 
         <!--begin::Input-->
         <input
+          @blur="createDraft"
           v-model="teamMembers[index].name"
           @input="fieldChanged($event)"
           name="name"
@@ -114,6 +115,7 @@
 
         <!--begin::Input-->
         <input
+          @blur="createDraft"
           v-model="teamMembers[index].jobTitle"
           @input="fieldChanged($event)"
           name="jobTitle"
@@ -146,6 +148,7 @@
 
         <!--begin::Input-->
         <input
+          @blur="createDraft"
           v-model="teamMembers[index].linkedInProfileUrl"
           @input="fieldChanged($event)"
           type="text"
@@ -177,6 +180,7 @@
 
         <!--begin::Input-->
         <input
+          @blur="createDraft"
           v-model="teamMembers[index].introduction"
           @input="fieldChanged($event)"
           type="text"
@@ -272,17 +276,29 @@ export default defineComponent({
       } else
         formData.value.append("teamMembers", JSON.stringify(teamMembers.value));
       emit("form-data", formData.value);
-      try {
-        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
-          business: JSON.stringify(tempBusinessDraft),
-        });
-        if (res !== true) throw new Error("error in API");
-        store.dispatch(Actions.GET_BUSINESS_DRAFT);
-      } catch (err) {
-        console.log({ err });
+    };
+    let timeoutQueue: Array<number> = [];
+    const createDraft = () => {
+      for (let i = 0; i < timeoutQueue.length; i++) {
+        clearTimeout(timeoutQueue[i]);
       }
+      timeoutQueue = [
+        ...timeoutQueue,
+        setTimeout(async () => {
+          try {
+            const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+              business: JSON.stringify(tempBusinessDraft),
+            });
+            if (res !== true) throw new Error("error in API");
+            store.dispatch(Actions.GET_BUSINESS_DRAFT);
+          } catch (err) {
+            console.log({ err });
+          }
+        }, 1000),
+      ];
     };
     return {
+      createDraft,
       fileAdded,
       teamMembers,
       formData,

@@ -24,7 +24,7 @@ export default class Business extends VuexModule {
     }
     @Action
     [Actions.CREATE_FOUNDER_BUSINESS](payload: AxiosRequestConfig): Promise<AxiosResponse> {
-        ApiService.setHeader("multipart/form-data")
+        ApiService.setHeader("application/json")
         return ApiService.post("/founder-business", payload)
             .then(() => {
                 return true

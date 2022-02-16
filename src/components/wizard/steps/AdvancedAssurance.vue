@@ -83,7 +83,7 @@ export default defineComponent({
       }
     };
     const fieldChanged = async (event) => {
-      tempBusinessDraft[event.target.name] = event.target.value;
+      tempBusinessDraft[event.target.name] = event.target.checked ? "1" : "0";
       if (formData.value.has(event.target.name))
         formData.value.set(event.target.name, event.target.checked ? "1" : "0");
       else

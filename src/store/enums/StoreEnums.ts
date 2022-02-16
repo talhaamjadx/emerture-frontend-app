@@ -55,7 +55,8 @@ enum Actions {
   DELETE_FUNDING_ROUND_INVESTMENT = "deleteFundingRoundInvestment",
   DEACTIVATE = "deactivate",
   CREATE_BUSINESS_DRAFT = "createBusinessDraft",
-  GET_BUSINESS_DRAFT = "getBusinessDraft"
+  GET_BUSINESS_DRAFT = "getBusinessDraft",
+  DELETE_BUSINESS_DRAFT = "deleteBusinessDraft"
 }
 
 enum Mutations {

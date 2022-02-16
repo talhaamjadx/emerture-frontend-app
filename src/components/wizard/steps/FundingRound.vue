@@ -16,6 +16,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         @input="fieldChanged($event)"
         name="fundingRoundName"
         class="form-control form-control-lg form-control-solid"
@@ -47,6 +48,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         as="input"
         type="text"
         @input="
@@ -84,6 +86,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         as="input"
         type="text"
         @input="
@@ -121,6 +124,7 @@
 
       <!--begin::Input-->
       <Field
+        @blur="createDraft"
         as="input"
         type="text"
         @input="
@@ -217,7 +221,6 @@ export default defineComponent({
     const closesAt = ref<string>("");
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
-      console.log({value})
       tempBusinessDraft = { ...value };
       fundingRoundName.value = businessDraft.value?.fundingRoundName;
       fundingRoundMinimumInvestment.value =
@@ -231,28 +234,23 @@ export default defineComponent({
     });
     const formatter = numberFormatter;
     watch(opensAt, (value) => {
-      const event = {
-        target: {
-          name: "fundingRoundOpensAt",
-          value: moment(value).format("YYYY-MM-DD"),
-        },
-      };
-      fieldChanged(event);
+      tempBusinessDraft["fundingRoundOpensAt"] =
+        moment(value).format("YYYY-MM-DD");
+      createDraft();
     });
     watch(closesAt, (value) => {
-      const event = {
-        target: {
-          name: "fundingRoundClosesAt",
-          value: moment(value).format("YYYY-MM-DD"),
-        },
-      };
-      fieldChanged(event);
+      tempBusinessDraft["fundingRoundClosesAt"] =
+        moment(value).format("YYYY-MM-DD");
+      createDraft();
     });
     const formatInput = (e) => {
       if (!e.target.value) {
-        fundingRoundInvestmentRequired.value = "";
-        fundingRoundMinimumInvestment.value = "";
-        fundingRoundPreMoneyValuation.value = "";
+        if (e.target.name == "fundingRoundInvestmentRequired")
+          fundingRoundInvestmentRequired.value = "";
+        if (e.target.name == "fundingRoundMinimumInvestment")
+          fundingRoundMinimumInvestment.value = "";
+        if (e.target.name == "fundingRoundPreMoneyValuation")
+          fundingRoundPreMoneyValuation.value = "";
         return;
       }
       if (e.target.name == "fundingRoundInvestmentRequired")
@@ -278,7 +276,18 @@ export default defineComponent({
     };
     const formData = ref<FormData>(props.formDataTemp);
     const fieldChanged = async (event) => {
-      tempBusinessDraft[event.target.name] = event.target.value;
+      if (
+        event.target.name == "fundingRoundInvestmentRequired" ||
+        event.target.name == "fundingRoundMinimumInvestment" ||
+        event.target.name == "fundingRoundPreMoneyValuation"
+      ) {
+        tempBusinessDraft[event.target.name] = event.target.value.replace(
+          /,/g,
+          ""
+        );
+      } else {
+        tempBusinessDraft[event.target.name] = event.target.value;
+      }
       if (formData.value.has(event.target.name)) {
         if (
           event.target.name == "fundingRoundInvestmentRequired" ||
@@ -307,17 +316,29 @@ export default defineComponent({
         }
       }
       emit("form-data", formData.value);
-      try {
-        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
-          business: JSON.stringify(tempBusinessDraft),
-        });
-        if (res !== true) throw new Error("error in API");
-        store.dispatch(Actions.GET_BUSINESS_DRAFT);
-      } catch (err) {
-        console.log({ err });
+    };
+    let timeoutQueue: Array<number> = [];
+    const createDraft = () => {
+      for (let i = 0; i < timeoutQueue.length; i++) {
+        clearTimeout(timeoutQueue[i]);
       }
+      timeoutQueue = [
+        ...timeoutQueue,
+        setTimeout(async () => {
+          try {
+            const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+              business: JSON.stringify(tempBusinessDraft),
+            });
+            if (res !== true) throw new Error("error in API");
+            store.dispatch(Actions.GET_BUSINESS_DRAFT);
+          } catch (err) {
+            console.log({ err });
+          }
+        }, 1000),
+      ];
     };
     return {
+      createDraft,
       limitInput,
       formData,
       fieldChanged,

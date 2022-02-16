@@ -399,7 +399,7 @@ export default defineComponent({
     const roles = computed(() => {
       return store.getters.getRolesData;
     });
-    const fileSizeError = ref<boolean>(false)
+    const fileSizeError = ref<boolean>(false);
     const businessDraft = computed(() => store.getters.businessDraftGetter);
     const router = useRouter();
     const store = useStore();
@@ -460,7 +460,10 @@ export default defineComponent({
         defensibleUsp: Yup.string().required().label("Defensible USP"),
       }),
       Yup.object({
-        telephone: Yup.string().required().min(12, 'Telephone must be 11 characters long.').label("Telephone"),
+        telephone: Yup.string()
+          .required()
+          .min(12, "Telephone must be 11 characters long.")
+          .label("Telephone"),
         website: Yup.string()
           .matches(
             /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
@@ -514,7 +517,7 @@ export default defineComponent({
 
     const handleStep = handleSubmit((values) => {
       console.log({ values });
-      if(fileSizeError.value) return
+      if (fileSizeError.value) return;
       formData.value = {
         ...formData.value,
         ...values,
@@ -558,9 +561,14 @@ export default defineComponent({
         }
         const response = await store.dispatch(
           Actions.CREATE_FOUNDER_BUSINESS,
-          formDataTemp.value
+          businessDraft.value
         );
         if (response !== true) throw new Error();
+        const deleteResponse = await store.dispatch(
+          Actions.DELETE_BUSINESS_DRAFT
+        );
+        if (deleteResponse !== true) throw new Error("Error in deleting draft");
+        else await store.dispatch(Actions.GET_BUSINESS_DRAFT);
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Investment Oppertunity ${"Created"}`,
@@ -608,7 +616,7 @@ export default defineComponent({
       formSubmit,
       totalSteps,
       currentStepIndex,
-      fileSizeError
+      fileSizeError,
     };
   },
 });
