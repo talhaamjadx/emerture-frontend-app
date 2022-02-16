@@ -18,7 +18,7 @@
                   class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
                   style="color: rgb(207, 187, 88); font-size: 15px"
                 >
-                  Investment Opportinity Shared
+                  Investment Opportinities Shared
                 </p>
               </div>
               <div
@@ -36,7 +36,7 @@
                   class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
                   style="color: #9bbfd3; font-size: 15px"
                 >
-                  Investment Oppertunity Viewed
+                  Investment Opportinities Viewed
                 </p>
               </div>
               <div class="col-3 display-2 text-center" style="color: #9bbfd3">

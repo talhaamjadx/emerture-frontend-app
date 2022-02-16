@@ -7,7 +7,12 @@
       <div class="card-body d-flex flex-center flex-column p-9">
         <!--begin::Avatar-->
         <div v-if="avatar" class="symbol symbol-65px symbol-circle mb-5">
-          <img :src="profilePicture ?? avatar" alt="image" />
+          <img
+            :style="`
+              background-image: url('${profilePicture ?? avatar}');
+              background-size: cover;`
+            "
+          />
         </div>
         <div v-else class="symbol symbol-65px symbol-circle mb-5">
           <span
