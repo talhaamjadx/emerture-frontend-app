@@ -42,9 +42,10 @@
         data-bs-html="true"
       >
       </i>
-      <div class="input-group mb-3" style="margin-top:6px;">
+      <div class="input-group mb-3" style="margin-top: 6px">
         <span class="input-group-text">£</span>
         <Field
+          @blur="createDraft"
           as="input"
           type="text"
           @input="
@@ -63,30 +64,8 @@
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
       </div>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <Field
-        @blur="createDraft"
-        as="input"
-        type="text"
-        @input="
-          fieldChanged($event);
-          formatInput($event);
-        "
-        @keypress="limitInput($event)"
-        name="fundingRoundInvestmentRequired"
-        class="form-control form-control-lg form-control-solid"
-        v-model="fundingRoundInvestmentRequired"
-      />
-      <!--end::Input-->
-      <ErrorMessage
-        name="fundingRoundInvestmentRequired"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
     </div>
     <!--end::Input group-->
-
 
     <!--begin::Input group-->
     <div class="fv-row mb-10">
@@ -100,9 +79,10 @@
         data-bs-html="true"
       >
       </i>
-      <div class="input-group mb-3" style="margin-top:6px;">
+      <div class="input-group mb-3" style="margin-top: 6px">
         <span class="input-group-text">£</span>
         <Field
+          @blur="createDraft"
           as="input"
           type="text"
           @input="
@@ -121,30 +101,8 @@
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
       </div>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <Field
-        @blur="createDraft"
-        as="input"
-        type="text"
-        @input="
-          fieldChanged($event);
-          formatInput($event);
-        "
-        @keypress="limitInput($event)"
-        name="fundingRoundPreMoneyValuation"
-        class="form-control form-control-lg form-control-solid"
-        v-model="fundingRoundPreMoneyValuation"
-      ></Field>
-      <ErrorMessage
-        name="fundingRoundPreMoneyValuation"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-      <!--end::Input-->
     </div>
     <!--end::Input group-->
-
 
     <!--begin::Input group-->
     <div class="fv-row mb-10">
@@ -158,9 +116,10 @@
         data-bs-html="true"
       >
       </i>
-      <div class="input-group mb-3" style="margin-top:6px;">
+      <div class="input-group mb-3" style="margin-top: 6px">
         <span class="input-group-text">£</span>
         <Field
+          @blur="createDraft"
           as="input"
           type="text"
           @input="
@@ -180,26 +139,6 @@
         ></ErrorMessage>
       </div>
       <!--end::Label-->
-
-      <!--begin::Input-->
-      <Field
-        @blur="createDraft"
-        as="input"
-        type="text"
-        @input="
-          fieldChanged($event);
-          formatInput($event);
-        "
-        @keypress="limitInput($event)"
-        name="fundingRoundMinimumInvestment"
-        class="form-control form-control-lg form-control-solid"
-        v-model="fundingRoundMinimumInvestment"
-      ></Field>
-      <ErrorMessage
-        name="fundingRoundMinimumInvestment"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-      <!--end::Input-->
     </div>
     <!--end::Input group-->
     <div class="fv-row mb-10">
@@ -281,15 +220,25 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      fundingRoundName.value = businessDraft.value?.fundingRoundName;
-      fundingRoundMinimumInvestment.value =
-        businessDraft.value?.fundingRoundMinimumInvestment;
-      fundingRoundPreMoneyValuation.value =
-        businessDraft.value?.fundingRoundPreMoneyValuation;
+      fundingRoundName.value = fundingRoundName.value
+        ? fundingRoundName.value
+        : businessDraft.value?.fundingRoundName ?? "";
+      fundingRoundMinimumInvestment.value = fundingRoundMinimumInvestment.value
+        ? fundingRoundMinimumInvestment.value
+        : businessDraft.value?.fundingRoundMinimumInvestment ?? "";
+      fundingRoundPreMoneyValuation.value = fundingRoundPreMoneyValuation.value
+        ? fundingRoundPreMoneyValuation.value
+        : businessDraft.value?.fundingRoundPreMoneyValuation ?? "";
       fundingRoundInvestmentRequired.value =
-        businessDraft.value?.fundingRoundInvestmentRequired;
-      opensAt.value = businessDraft.value?.fundingRoundOpensAt ?? "";
-      closesAt.value = businessDraft.value?.fundingRoundClosesAt ?? "";
+        fundingRoundInvestmentRequired.value
+          ? fundingRoundInvestmentRequired.value
+          : businessDraft.value?.fundingRoundInvestmentRequired ?? "";
+      opensAt.value = opensAt.value
+        ? opensAt.value
+        : businessDraft.value?.fundingRoundOpensAt ?? "";
+      closesAt.value = closesAt.value
+        ? closesAt.value
+        : businessDraft.value?.fundingRoundClosesAt ?? "";
     });
     const formatter = numberFormatter;
     watch(opensAt, (value) => {

@@ -134,10 +134,14 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      businessName.value = value?.name;
-      summary.value = value?.summary;
-      overview.value = value?.overview;
-      defensibleUsp.value = value?.defensibleUsp;
+      businessName.value = businessName.value
+        ? businessName.value
+        : value?.name ?? "";
+      summary.value = summary.value ? summary.value : value?.summary ?? "";
+      overview.value = overview.value ? overview.value : value?.overview ?? "";
+      defensibleUsp.value = defensibleUsp.value
+        ? defensibleUsp.value
+        : value?.defensibleUsp ?? "";
     });
     const limitInput = (e) => {
       if (e.target.value.length >= limitLength) e.preventDefault();
@@ -150,25 +154,25 @@ export default defineComponent({
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);
     };
-    let timeoutQueue: Array<number> = [];
-    const createDraft = () => {
-      for (let i = 0; i < timeoutQueue.length; i++) {
-        clearTimeout(timeoutQueue[i]);
+    // let timeoutQueue: Array<number> = [];
+    const createDraft = async () => {
+      // for (let i = 0; i < timeoutQueue.length; i++) {
+      //   clearTimeout(timeoutQueue[i]);
+      // }
+      // timeoutQueue = [
+      //   ...timeoutQueue,
+      // setTimeout(async () => {
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
       }
-      timeoutQueue = [
-        ...timeoutQueue,
-        setTimeout(async () => {
-          try {
-            const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
-              business: JSON.stringify(tempBusinessDraft),
-            });
-            if (res !== true) throw new Error("error in API");
-            store.dispatch(Actions.GET_BUSINESS_DRAFT);
-          } catch (err) {
-            console.log({ err });
-          }
-        }, 1000),
-      ];
+      // }, 1000),
+      // ];
     };
     return {
       createDraft,

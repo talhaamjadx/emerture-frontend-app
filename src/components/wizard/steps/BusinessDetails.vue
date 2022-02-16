@@ -137,10 +137,16 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      telephone.value = value?.telephone;
-      website.value = value?.website;
-      currency.value = value?.currencyCode;
-      geoFocus.value = value?.geoFocusCountryCode;
+      telephone.value = telephone.value
+        ? telephone.value
+        : value?.telephone ?? "";
+      website.value = website.value ? website.value : value?.website ?? "";
+      currency.value = currency.value
+        ? currency.value
+        : value?.currencyCode ?? "";
+      geoFocus.value = geoFocus.value
+        ? geoFocus.value
+        : value?.geoFocusCountryCode ?? "";
     });
     const formData = ref<FormData>(props.formDataTemp);
     const telephone = ref<string>("");
