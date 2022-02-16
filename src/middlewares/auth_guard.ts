@@ -32,12 +32,12 @@ export default async (to, from, next): Promise<NavigationGuardNext | undefined> 
         return areRolesAdded(store.getters.getUser) ? next('/') : next('/add-role')
       }
       if (to.name == 'dashboard' && from.name == 'social') {
-        if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts") {
+        if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts" && to.name !== "expert-global") {
           return next("/find-experts")
         }
         return areRolesAdded(store.getters.getUser) ? next() : next('add-role')
       }
-      if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts") {
+      if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts" && to.name !== "expert-global") {
         return next("/find-experts")
       }
       next()
@@ -54,7 +54,7 @@ export default async (to, from, next): Promise<NavigationGuardNext | undefined> 
     else if (objectPath.get(store, "getters.getUser.isActive", false) && to.meta.loginRequired && to.name == "email-verification") {
       return areRolesAdded(store.getters.getUser) ? next('/') : next('/add-role')
     }
-    if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts") {
+    if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts" && to.name !== "expert-global") {
       return next("/find-experts")
     }
     next()

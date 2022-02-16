@@ -117,7 +117,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "/expert/:id",
-        name: "expert",
+        name: "expert-global",
         component: () => import("@/views/crafted/pages/ExpertProfileGlobal.vue"),
         meta: {
           loginRequired: true

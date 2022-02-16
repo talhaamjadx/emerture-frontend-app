@@ -8,12 +8,6 @@ const DocMenuConfig = [
         fontIcon: "bi-layers",
       },
       {
-        heading: "profile",
-        route: "/crafted/account/settings",
-        svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-layers",
-      },
-      {
         heading: "expert-profile",
         route: "/expert-profile",
         svgIcon: "media/icons/duotune/general/gen019.svg",
