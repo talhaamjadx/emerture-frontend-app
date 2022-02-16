@@ -134,14 +134,34 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      businessName.value = businessName.value
-        ? businessName.value
-        : value?.name ?? "";
-      summary.value = summary.value ? summary.value : value?.summary ?? "";
-      overview.value = overview.value ? overview.value : value?.overview ?? "";
-      defensibleUsp.value = defensibleUsp.value
-        ? defensibleUsp.value
-        : value?.defensibleUsp ?? "";
+      businessName.value = (() => {
+        if (businessName.value) {
+          tempBusinessDraft["name"] = businessName.value;
+          return businessName.value;
+        }
+        return value?.name ?? "";
+      })();
+      summary.value = (() => {
+        if (summary.value) {
+          tempBusinessDraft["summary"] = summary.value;
+          return summary.value;
+        }
+        return value?.summary ?? "";
+      })();
+      overview.value = (() => {
+        if (overview.value) {
+          tempBusinessDraft["overview"] = overview.value;
+          return overview.value;
+        }
+        return value?.overview ?? "";
+      })();
+      defensibleUsp.value = (() => {
+        if (defensibleUsp.value) {
+          tempBusinessDraft["defensibleUsp"] = defensibleUsp.value;
+          return defensibleUsp.value;
+        }
+        return value?.defensibleUsp ?? "";
+      })();
     });
     const limitInput = (e) => {
       if (e.target.value.length >= limitLength) e.preventDefault();

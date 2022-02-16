@@ -137,16 +137,34 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      telephone.value = telephone.value
-        ? telephone.value
-        : value?.telephone ?? "";
-      website.value = website.value ? website.value : value?.website ?? "";
-      currency.value = currency.value
-        ? currency.value
-        : value?.currencyCode ?? "";
-      geoFocus.value = geoFocus.value
-        ? geoFocus.value
-        : value?.geoFocusCountryCode ?? "";
+      telephone.value = (() => {
+        if (telephone.value) {
+          tempBusinessDraft["telephone"] = telephone.value;
+          return telephone.value;
+        }
+        return value?.telephone ?? "";
+      })();
+      website.value = (() => {
+        if (website.value) {
+          tempBusinessDraft["website"] = website.value;
+          return website.value;
+        }
+        return value?.website ?? "";
+      })();
+      currency.value = (() => {
+        if (currency.value) {
+          tempBusinessDraft["currencyCode"] = currency.value;
+          return currency.value;
+        }
+        return value?.currencyCode ?? "";
+      })();
+      geoFocus.value = (() => {
+        if (geoFocus.value) {
+          tempBusinessDraft["geoFocusCountryCode"] = geoFocus.value;
+          return geoFocus.value;
+        }
+        return value?.geoFocusCountryCode ?? "";
+      })();
     });
     const formData = ref<FormData>(props.formDataTemp);
     const telephone = ref<string>("");

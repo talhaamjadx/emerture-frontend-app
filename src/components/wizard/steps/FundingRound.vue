@@ -220,25 +220,50 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      fundingRoundName.value = fundingRoundName.value
-        ? fundingRoundName.value
-        : businessDraft.value?.fundingRoundName ?? "";
-      fundingRoundMinimumInvestment.value = fundingRoundMinimumInvestment.value
-        ? fundingRoundMinimumInvestment.value
-        : businessDraft.value?.fundingRoundMinimumInvestment ?? "";
-      fundingRoundPreMoneyValuation.value = fundingRoundPreMoneyValuation.value
-        ? fundingRoundPreMoneyValuation.value
-        : businessDraft.value?.fundingRoundPreMoneyValuation ?? "";
-      fundingRoundInvestmentRequired.value =
-        fundingRoundInvestmentRequired.value
-          ? fundingRoundInvestmentRequired.value
-          : businessDraft.value?.fundingRoundInvestmentRequired ?? "";
-      opensAt.value = opensAt.value
-        ? opensAt.value
-        : businessDraft.value?.fundingRoundOpensAt ?? "";
-      closesAt.value = closesAt.value
-        ? closesAt.value
-        : businessDraft.value?.fundingRoundClosesAt ?? "";
+      fundingRoundName.value = (() => {
+        if (fundingRoundName.value) {
+          tempBusinessDraft["fundingRoundName"] = fundingRoundName.value;
+          return fundingRoundName.value;
+        }
+        return value?.fundingRoundName ?? "";
+      })();
+      fundingRoundMinimumInvestment.value = (() => {
+        if (fundingRoundMinimumInvestment.value) {
+          tempBusinessDraft["fundingRoundMinimumInvestment"] = fundingRoundMinimumInvestment.value.replace(/,/g, "").toString();
+          return fundingRoundMinimumInvestment.value.replace(/,/g, "").toString();
+        }
+        return value?.fundingRoundMinimumInvestment ?? "";
+      })();
+      fundingRoundPreMoneyValuation.value = (() => {
+        if (fundingRoundPreMoneyValuation.value) {
+          tempBusinessDraft["fundingRoundPreMoneyValuation"] =
+            fundingRoundPreMoneyValuation.value.replace(/,/g, "").toString();
+          return fundingRoundPreMoneyValuation.value.replace(/,/g, "").toString();
+        }
+        return value?.fundingRoundPreMoneyValuation ?? "";
+      })();
+      fundingRoundInvestmentRequired.value = (() => {
+        if (fundingRoundInvestmentRequired.value) {
+          tempBusinessDraft["fundingRoundInvestmentRequired"] =
+            fundingRoundInvestmentRequired.value.replace(/,/g, "").toString();
+          return fundingRoundInvestmentRequired.value.replace(/,/g, "").toString();
+        }
+        return value?.fundingRoundInvestmentRequired ?? "";
+      })();
+      opensAt.value = (() => {
+        if (opensAt.value) {
+          tempBusinessDraft["fundingRoundOpensAt"] = opensAt.value;
+          return opensAt.value;
+        }
+        return value?.fundingRoundOpensAt ?? "";
+      })();
+      closesAt.value = (() => {
+        if (closesAt.value) {
+          tempBusinessDraft["fundingRoundClosesAt"] = closesAt.value;
+          return closesAt.value;
+        }
+        return value?.fundingRoundClosesAt ?? "";
+      })();
     });
     const formatter = numberFormatter;
     watch(opensAt, (value) => {
