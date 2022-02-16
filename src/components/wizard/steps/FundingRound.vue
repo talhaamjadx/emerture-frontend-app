@@ -33,17 +33,36 @@
     <!--begin::Input group-->
     <div class="fv-row mb-10">
       <!--begin::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span class="required">Investment Required</span>
+      <span class="required form-label"> Investment Required</span>
 
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
-        >
-        </i>
-      </label>
+      <i
+        class="fas fa-exclamation-circle ms-2 fs-7"
+        data-bs-toggle="popover"
+        data-bs-trigger="hover"
+        data-bs-html="true"
+      >
+      </i>
+      <div class="input-group mb-3" style="margin-top:6px;">
+        <span class="input-group-text">£</span>
+        <Field
+          as="input"
+          type="text"
+          @input="
+            fieldChanged($event);
+            formatInput($event);
+          "
+          style="background-color: #f5f8fa"
+          @keypress="limitInput($event)"
+          name="fundingRoundInvestmentRequired"
+          class="form-control py-4 form-control-lg form-control-solid"
+          v-model="fundingRoundInvestmentRequired"
+        />
+        <!--end::Input-->
+        <ErrorMessage
+          name="fundingRoundInvestmentRequired"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
       <!--end::Label-->
 
       <!--begin::Input-->
@@ -68,20 +87,40 @@
     </div>
     <!--end::Input group-->
 
+
     <!--begin::Input group-->
     <div class="fv-row mb-10">
-      <!--end::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span class="required">Pre-Money Valuation</span>
+      <!--begin::Label-->
+      <span class="required form-label">Pre-Money Valuation</span>
 
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
-        >
-        </i>
-      </label>
+      <i
+        class="fas fa-exclamation-circle ms-2 fs-7"
+        data-bs-toggle="popover"
+        data-bs-trigger="hover"
+        data-bs-html="true"
+      >
+      </i>
+      <div class="input-group mb-3" style="margin-top:6px;">
+        <span class="input-group-text">£</span>
+        <Field
+          as="input"
+          type="text"
+          @input="
+            fieldChanged($event);
+            formatInput($event);
+          "
+          style="background-color: #f5f8fa"
+          @keypress="limitInput($event)"
+          name="fundingRoundPreMoneyValuation"
+          class="form-control py-4 form-control-lg form-control-solid"
+          v-model="fundingRoundPreMoneyValuation"
+        />
+        <!--end::Input-->
+        <ErrorMessage
+          name="fundingRoundPreMoneyValuation"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
       <!--end::Label-->
 
       <!--begin::Input-->
@@ -106,20 +145,40 @@
     </div>
     <!--end::Input group-->
 
+
     <!--begin::Input group-->
     <div class="fv-row mb-10">
-      <!--end::Label-->
-      <label class="d-flex align-items-center form-label">
-        <span class="required">Minimum Investment</span>
+      <!--begin::Label-->
+      <span class="required form-label">Minimum Investment</span>
 
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="popover"
-          data-bs-trigger="hover"
-          data-bs-html="true"
-        >
-        </i>
-      </label>
+      <i
+        class="fas fa-exclamation-circle ms-2 fs-7"
+        data-bs-toggle="popover"
+        data-bs-trigger="hover"
+        data-bs-html="true"
+      >
+      </i>
+      <div class="input-group mb-3" style="margin-top:6px;">
+        <span class="input-group-text">£</span>
+        <Field
+          as="input"
+          type="text"
+          @input="
+            fieldChanged($event);
+            formatInput($event);
+          "
+          style="background-color: #f5f8fa"
+          @keypress="limitInput($event)"
+          name="fundingRoundMinimumInvestment"
+          class="form-control py-4 form-control-lg form-control-solid"
+          v-model="fundingRoundMinimumInvestment"
+        />
+        <!--end::Input-->
+        <ErrorMessage
+          name="fundingRoundMinimumInvestment"
+          class="fv-plugins-message-container invalid-feedback"
+        ></ErrorMessage>
+      </div>
       <!--end::Label-->
 
       <!--begin::Input-->

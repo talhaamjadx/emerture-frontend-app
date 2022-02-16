@@ -13,7 +13,7 @@
           <div class="content" style="background-color: #1b283f">
             <div class="row">
               <div
-                class="col-sm-5 col-12 order-sm-first order-last text-center"
+                class="col-sm-4 col-12 order-sm-first order-last text-center offset-1"
               >
                 <div>
                   <img
@@ -33,11 +33,11 @@
 
               <div
                 class="
-                  col-sm-7 col-12
+                  col-sm-4 col-12
                   order-sm-last order-first
                   text-white text-center
                   my-sm-auto
-                  mt-3
+                  mt-3 offset-1
                 "
               >
                 <h3 style="color: white !important">{{ business.name }}</h3>
