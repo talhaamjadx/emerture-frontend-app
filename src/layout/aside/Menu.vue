@@ -174,7 +174,6 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { version } from "@/core/helpers/documentation";
 import { asideMenuIcons } from "@/core/helpers/config";
-import MainMenu from "@/core/config/MainMenuConfig";
 import objectPath from "object-path";
 
 export default defineComponent({
@@ -183,7 +182,56 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const user = computed(() => store.getters.getUser);
-    let MainMenuConfig = reactive(MainMenu);
+    const MainMenu = [
+      {
+        pages: [
+          {
+            heading: "dashboard",
+            route: "/dashboard",
+            svgIcon: "media/icons/duotune/general/gen001.svg",
+            fontIcon: "bi-layers",
+          },
+          {
+            heading: "expert-profile",
+            route: "/expert-profile",
+            svgIcon: "media/icons/duotune/general/gen019.svg",
+            fontIcon: "bi-layers",
+          },
+          {
+            heading: "investor-profile",
+            route: "/investor-profile",
+            svgIcon: "media/icons/duotune/general/gen019.svg",
+            fontIcon: "bi-layers",
+          },
+          {
+            heading: "find-experts",
+            route: "/find-experts",
+            svgIcon: "media/icons/duotune/general/gen019.svg",
+            fontIcon: "bi-layers",
+          },
+          {
+            heading: "find-investment-oppertunities",
+            route: "/find-investment-oppertunities",
+            svgIcon: "media/icons/duotune/general/gen019.svg",
+            fontIcon: "bi-layers",
+          },
+          {
+            heading: "addRole",
+            route: "/add-role",
+            svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
+            fontIcon: "bi-cart",
+          },
+          {
+            heading: "businesses",
+            route: "/businesses",
+            svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
+            fontIcon: "bi-cart",
+          },
+        ],
+      },
+    ];
+    const MainMenuTemp = [...MainMenu]
+    let MainMenuConfig = reactive(MainMenuTemp);
     watch(
       [
         () => user.value.investor,
@@ -195,7 +243,7 @@ export default defineComponent({
       }
     );
     const filterItems = () => {
-      MainMenu[0].pages = MainMenu[0].pages.filter((config) => {
+      MainMenuTemp[0].pages = MainMenuTemp[0].pages.filter((config) => {
         if (
           config.heading == "expert-profile" &&
           !(user.value.expert instanceof Array)
@@ -226,7 +274,7 @@ export default defineComponent({
           return true;
         } else return false;
       });
-      MainMenuConfig = MainMenu;
+      MainMenuConfig = MainMenuTemp;
     };
     filterItems();
     const { t, te } = useI18n();
