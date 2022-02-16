@@ -160,11 +160,13 @@
         >
         </i>
       </label>
-      <input
+      <el-date-picker
         name="fundingRoundOpensAt"
         type="date"
-        @input="fieldChanged($event)"
-      />
+        v-model="opensAt"
+        placeholder="Pick a Starting Date"
+      >
+      </el-date-picker>
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
@@ -179,11 +181,13 @@
         >
         </i>
       </label>
-      <input
+      <el-date-picker
         name="fundingRoundClosesAt"
         type="date"
-        @input="fieldChanged($event)"
-      />
+        v-model="closesAt"
+        placeholder="Pick an Ending Date"
+      >
+      </el-date-picker>
     </div>
     <!--begin::Input group-->
   </div>
@@ -191,9 +195,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
 import { numberFormatter } from "@/utils/index";
+import moment from "moment";
 
 export default defineComponent({
   name: "PersonalDetails",
@@ -212,6 +217,26 @@ export default defineComponent({
     const fundingRoundInvestmentRequired = ref<string>("");
     const fundingRoundMinimumInvestment = ref<string>("");
     const fundingRoundPreMoneyValuation = ref<string>("");
+    const opensAt = ref<string>("");
+    const closesAt = ref<string>("");
+    watch(opensAt, (value) => {
+      const event = {
+        target: {
+          name: "fundingRoundOpensAt",
+          value: moment(value).format("YYYY-MM-DD"),
+        },
+      };
+      fieldChanged(event);
+    });
+    watch(opensAt, (value) => {
+      const event = {
+        target: {
+          name: "fundingRoundClosesAt",
+          value: moment(value).format("YYYY-MM-DD"),
+        },
+      };
+      fieldChanged(event);
+    });
     const formatInput = (e) => {
       if (!e.target.value) {
         fundingRoundInvestmentRequired.value = "";
@@ -242,6 +267,7 @@ export default defineComponent({
     };
     const formData = ref<FormData>(props.formDataTemp);
     const fieldChanged = (event) => {
+      console.log({ event }, "date check");
       if (formData.value.has(event.target.name)) {
         if (
           event.target.name == "fundingRoundInvestmentRequired" ||
@@ -279,6 +305,8 @@ export default defineComponent({
       fundingRoundMinimumInvestment,
       fundingRoundPreMoneyValuation,
       formatInput,
+      opensAt,
+      closesAt,
     };
   },
 });
