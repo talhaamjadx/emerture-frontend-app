@@ -154,14 +154,7 @@ export default defineComponent({
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);
     };
-    // let timeoutQueue: Array<number> = [];
     const createDraft = async () => {
-      // for (let i = 0; i < timeoutQueue.length; i++) {
-      //   clearTimeout(timeoutQueue[i]);
-      // }
-      // timeoutQueue = [
-      //   ...timeoutQueue,
-      // setTimeout(async () => {
       try {
         const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
           business: JSON.stringify(tempBusinessDraft),
@@ -171,8 +164,6 @@ export default defineComponent({
       } catch (err) {
         console.log({ err });
       }
-      // }, 1000),
-      // ];
     };
     return {
       createDraft,

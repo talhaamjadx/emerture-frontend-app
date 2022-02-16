@@ -179,25 +179,16 @@ export default defineComponent({
       } else formData.value.append(event.target.name, event.target.value);
       emit("form-data", formData.value);
     };
-    let timeoutQueue: Array<number> = [];
-    const createDraft = () => {
-      for (let i = 0; i < timeoutQueue.length; i++) {
-        clearTimeout(timeoutQueue[i]);
+    const createDraft = async () => {
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
       }
-      timeoutQueue = [
-        ...timeoutQueue,
-        setTimeout(async () => {
-          try {
-            const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
-              business: JSON.stringify(tempBusinessDraft),
-            });
-            if (res !== true) throw new Error("error in API");
-            store.dispatch(Actions.GET_BUSINESS_DRAFT);
-          } catch (err) {
-            console.log({ err });
-          }
-        }, 1000),
-      ];
     };
     return {
       createDraft,

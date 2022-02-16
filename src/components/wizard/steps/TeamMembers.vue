@@ -251,11 +251,13 @@ export default defineComponent({
         jobTitle: "",
         introduction: "",
       });
-      fieldChanged();
+      tempBusinessDraft["teamMembers"] = teamMembers.value;
+      createDraft();
     };
     const removeTeamMember = (index) => {
       teamMembers.value.splice(index, 1);
-      fieldChanged();
+      tempBusinessDraft["teamMembers"] = teamMembers.value;
+      createDraft();
     };
     const fileAdded = async (index, event) => {
       try {
@@ -264,7 +266,8 @@ export default defineComponent({
         const response = await store.dispatch(Actions.UPLOAD_FILE, formData);
         if (!response.includes("https://")) throw new Error();
         teamMembers.value[index].profilePicture = response;
-        fieldChanged();
+        tempBusinessDraft["teamMembers"] = teamMembers.value;
+        createDraft();
       } catch (err) {
         //}
       }
@@ -277,25 +280,16 @@ export default defineComponent({
         formData.value.append("teamMembers", JSON.stringify(teamMembers.value));
       emit("form-data", formData.value);
     };
-    let timeoutQueue: Array<number> = [];
-    const createDraft = () => {
-      for (let i = 0; i < timeoutQueue.length; i++) {
-        clearTimeout(timeoutQueue[i]);
+    const createDraft = async () => {
+      try {
+        const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
+          business: JSON.stringify(tempBusinessDraft),
+        });
+        if (res !== true) throw new Error("error in API");
+        store.dispatch(Actions.GET_BUSINESS_DRAFT);
+      } catch (err) {
+        console.log({ err });
       }
-      timeoutQueue = [
-        ...timeoutQueue,
-        setTimeout(async () => {
-          try {
-            const res = await store.dispatch(Actions.CREATE_BUSINESS_DRAFT, {
-              business: JSON.stringify(tempBusinessDraft),
-            });
-            if (res !== true) throw new Error("error in API");
-            store.dispatch(Actions.GET_BUSINESS_DRAFT);
-          } catch (err) {
-            console.log({ err });
-          }
-        }, 1000),
-      ];
     };
     return {
       createDraft,
