@@ -82,17 +82,17 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <input
+        <Field
           @blur="createDraft"
           v-model="teamMembers[index].name"
           @input="fieldChanged($event)"
-          name="name"
+          :name="`team-member-name-${index}`"
           class="form-control form-control-lg form-control-solid"
         />
-        <!-- <ErrorMessage
-          name="name"
+        <ErrorMessage
+          :name="`team-member-name-${index}`"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage> -->
+        ></ErrorMessage>
         <!--end::Input-->
       </div>
       <!--end::Input group-->
@@ -114,18 +114,18 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <input
+        <Field
           @blur="createDraft"
           v-model="teamMembers[index].jobTitle"
           @input="fieldChanged($event)"
-          name="jobTitle"
+          :name="`team-member-jobTitle-${index}`"
           class="form-control form-control-lg form-control-solid"
         />
         <!--end::Input-->
-        <!-- <ErrorMessage
-          name="jobTitle"
+        <ErrorMessage
+          :name="`team-member-jobTitle-${index}`"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage> -->
+        ></ErrorMessage>
 
         <!--end::Hint-->
       </div>
@@ -147,19 +147,19 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <input
+        <Field
           @blur="createDraft"
           v-model="teamMembers[index].linkedInProfileUrl"
           @input="fieldChanged($event)"
           type="text"
-          name="linkedInProfileUrl"
+          :name="`team-member-linkedInProfileUrl-${index}`"
           class="form-control form-control-lg form-control-solid"
           rows="3"
         />
-        <!-- <ErrorMessage
-          name="linkedInProfileUrl"
+        <ErrorMessage
+          :name="`team-member-linkedInProfileUrl-${index}`"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage> -->
+        ></ErrorMessage>
         <!--end::Input-->
       </div>
       <!--end::Input group-->
@@ -179,19 +179,19 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <input
+        <Field
           @blur="createDraft"
           v-model="teamMembers[index].introduction"
           @input="fieldChanged($event)"
           type="text"
-          name="introduction"
+          :name="`team-member-introduction-${index}`"
           class="form-control form-control-lg form-control-solid"
           rows="3"
         />
-        <!-- <ErrorMessage
-          name="introduction"
+        <ErrorMessage
+          :name="`team-member-introduction-${index}`"
           class="fv-plugins-message-container invalid-feedback"
-        ></ErrorMessage> -->
+        ></ErrorMessage>
         <!--end::Input-->
       </div>
       <div class="row float-end">
@@ -209,7 +209,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch, computed } from "vue";
-// import { Field, ErrorMessage } from "vee-validate";
+import { Field, ErrorMessage } from "vee-validate";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useStore } from "vuex";
 
@@ -224,8 +224,8 @@ interface TeamMember {
 export default defineComponent({
   name: "PersonalDetails",
   components: {
-    // Field,
-    // ErrorMessage,
+    Field,
+    ErrorMessage,
   },
   props: {
     formDataTemp: {
@@ -240,6 +240,7 @@ export default defineComponent({
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
       teamMembers.value = [...(businessDraft.value?.teamMembers ?? [])];
+      emit("teamMembersLength", teamMembers.value.length)
     });
     const teamMembers = ref<Array<TeamMember>>([]);
     const formData = ref<FormData>(props.formDataTemp);
@@ -251,6 +252,7 @@ export default defineComponent({
         jobTitle: "",
         introduction: "",
       });
+      emit("teamMembersLength", teamMembers.value.length)
       tempBusinessDraft["teamMembers"] = teamMembers.value;
       createDraft();
     };

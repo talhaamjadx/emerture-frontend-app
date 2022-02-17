@@ -247,6 +247,7 @@
         </div>
         <div data-kt-stepper-element="content">
           <TeamMembers
+            @teamMembersLength="teamMembersLength = $event"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></TeamMembers>
@@ -340,7 +341,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from "vue";
+import { computed, defineComponent, onMounted, ref, watchEffect } from "vue";
 import Images from "@/components/wizard/steps/Images.vue";
 import UploadPitchDeck from "@/components/wizard/steps/UploadPitchDeck.vue";
 import BusinessDescription from "@/components/wizard/steps/BusinessDescription.vue";
@@ -395,6 +396,7 @@ export default defineComponent({
     IndustrySectorsBusinesses,
   },
   setup() {
+    const teamMembersLength = ref<number>(0);
     let roleId = 0;
     const roles = computed(() => {
       return store.getters.getRolesData;
@@ -448,51 +450,70 @@ export default defineComponent({
         "Businesses",
       ]);
     });
-    const createAccountSchema = [
-      {},
-      Yup.object({
-        pitchDeckDocument: Yup.mixed().required().label("Pitch Deck Document"),
-      }),
-      Yup.object({
-        name: Yup.string().required().label("Name"),
-        summary: Yup.string().required().label("Summary"),
-        overview: Yup.string().required().label("Overview"),
-        defensibleUsp: Yup.string().required().label("Defensible USP"),
-      }),
-      Yup.object({
-        telephone: Yup.string()
+    const createAccountSchema = computed(() => {
+      let tempObj = {};
+      for (let i = 0; i < +teamMembersLength.value; i++) {
+        tempObj[`team-member-name-${i}`] = Yup.string()
           .required()
-          .min(12, "Telephone must be 11 characters long.")
-          .label("Telephone"),
-        website: Yup.string()
-          .matches(
-            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            "Enter correct url!"
-          )
+          .label("Name");
+        tempObj[`team-member-linkedInProfileUrl-${i}`] = Yup.string()
           .required()
-          .label("Website"),
-        currencyCode: Yup.string().required().label("Currency"),
-        geoFocusCountryCode: Yup.string().required().label("Geo Focus"),
-      }),
-      {},
-      {},
-      {},
-      Yup.object({
-        fundingRoundName: Yup.string().required().label("Name"),
-        fundingRoundInvestmentRequired: Yup.string()
+          .label("LinkedIn Profile");
+        tempObj[`team-member-jobTitle-${i}`] = Yup.string()
           .required()
-          .label("Investment Required"),
-        fundingRoundPreMoneyValuation: Yup.string()
+          .label("Job Title");
+        tempObj[`team-member-introduction-${i}`] = Yup.string()
           .required()
-          .label("Pre-Money Valuation"),
-        fundingRoundMinimumInvestment: Yup.string()
-          .required()
-          .label("Minimum Investment"),
-      }),
-    ];
-
-    const currentSchema = computed(() => {
-      return createAccountSchema[currentStepIndex.value];
+          .label("Introduction");
+      }
+      return [
+        {},
+        Yup.object({
+          pitchDeckDocument: Yup.mixed()
+            .required()
+            .label("Pitch Deck Document"),
+        }),
+        Yup.object({
+          name: Yup.string().required().label("Name"),
+          summary: Yup.string().required().label("Summary"),
+          overview: Yup.string().required().label("Overview"),
+          defensibleUsp: Yup.string().required().label("Defensible USP"),
+        }),
+        Yup.object({
+          telephone: Yup.string()
+            .required()
+            .min(12, "Telephone must be 11 characters long.")
+            .label("Telephone"),
+          website: Yup.string()
+            .matches(
+              /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+              "Enter correct url!"
+            )
+            .required()
+            .label("Website"),
+          currencyCode: Yup.string().required().label("Currency"),
+          geoFocusCountryCode: Yup.string().required().label("Geo Focus"),
+        }),
+        {},
+        tempObj,
+        {},
+        Yup.object({
+          fundingRoundName: Yup.string().required().label("Name"),
+          fundingRoundInvestmentRequired: Yup.string()
+            .required()
+            .label("Investment Required"),
+          fundingRoundPreMoneyValuation: Yup.string()
+            .required()
+            .label("Pre-Money Valuation"),
+          fundingRoundMinimumInvestment: Yup.string()
+            .required()
+            .label("Minimum Investment"),
+        }),
+      ];
+    });
+    const currentSchema = ref<Record<string, unknown>>({});
+    watchEffect(() => {
+      currentSchema.value = createAccountSchema.value[currentStepIndex.value];
     });
 
     const { resetForm, handleSubmit } = useForm<
@@ -609,6 +630,7 @@ export default defineComponent({
     };
 
     return {
+      createAccountSchema,
       formDataTemp,
       verticalWizardRef,
       previousStep,
@@ -617,6 +639,7 @@ export default defineComponent({
       totalSteps,
       currentStepIndex,
       fileSizeError,
+      teamMembersLength,
     };
   },
 });
