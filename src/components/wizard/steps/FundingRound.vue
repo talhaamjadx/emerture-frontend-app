@@ -43,7 +43,7 @@
       >
       </i>
       <div class="input-group mb-3" style="margin-top: 6px">
-        <span class="input-group-text">£</span>
+        <span class="input-group-text" style="border: none;">£</span>
         <Field
           @blur="createDraft"
           as="input"
@@ -80,7 +80,7 @@
       >
       </i>
       <div class="input-group mb-3" style="margin-top: 6px">
-        <span class="input-group-text">£</span>
+        <span class="input-group-text" style="border: none;">£</span>
         <Field
           @blur="createDraft"
           as="input"
@@ -117,7 +117,7 @@
       >
       </i>
       <div class="input-group mb-3" style="margin-top: 6px">
-        <span class="input-group-text">£</span>
+        <span class="input-group-text" style="border: none;">£</span>
         <Field
           @blur="createDraft"
           as="input"
