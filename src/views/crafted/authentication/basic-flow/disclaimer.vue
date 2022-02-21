@@ -29,7 +29,6 @@ export default defineComponent({
     const route = useRoute()
     let termsAndConditions = { value: "" };
     const inner = ref<string>("");
-    const quill = new Quill();
     const router = useRouter();
     const connect = async (id) => {
       try {

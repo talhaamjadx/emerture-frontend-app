@@ -64,7 +64,7 @@
           <div class="contnt">
             <img
               :src="`${oppertunity.headerImage}`"
-              style="width: 100%; height: 302px"
+              style="width: 100%; height: 242px"
             />
           </div>
         </div>
