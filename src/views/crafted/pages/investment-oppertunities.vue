@@ -25,15 +25,15 @@
                 >
                   View Investment Oppertunity
                 </router-link>
-                <button
+                <router-link
                   v-if="!connectedIds[oppertunity.id]"
-                  @click="connect(oppertunity.id)"
+                  :to="`/disclaimer/${oppertunity.id}`"
                   type="button"
                   style="width: 92%"
                   class="btn btn-danger my-sm-2 my-3"
                 >
                   Connect
-                </button>
+                </router-link>
                 <button
                   v-else
                   disabled
@@ -89,33 +89,6 @@ export default defineComponent({
     const store = useStore();
     const investmentOppertunities = ref<Array<Record<string, unknown>>>([]);
     let connectedIds = ref<Record<string, unknown>>({});
-    const connect = async (id) => {
-      try {
-        const response = await store.dispatch(
-          Actions.INVESTMENT_OPPERTUNITY_CONNECT,
-          {
-            founderBusinessId: id,
-          }
-        );
-        if (response !== true) throw new Error();
-        refresh();
-        store.commit("setAlert", {
-              message: "Success",
-              subMessage: "Investment Oppertunity Connected",
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
-      } catch (err) {
-        store.commit("setAlert", {
-              message: "Error",
-              subMessage: "Investment Oppertunity Not Connected",
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
-      }
-    };
     const refresh = async () => {
       try {
         const response = await store.dispatch(
@@ -142,7 +115,6 @@ export default defineComponent({
     );
     return {
       investmentOppertunities,
-      connect,
       connectedIds,
     };
   },

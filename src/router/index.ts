@@ -428,7 +428,7 @@ const routes: Array<RouteRecordRaw> = [
           import("@/views/crafted/authentication/basic-flow/terms-and-conditions.vue"),
       },
       {
-        path: "/disclaimer",
+        path: "/disclaimer/:id",
         name: "disclaimer",
         component: () =>
           import("@/views/crafted/authentication/basic-flow/disclaimer.vue"),

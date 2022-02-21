@@ -9,7 +9,7 @@
     <!--end::Heading-->
     <div class="fv-row mb-10">
       <!--end::Label-->
-      <label class="form-label">Telephone</label>
+      <label class="form-label required">Telephone</label>
       <!--end::Label-->
 
       <!--begin::Input-->
@@ -34,7 +34,7 @@
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
-      <label class="form-label">Website</label>
+      <label class="form-label required">Website</label>
       <!--end::Label-->
 
       <Field

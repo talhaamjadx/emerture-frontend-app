@@ -168,7 +168,7 @@ export default defineComponent({
             });
           await store.dispatch(Actions.AUTH_USER);
           nextTick(() => {
-            router.push("/");
+            router.push("/add-role");
           });
       } catch (err) {
         const error = store.getters.getErrors;
