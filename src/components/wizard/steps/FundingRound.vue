@@ -159,7 +159,8 @@
         type="date"
         v-model="opensAt"
         placeholder="Pick a Starting Date"
-      >
+        format="DD-MM-YYYY">
+
       </el-date-picker>
     </div>
     <div class="fv-row mb-10">
@@ -180,7 +181,7 @@
         type="date"
         v-model="closesAt"
         placeholder="Pick an Ending Date"
-      >
+        format="DD-MM-YYYY">
       </el-date-picker>
     </div>
     <!--begin::Input group-->

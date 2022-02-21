@@ -65,12 +65,12 @@ export default defineComponent({
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      file.value = value?.pitchDeckDocument ?? '';
+      file.value = value?.pitchDeckDocument ?? null;
     });
     const formData = ref<FormData>(props.formDataTemp);
     const document = ref<string | unknown>("");
     const fileSizeError = ref<boolean>(false);
-    const file = ref<string>();
+    const file = ref<string | null>(null);
     const handleImageUpload = async (event) => {
       fileSizeError.value = false;
       emit("file-size-error", false);
