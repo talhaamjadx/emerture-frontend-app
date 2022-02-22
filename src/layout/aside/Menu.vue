@@ -246,12 +246,14 @@ export default defineComponent({
       MainMenuTemp[0].pages = MainMenuTemp[0].pages.filter((config) => {
         if (
           config.heading == "expert-profile" &&
-          !(user.value.expert instanceof Array)
+          !(user.value.expert instanceof Array) &&
+          user.value.expert 
         ) {
           return true;
         } else if (
           config.heading == "investor-profile" &&
-          !(user.value?.investor instanceof Array)
+          !(user.value?.investor instanceof Array) &&
+          user.value.investor
         ) {
           return true;
         } else if (
