@@ -230,7 +230,7 @@ export default defineComponent({
         ],
       },
     ];
-    const MainMenuTemp = [...MainMenu]
+    const MainMenuTemp = [...MainMenu];
     let MainMenuConfig = reactive(MainMenuTemp);
     watch(
       [
@@ -247,23 +247,54 @@ export default defineComponent({
         if (
           config.heading == "expert-profile" &&
           !(user.value.expert instanceof Array) &&
-          user.value.expert 
+          user.value.expert &&
+          user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "expert"
+          )
         ) {
           return true;
         } else if (
-          config.heading == "investor-profile" &&
+          config.heading == "dashboard" &&
+          ((!(user.value?.investor instanceof Array) &&
+            user.value.investor &&
+            user.value?.userRoles?.some(
+              (role) => role.name.toLowerCase() == "investor"
+            )) ||
+            (objectPath.get(user.value, "founderBusiness.length", false) &&
+              user.value?.userRoles?.some(
+                (role) => role.name.toLowerCase() == "founder"
+              )) ||
+            (!(user.value.expert instanceof Array) &&
+              user.value.expert &&
+              user.value?.userRoles?.some(
+                (role) => role.name.toLowerCase() == "expert"
+              )))
+        ) {
+          return true;
+        } else if (
+          (config.heading == "investor-profile" ||
+            config.heading == "find-investment-opportunities") &&
           !(user.value?.investor instanceof Array) &&
-          user.value.investor
+          user.value.investor &&
+          user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "investor"
+          )
         ) {
           return true;
         } else if (
           config.heading == "find-experts" &&
-          objectPath.get(user.value, "founderBusiness.length", false)
+          objectPath.get(user.value, "founderBusiness.length", false) &&
+          user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "founder"
+          )
         ) {
           return true;
         } else if (
           config.heading == "businesses" &&
-          objectPath.get(user.value, "founderBusiness.length", false)
+          objectPath.get(user.value, "founderBusiness.length", false) &&
+          user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "founder"
+          )
         ) {
           return true;
         } else if (
@@ -271,7 +302,9 @@ export default defineComponent({
           config.heading !== "investor-profile" &&
           config.heading !== "founder-profile" &&
           config.heading !== "find-experts" &&
-          config.heading !== "businesses"
+          config.heading !== "businesses" &&
+          config.heading !== "find-investment-opportunities" &&
+          config.heading !== "dashboard"
         ) {
           return true;
         } else return false;

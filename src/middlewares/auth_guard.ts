@@ -4,12 +4,21 @@ import objectPath from "object-path"
 import { NavigationGuardNext } from "vue-router"
 
 const areRolesAdded = (user) => {
-  console.log("are role added")
   return (user?.userRoles?.some(
     (role) => role.name.toLowerCase() == "expert"
   ) && user?.userRoles?.some(
     (role) => role.name.toLowerCase() == "investor"
   ) && user?.userRoles?.some(
+    (role) => role.name.toLowerCase() == "founder"
+  ))
+}
+
+const isAnyRoleAdded = (user) => {
+  return (user?.userRoles?.some(
+    (role) => role.name.toLowerCase() == "expert"
+  ) || user?.userRoles?.some(
+    (role) => role.name.toLowerCase() == "investor"
+  ) || user?.userRoles?.some(
     (role) => role.name.toLowerCase() == "founder"
   ))
 }
@@ -31,6 +40,9 @@ export default async (to, from, next): Promise<NavigationGuardNext | undefined> 
       else if (to.name === "email-verification") {
         return areRolesAdded(store.getters.getUser) ? next('/') : next('/add-role')
       }
+      else if (to.name === "dashboard") {
+        return isAnyRoleAdded(store.getters.getUser) ? next() : next('/add-role')
+      }
       if (to.name == 'dashboard' && from.name == 'social') {
         if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts" && to.name !== "expert-global") {
           return next("/find-experts")
@@ -47,12 +59,14 @@ export default async (to, from, next): Promise<NavigationGuardNext | undefined> 
     }
   }
   else {
-    console.log("in else")
     if (!objectPath.get(store, "getters.getUser.isActive", false) && to.meta.loginRequired && to.name !== "email-verification") {
       return next("/email-verification")
     }
     else if (objectPath.get(store, "getters.getUser.isActive", false) && to.meta.loginRequired && to.name == "email-verification") {
       return areRolesAdded(store.getters.getUser) ? next('/') : next('/add-role')
+    }
+    else if (objectPath.get(store, "getters.getUser.isActive", false) && to.meta.loginRequired && to.name == "dashboard") {
+      return isAnyRoleAdded(store.getters.getUser) ? next() : next('/add-role')
     }
     if ((!selectAtLeaseThreeExperts() && objectPath.get(store.getters.getUser, 'founderBusiness.length', false)) && to.name !== "find-experts" && to.name !== "expert-global") {
       return next("/find-experts")
