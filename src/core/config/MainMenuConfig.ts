@@ -26,8 +26,8 @@ const DocMenuConfig = [
         fontIcon: "bi-layers",
       },
       {
-        heading: "find-investment-oppertunities",
-        route: "/find-investment-oppertunities",
+        heading: "find-investment-Opportunities",
+        route: "/find-investment-opportunities",
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-layers",
       },

@@ -1,7 +1,7 @@
 <template>
   <div
-    v-for="oppertunity in investmentOppertunities.founderBusinesses"
-    :key="oppertunity.id"
+    v-for="opportunity in investmentOpportunities.founderBusinesses"
+    :key="opportunity.id"
   >
     <div class="container-fluid p-0">
       <div class="row m-3 g-0">
@@ -14,20 +14,20 @@
                 <div>
                   <img
                     class="rounded-circle my-2"
-                    :src="`${oppertunity.logo ?? '/media/avatars/blank.png'}`"
+                    :src="`${opportunity.logo ?? '/media/avatars/blank.png'}`"
                     style="border: 3px solid white; width: 120px; height: 118px"
                   />
                 </div>
                 <router-link
-                  :to="`/investment-oppertunity-profile/${oppertunity.id}`"
+                  :to="`/investment-opportunity-profile/${opportunity.id}`"
                   type="button"
                   class="btn btn-danger my-sm-2 my-3"
                 >
-                  View Investment Oppertunity
+                  View Investment Opportunity
                 </router-link>
                 <router-link
-                  v-if="!connectedIds[oppertunity.id]"
-                  :to="`/disclaimer/${oppertunity.id}`"
+                  v-if="!connectedIds[opportunity.id]"
+                  :to="`/disclaimer/${opportunity.id}`"
                   type="button"
                   style="width: 92%"
                   class="btn btn-danger my-sm-2 my-3"
@@ -54,8 +54,8 @@
                   mt-3
                 "
               >
-                <h3 style="color: white !important">{{ oppertunity.name }}</h3>
-                <p>{{ oppertunity.summary }}</p>
+                <h3 style="color: white !important">{{ opportunity.name }}</h3>
+                <p>{{ opportunity.summary }}</p>
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@
         <div class="col-xl-5 col-12 order-md-last order-first">
           <div class="contnt">
             <img
-              :src="`${oppertunity.headerImage}`"
+              :src="`${opportunity.headerImage}`"
               style="width: 100%; height: 242px"
             />
           </div>
@@ -80,19 +80,19 @@ import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
   props: {
-    investmentOppertunitiesMain: {
+    investmentOpportunitiesMain: {
       required: true,
       type: Array,
     },
   },
   setup(props) {
     const store = useStore();
-    const investmentOppertunities = ref<Array<Record<string, unknown>>>([]);
+    const investmentOpportunities = ref<Array<Record<string, unknown>>>([]);
     let connectedIds = ref<Record<string, unknown>>({});
     const refresh = async () => {
       try {
         const response = await store.dispatch(
-          Actions.CONNECTED_INVESTMENT_OPPERTUNITIES
+          Actions.CONNECTED_INVESTMENT_OPPORTUNITIES
         );
         if (!response.success) throw new Error();
         connectedIds.value = {};
@@ -107,14 +107,14 @@ export default defineComponent({
       refresh();
     });
     watch(
-      () => props.investmentOppertunitiesMain,
+      () => props.investmentOpportunitiesMain,
       (value) =>
-        (investmentOppertunities.value = value as Array<
+        (investmentOpportunities.value = value as Array<
           Record<string, unknown>
         >)
     );
     return {
-      investmentOppertunities,
+      investmentOpportunities,
       connectedIds,
     };
   },

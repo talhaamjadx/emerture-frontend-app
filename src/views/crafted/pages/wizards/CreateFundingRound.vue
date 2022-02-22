@@ -231,7 +231,7 @@ interface IStep4 {
 interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "Investment-Oppertunity",
+  name: "Investment-Opportunity",
   components: {
     FundingRoundStage,
     FundingRequirements,

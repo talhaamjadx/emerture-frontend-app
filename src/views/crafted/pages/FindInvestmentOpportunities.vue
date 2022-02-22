@@ -85,16 +85,16 @@
         </p>
         <div v-if="globalSearch" class="mt-8">
           <button
-            @click="findOppertunityInvestment"
+            @click="findOpportunityInvestment"
             class="btn btn-primary float-end"
           >
-            Find Investment Oppertunities
+            Find Investment Opportunities
           </button>
         </div>
       </div>
     </div>
-    <InvestmentOppertunities
-      :investmentOppertunitiesMain="investmentOppertunities"
+    <InvestmentOpportunities
+      :investmentOpportunitiesMain="investmentOpportunities"
     />
   </div>
 </template>
@@ -105,20 +105,20 @@ import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
-import InvestmentOppertunities from "@/views/crafted/pages/investment-oppertunities.vue";
+import InvestmentOpportunities from "@/views/crafted/pages/investment-opportunities.vue";
 
 export default defineComponent({
-  name: "find-investment-oppertunities",
+  name: "find-investment-opportunities",
   components: {
-    InvestmentOppertunities,
+    InvestmentOpportunities,
   },
   setup() {
     const globalSearch = ref<boolean>(false);
     const store = useStore();
     const user = computed(() => store.getters.getUser);
     const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
-    const investmentOppertunities = computed(
-      () => store.getters.getInvestmentOppertunities
+    const investmentOpportunities = computed(
+      () => store.getters.getInvestmentOpportunities
     );
     watchEffect(() => {
       founderRequisiteExperts.value = user.value.founderRequisiteExpert;
@@ -147,10 +147,10 @@ export default defineComponent({
         );
       }
     };
-    const findOppertunityInvestment = async () => {
+    const findOpportunityInvestment = async () => {
       try {
         const response = await store.dispatch(
-          Actions.FIND_INVESTMENT_OPPERTUNITIES, selectedIndustrySectors.value.length ?
+          Actions.FIND_INVESTMENT_OPPORTUNITIES, selectedIndustrySectors.value.length ?
           {
             industrySectorIds: selectedIndustrySectors.value,
           } : null
@@ -161,9 +161,9 @@ export default defineComponent({
       }
     };
     onMounted(async () => {
-      setCurrentPageBreadcrumbs("Find Investment Oppertunities", []);
-      if (!investmentOppertunities.value.length)
-        await store.dispatch(Actions.FIND_INVESTMENT_OPPERTUNITIES);
+      setCurrentPageBreadcrumbs("Find Investment Opportunities", []);
+      if (!investmentOpportunities.value.length)
+        await store.dispatch(Actions.FIND_INVESTMENT_OPPORTUNITIES);
       if (!industrySectors.value.length)
         await store.dispatch(Actions.GET_INDUSTRY_SECTORS);
     });
@@ -175,8 +175,8 @@ export default defineComponent({
       addToIndustrySectors,
       filteredExperts,
       isAlreadyConnected,
-      investmentOppertunities,
-      findOppertunityInvestment,
+      investmentOpportunities,
+      findOpportunityInvestment,
     };
   },
 });

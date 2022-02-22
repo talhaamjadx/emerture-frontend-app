@@ -210,8 +210,8 @@ export default defineComponent({
             fontIcon: "bi-layers",
           },
           {
-            heading: "find-investment-oppertunities",
-            route: "/find-investment-oppertunities",
+            heading: "find-investment-opportunities",
+            route: "/find-investment-opportunities",
             svgIcon: "media/icons/duotune/general/gen019.svg",
             fontIcon: "bi-layers",
           },

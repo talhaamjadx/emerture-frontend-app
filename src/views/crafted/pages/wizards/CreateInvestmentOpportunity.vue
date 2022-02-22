@@ -384,7 +384,7 @@ interface IStep4 {
 interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "Investment-Oppertunity",
+  name: "Investment-Opportunity",
   components: {
     FundingRound,
     Images,
@@ -446,7 +446,7 @@ export default defineComponent({
       } catch (err) {
         console.log("error in fetching roles");
       }
-      setCurrentPageBreadcrumbs("Create Investment Oppertunity", [
+      setCurrentPageBreadcrumbs("Create Investment Opportunity", [
         "Businesses",
       ]);
     });
@@ -592,7 +592,7 @@ export default defineComponent({
         else await store.dispatch(Actions.GET_BUSINESS_DRAFT);
         store.commit("setAlert", {
           message: "Success",
-          subMessage: `Investment Oppertunity ${"Created"}`,
+          subMessage: `Investment Opportunity ${"Created"}`,
           variant: "primary",
           duration: 4000,
           show: true,
@@ -621,7 +621,7 @@ export default defineComponent({
       } catch (err) {
         store.commit("setAlert", {
           message: "Error",
-          subMessage: "`Investment Oppertunity Creation Unsuccessful`",
+          subMessage: "`Investment Opportunity Creation Unsuccessful`",
           variant: "danger",
           duration: 4000,
           show: true,

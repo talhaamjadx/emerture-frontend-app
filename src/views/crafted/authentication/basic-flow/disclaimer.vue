@@ -33,7 +33,7 @@ export default defineComponent({
     const connect = async (id) => {
       try {
         const response = await store.dispatch(
-          Actions.INVESTMENT_OPPERTUNITY_CONNECT,
+          Actions.INVESTMENT_OPPORTUNITY_CONNECT,
           {
             founderBusinessId: route.params.id,
           }
@@ -41,18 +41,18 @@ export default defineComponent({
         if (response !== true) throw new Error();
         store.commit("setAlert", {
           message: "Success",
-          subMessage: "Investment Oppertunity Connected",
+          subMessage: "Investment Opportunity Connected",
           variant: "primary",
           duration: 4000,
           show: true,
         });
         setTimeout(() => {
-          router.push("/find-investment-oppertunities");
+          router.push("/find-investment-opportunities");
         }, 2000);
       } catch (err) {
         store.commit("setAlert", {
           message: "Error",
-          subMessage: "Investment Oppertunity Not Connected",
+          subMessage: "Investment Opportunity Not Connected",
           variant: "danger",
           duration: 4000,
           show: true,

@@ -22,7 +22,9 @@
         <!--end::Card title-->
 
         <!--begin::Action-->
-        <router-link :to="`/update-investment-oppertunity/${route.params.id}`" class="btn btn-primary align-self-center mx-5"
+        <router-link
+          :to="`/update-investment-opportunity/${route.params.id}`"
+          class="btn btn-primary align-self-center mx-5"
           >Edit</router-link
         >
         <!--end::Action-->
@@ -120,18 +122,17 @@
 
           <!--begin::Col-->
           <div class="col-lg-8">
-          <div
-            v-for="(member, index) in parseJSON(business.teamMembers)"
-            :key="`team-member-${index}`"
-          
-          >
-            <span class="fw-bolder fs-6 text-dark float-right"
-              >{{ member.name }} ({{ member.jobTitle }})
-              <a :href="member.linkedInProfileUrl" target="_blank"
-                >LinkedIn Profile</a
-              ></span
+            <div
+              v-for="(member, index) in parseJSON(business.teamMembers)"
+              :key="`team-member-${index}`"
             >
-          </div>
+              <span class="fw-bolder fs-6 text-dark float-right"
+                >{{ member.name }} ({{ member.jobTitle }})
+                <a :href="member.linkedInProfileUrl" target="_blank"
+                  >LinkedIn Profile</a
+                ></span
+              >
+            </div>
           </div>
           <!--end::Col-->
         </div>
@@ -220,12 +221,17 @@
       <div class="card-header">
         <h3 class="card-title">Funding Rounds</h3>
         <div class="card-toolbar">
-          <router-link :to="`/create-funding-round?businessId=${business.id}`" type="button" class="btn btn-sm btn-primary">New</router-link>
+          <router-link
+            :to="`/create-funding-round?businessId=${business.id}`"
+            type="button"
+            class="btn btn-sm btn-primary"
+            >New</router-link
+          >
         </div>
       </div>
       <div class="card-body pt-0">
-      <FundingRounds :businessId="business.id"/>
-    </div>
+        <FundingRounds :businessId="business.id" />
+      </div>
     </div>
   </div>
   <!--end::details View-->
@@ -234,7 +240,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, computed, ref } from "vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-import FundingRounds from "@/components/widgets/lists/funding-rounds.vue"
+import FundingRounds from "@/components/widgets/lists/funding-rounds.vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
@@ -242,7 +248,7 @@ import { useRoute } from "vue-router";
 export default defineComponent({
   name: "business-details",
   components: {
-    FundingRounds
+    FundingRounds,
   },
   setup() {
     const store = useStore();
@@ -253,7 +259,11 @@ export default defineComponent({
       return value?.toUpperCase();
     };
     const parseJSON = (value) => {
-      return value ? JSON.parse(value) : [];
+      try {
+        return value ? JSON.parse(value) : [];
+      } catch (err) {
+        return [];
+      }
     };
     onMounted(async () => {
       if (!businesses.value?.founderBusinesses?.length) {

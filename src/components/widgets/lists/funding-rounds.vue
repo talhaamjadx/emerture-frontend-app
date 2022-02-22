@@ -174,23 +174,21 @@ import { mainFormatter } from "@/utils/index";
 import moment from "moment";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   name: "funding-rounds",
   props: {
     widgetClasses: String,
-    businessId: {
-      type: Number,
-      required: true,
-    },
   },
   components: {
     DeleteFundingRoundModal,
   },
   setup(props) {
+    const route = useRoute()
     const store = useStore();
     const rounds = ref<Array<Record<string, unknown>>>([]);
-    const businessId = ref<number>(props.businessId);
+    const businessId = ref<string>(route.params.id as string)
     const refresh = async () => {
       try {
         const response = await store.dispatch(
@@ -204,17 +202,12 @@ export default defineComponent({
         //
       }
     };
-    onMounted(() => refresh());
+    onMounted(() => {
+      refresh();
+    });
     const roundDeleted = () => {
       refresh();
     };
-    watch(
-      () => props.businessId,
-      async (value) => {
-        businessId.value = value;
-        refresh();
-      }
-    );
     const formatDate = (date) => moment(date).format("YYYY-MM-DD");
     const formatter = computed(() => mainFormatter);
     return {

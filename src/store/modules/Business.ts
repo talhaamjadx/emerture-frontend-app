@@ -7,9 +7,9 @@ import objectPath from "object-path";
 @Module
 export default class Business extends VuexModule {
     businesses = []
-    investmentOppertunities = []
-    get getInvestmentOppertunities() {
-        return this.investmentOppertunities
+    investmentOpportunities = []
+    get getInvestmentOpportunities() {
+        return this.investmentOpportunities
     }
     get getBusinesses() {
         return this.businesses
@@ -19,8 +19,8 @@ export default class Business extends VuexModule {
         this.businesses = payload
     }
     @Mutation
-    [Mutations.SET_INVESTMENT_OPPERTUNITIES](payload): void {
-        this.investmentOppertunities = payload
+    [Mutations.SET_INVESTMENT_OPPORTUNITIES](payload): void {
+        this.investmentOpportunities = payload
     }
     @Action
     [Actions.CREATE_FOUNDER_BUSINESS](payload: AxiosRequestConfig): Promise<AxiosResponse> {
@@ -115,11 +115,11 @@ export default class Business extends VuexModule {
             })
     }
     @Action
-    [Actions.FIND_INVESTMENT_OPPERTUNITIES](payload): Promise<AxiosResponse> {
+    [Actions.FIND_INVESTMENT_OPPORTUNITIES](payload): Promise<AxiosResponse> {
         ApiService.setHeader("application/json")
         return ApiService.post(`/investment-opportunities`, payload)
-            .then(investmentOppertunities => {
-                this.context.commit(Mutations.SET_INVESTMENT_OPPERTUNITIES, investmentOppertunities.data.data);
+            .then(investmentOpportunities => {
+                this.context.commit(Mutations.SET_INVESTMENT_OPPORTUNITIES, investmentOpportunities.data.data);
                 return true
             })
             .catch(err => {
@@ -129,7 +129,7 @@ export default class Business extends VuexModule {
             })
     }
     @Action
-    [Actions.INVESTMENT_OPPERTUNITY_CONNECT](payload): Promise<AxiosResponse> {
+    [Actions.INVESTMENT_OPPORTUNITY_CONNECT](payload): Promise<AxiosResponse> {
         ApiService.setHeader("application/json")
         return ApiService.post(`/investor-business-connection`, payload)
             .then(() => {
@@ -142,11 +142,11 @@ export default class Business extends VuexModule {
             })
     }
     @Action
-    [Actions.CONNECTED_INVESTMENT_OPPERTUNITIES](): Promise<AxiosResponse> {
+    [Actions.CONNECTED_INVESTMENT_OPPORTUNITIES](): Promise<AxiosResponse> {
         ApiService.setHeader("application/json")
         return ApiService.get(`/investor-business-connection`)
-            .then(connectedInvestmentOppertunities => {
-                return connectedInvestmentOppertunities.data
+            .then(connectedInvestmentOpportunities => {
+                return connectedInvestmentOpportunities.data
             })
             .catch(err => {
                 console.log(err)
@@ -155,11 +155,11 @@ export default class Business extends VuexModule {
             })
     }
     @Action
-    [Actions.GET_INVESTMENT_OPPERTUNITY_PROFILE](id): Promise<AxiosResponse> {
+    [Actions.GET_INVESTMENT_OPPORTUNITY_PROFILE](id): Promise<AxiosResponse> {
         ApiService.setHeader("application/json")
         return ApiService.get(`/founder-business/${id}`)
-            .then(investmentOppertunity => {
-                return investmentOppertunity.data
+            .then(investmentOpportunity => {
+                return investmentOpportunity.data
             })
             .catch(err => {
                 console.log(err)

@@ -13,7 +13,7 @@
             "
           >
             <img
-              :src="business.logo ?? require('@/assets/img/150-2.jpg')"
+              :src="business.logo ?? require('@/assets/img/blank.png')"
               alt="image"
             />
           </div>
@@ -224,8 +224,7 @@ import { useRoute } from "vue-router";
 
 export default defineComponent({
   name: "business-details",
-  components: {
-  },
+  components: {},
   setup() {
     const store = useStore();
     const route = useRoute();
@@ -234,12 +233,16 @@ export default defineComponent({
       return value?.toUpperCase();
     };
     const parseJSON = (value) => {
-      return value ? JSON.parse(value) : [];
+      try {
+        return value ? JSON.parse(value) : [];
+      } catch (err) {
+        return [];
+      }
     };
     onMounted(async () => {
       try {
         const response = await store.dispatch(
-          Actions.GET_INVESTMENT_OPPERTUNITY_PROFILE,
+          Actions.GET_INVESTMENT_OPPORTUNITY_PROFILE,
           route.params.id
         );
         if (!response.success) throw new Error();
@@ -247,8 +250,8 @@ export default defineComponent({
       } catch (err) {
         //
       }
-      setCurrentPageBreadcrumbs("Investment Oppertunity Details", [
-        "Find Investment Oppertunities",
+      setCurrentPageBreadcrumbs("Investment Opportunity Details", [
+        "Find Investment Opportunities",
       ]);
     });
     return {

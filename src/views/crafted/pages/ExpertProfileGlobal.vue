@@ -211,7 +211,7 @@ export default defineComponent({
         console.log(err);
       }
       setCurrentPageBreadcrumbs("Expert Profile", [
-        "Find Investment Oppertunities",
+        "Find Investment Opportunities",
       ]);
     });
     return {

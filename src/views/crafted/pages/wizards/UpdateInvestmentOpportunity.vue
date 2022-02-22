@@ -338,7 +338,7 @@ interface IStep4 {
 interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
 
 export default defineComponent({
-  name: "update-investment-oppertunity",
+  name: "update-investment-opportunity",
   components: {
     ImagesUpdate,
     UploadPitchDeckUpdate,
@@ -412,7 +412,7 @@ export default defineComponent({
         );
         syncData();
       }
-      setCurrentPageBreadcrumbs("Update Investment Oppertunity", [
+      setCurrentPageBreadcrumbs("Update Investment Opportunity", [
         "Businesses",
       ]);
     });
@@ -495,7 +495,7 @@ export default defineComponent({
         if (response !== true) throw new Error();
         store.commit("setAlert", {
           message: "Success",
-          subMessage: `Investment Oppertunity ${"Updated"}`,
+          subMessage: `Investment Opportunity ${"Updated"}`,
           variant: "primary",
           duration: 4000,
           show: true,
@@ -506,7 +506,7 @@ export default defineComponent({
       } catch (err) {
         store.commit("setAlert", {
           message: "Error",
-          subMessage: "`Investment Oppertunity Updation Unsuccessful`",
+          subMessage: "`Investment Opportunity Updation Unsuccessful`",
           variant: "danger",
           duration: 4000,
           show: true,

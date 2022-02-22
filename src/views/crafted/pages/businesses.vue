@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12 d-flex justify-content-end">
-      <router-link to="/create-investment-oppertunity" class="btn btn-primary mx-3"
+      <router-link to="/create-investment-opportunity" class="btn btn-primary mx-3"
         >Create</router-link
       >
     </div>
@@ -72,7 +72,7 @@ export default defineComponent({
     store.commit(Mutations.SET_TOOLBAR_BUTTON, {
       shouldShow: true,
       title: "Create",
-      url: "/create-investment-oppertunity",
+      url: "/create-investment-opportunity",
     });
     onMounted(() => {
       setCurrentPageBreadcrumbs("Businesses", []);

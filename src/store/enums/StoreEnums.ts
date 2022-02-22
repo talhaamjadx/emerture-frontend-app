@@ -43,12 +43,12 @@ enum Actions {
   FIND_EXPERTS = "findExperts",
   FOUNDER_REQUISITE_EXPERT = "founderRequisiteExpert",
   UPLOAD_FILE = "uploadFile",
-  FIND_INVESTMENT_OPPERTUNITIES = "findInvestmentOppertunities",
-  INVESTMENT_OPPERTUNITY_CONNECT = "investmentOppertunityConnect",
-  CONNECTED_INVESTMENT_OPPERTUNITIES = "connectedInvestmentOppertunity",
+  FIND_INVESTMENT_OPPORTUNITIES = "findInvestmentOpportunities",
+  INVESTMENT_OPPORTUNITY_CONNECT = "investmentOpportunityConnect",
+  CONNECTED_INVESTMENT_OPPORTUNITIES = "connectedInvestmentOpportunity",
   GET_EXPERT_PROFILE_GLOBAL = "getExpertProfileGlobal",
   GET_CONFIGURATION_BY_KEY = "getConfigurationByKey",
-  GET_INVESTMENT_OPPERTUNITY_PROFILE = "getInvestmentOppertunityProfile",
+  GET_INVESTMENT_OPPORTUNITY_PROFILE = "getInvestmentOpportunityProfile",
   CREATE_FUNDING_ROUND_INVESTMENT = "createFundingRoundInvestment",
   GET_FUNDING_ROUND_INVESTMENT = "getFundingRoundInvestment",
   UPDATE_FUNDING_ROUND_INVESTMENT = "updateFundingRoundInvestment",
@@ -84,7 +84,7 @@ enum Mutations {
   SET_FOUNDER_BUSINESSES = "setFounderBusinesses",
   SET_FOUNDER = "setFounder",
   SET_EXPERTS = "setExperts",
-  SET_INVESTMENT_OPPERTUNITIES = "setInvestmentOppertunities",
+  SET_INVESTMENT_OPPORTUNITIES = "setInvestmentOpportunities",
   SET_BUSINESS_DRAFT = "setBusinessDraft"
 }
 

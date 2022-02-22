@@ -276,7 +276,7 @@ export default defineComponent({
         if (user.value.founder) {
           return createRole(id);
         }
-        router.push("/create-investment-oppertunity");
+        router.push("/create-investment-opportunity");
       } else if (roleNameIdKeyValues[id].toLowerCase() === "expert") {
         if (!(user.value.expert instanceof Array)) {
           return createRole(id);

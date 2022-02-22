@@ -15,7 +15,7 @@
             <div class="row">
               <div class="col-9">
                 <p class="pt-lg-5 mt-xl-2 mt-0 pt-md-3" style="color:rgb(207, 187, 88); font-size:15px;">
-                  Matched Investment Oppertunities
+                  Matched Investment Opportunities
                 </p>
               </div>
               <div
@@ -33,7 +33,7 @@
                   class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
                   style="color: #9bbfd3; font-size: 15px"
                 >
-                  Investment Oppertunities Pursued
+                  Investment Opportunities Pursued
                 </p>
               </div>
               <div class="col-3 display-2 text-center" style="color: #9bbfd3">
@@ -52,7 +52,7 @@
                   class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
                   style="color: #e2adbc; font-size: 15px"
                 >
-                  Successful Investment Oppertunities
+                  Successful Investment Opportunities
                 </p>
               </div>
               <div class="col-3 display-2 text-center" style="color: #e2adbc">
@@ -67,7 +67,7 @@
                   class="pt-lg-5 mt-xl-2 mt-0 pt-md-3"
                   style="color: #9ae6c0; font-size: 15px"
                 >
-                  Declined Investment Oppertunities
+                  Declined Investment Opportunities
                 </p>
               </div>
               <div class="col-3 display-2 text-center" style="color: #9ae6c0">

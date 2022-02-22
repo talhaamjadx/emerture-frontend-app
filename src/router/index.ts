@@ -92,9 +92,9 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "/find-investment-oppertunities",
-        name: "find-investment-oppertunities",
-        component: () => import("@/views/crafted/pages/FindInvestmentOppertunities.vue"),
+        path: "/find-investment-opportunities",
+        name: "find-investment-opportunities",
+        component: () => import("@/views/crafted/pages/FindInvestmentOpportunities.vue"),
         meta: {
           loginRequired: true
         }
@@ -108,9 +108,9 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "/investment-oppertunity-profile/:id",
-        name: "investment-oppertunity-profile",
-        component: () => import("@/views/crafted/pages/InvestmentOppertunityDetails.vue"),
+        path: "/investment-opportunity-profile/:id",
+        name: "investment-opportunity-profile",
+        component: () => import("@/views/crafted/pages/InvestmentOpportunityDetails.vue"),
         meta: {
           loginRequired: true
         }
@@ -185,17 +185,17 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "/create-investment-oppertunity",
-        name: "create-investment-oppertunity",
-        component: () => import("@/views/crafted/pages/wizards/CreateInvestmentOppertunity.vue"),
+        path: "/create-investment-opportunity",
+        name: "create-investment-opportunity",
+        component: () => import("@/views/crafted/pages/wizards/CreateInvestmentOpportunity.vue"),
         meta: {
           loginRequired: true
         }
       },
       {
-        path: "/update-investment-oppertunity/:id",
-        name: "update-investment-oppertunity",
-        component: () => import("@/views/crafted/pages/wizards/UpdateInvestmentOppertunity.vue"),
+        path: "/update-investment-opportunity/:id",
+        name: "update-investment-opportunity",
+        component: () => import("@/views/crafted/pages/wizards/UpdateInvestmentOpportunity.vue"),
         meta: {
           loginRequired: true
         }
