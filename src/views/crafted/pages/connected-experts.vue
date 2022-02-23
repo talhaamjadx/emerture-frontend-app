@@ -20,6 +20,9 @@
         :fromConnectedExperts="true"
       />
     </div>
+    <div v-if="founderRequisiteExperts?.length == 0" class="row d-flex justify-content-center">
+        No Connected Experts
+    </div>
   </div>
 </template>
 
