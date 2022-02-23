@@ -90,6 +90,7 @@
           class="form-control form-control-lg form-control-solid"
         />
         <ErrorMessage
+          v-show="touched"
           :name="`team-member-name-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
@@ -123,6 +124,7 @@
         />
         <!--end::Input-->
         <ErrorMessage
+          v-show="touched"
           :name="`team-member-jobTitle-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
@@ -157,6 +159,7 @@
           rows="3"
         />
         <ErrorMessage
+          v-show="touched"
           :name="`team-member-linkedInProfileUrl-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
@@ -189,6 +192,7 @@
           rows="3"
         />
         <ErrorMessage
+          v-show="touched"
           :name="`team-member-introduction-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
@@ -232,15 +236,24 @@ export default defineComponent({
       type: FormData,
       required: true,
     },
+    touchedParent: {
+      type: Boolean,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const store = useStore();
+    const touched = ref<boolean>(false);
+    watch(
+      () => props.touchedParent,
+      (value) => (touched.value = value)
+    );
     const businessDraft = computed(() => store.getters.businessDraftGetter);
     let tempBusinessDraft = { ...businessDraft.value };
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
       teamMembers.value = [...(businessDraft.value?.teamMembers ?? [])];
-      emit("teamMembersLength", teamMembers.value.length)
+      emit("teamMembersLength", teamMembers.value.length);
     });
     const teamMembers = ref<Array<TeamMember>>([]);
     const formData = ref<FormData>(props.formDataTemp);
@@ -252,13 +265,17 @@ export default defineComponent({
         jobTitle: "",
         introduction: "",
       });
-      emit("teamMembersLength", teamMembers.value.length)
+      touched.value = false;
+      emit("resetTouch", false);
+      emit("teamMembersLength", teamMembers.value.length);
       tempBusinessDraft["teamMembers"] = teamMembers.value;
       createDraft();
     };
     const removeTeamMember = (index) => {
       teamMembers.value.splice(index, 1);
       tempBusinessDraft["teamMembers"] = teamMembers.value;
+      touched.value = false;
+      emit("resetTouch", false);
       createDraft();
     };
     const fileAdded = async (index, event) => {
@@ -301,6 +318,7 @@ export default defineComponent({
       fieldChanged,
       addTeamMember,
       removeTeamMember,
+      touched,
     };
   },
 });

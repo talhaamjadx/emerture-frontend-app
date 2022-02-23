@@ -247,6 +247,8 @@
         </div>
         <div data-kt-stepper-element="content">
           <TeamMembers
+            @resetTouch="touched = $event"
+            :touchedParent="touched"
             @teamMembersLength="teamMembersLength = $event"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
@@ -319,6 +321,7 @@
               type="submit"
               class="btn btn-lg"
               style="color: #ffffff; background-color: #236db5"
+              @click="handleTouch"
             >
               Continue
               <span class="svg-icon svg-icon-4 ms-1 me-0">
@@ -396,6 +399,7 @@ export default defineComponent({
     IndustrySectorsBusinesses,
   },
   setup() {
+    const touched = ref<boolean>(false)
     const teamMembersLength = ref<number>(0);
     let roleId = 0;
     const roles = computed(() => {
@@ -422,7 +426,10 @@ export default defineComponent({
       expertIndustrySectors: [],
       expertExpertise: [],
     });
-
+    const handleTouch = () => {
+      if(_stepperObj.value?.currentStepIndex == 6)
+        touched.value = true
+    }
     onMounted(async () => {
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
@@ -537,7 +544,6 @@ export default defineComponent({
     });
 
     const handleStep = handleSubmit((values) => {
-      console.log({ values });
       if (fileSizeError.value) return;
       formData.value = {
         ...formData.value,
@@ -640,6 +646,8 @@ export default defineComponent({
       currentStepIndex,
       fileSizeError,
       teamMembersLength,
+      touched,
+      handleTouch
     };
   },
 });
