@@ -25,52 +25,14 @@
       "
       data-kt-menu="true"
     >
-      <template v-for="(item, i) in MainMenuConfig" :key="i">
-        <div v-if="item.heading" class="menu-item">
-          <div class="menu-content pt-8 pb-2">
-            <span class="menu-section text-muted text-uppercase fs-8 ls-1">
-              {{ translate(item.heading) }}
-            </span>
-          </div>
-        </div>
-        <template v-for="(menuItem, j) in item.pages" :key="j">
-          <template v-if="menuItem.heading">
-            <div class="menu-item">
-              <router-link
-                class="menu-link"
-                active-class="active"
-                :to="menuItem.route"
-              >
-                <span
-                  v-if="menuItem.svgIcon || menuItem.fontIcon"
-                  class="menu-icon"
-                >
-                  <i
-                    v-if="asideMenuIcons === 'font'"
-                    :class="menuItem.fontIcon"
-                    class="bi fs-3"
-                  ></i>
-                  <span
-                    v-else-if="asideMenuIcons === 'svg'"
-                    class="svg-icon svg-icon-2"
-                  >
-                    <inline-svg :src="menuItem.svgIcon" />
-                  </span>
-                </span>
-                <span class="menu-title">{{
-                  translate(menuItem.heading)
-                }}</span>
-              </router-link>
-            </div>
-          </template>
-          <div
-            v-if="menuItem.sectionTitle"
-            :class="{ show: hasActiveChildren(menuItem.route) }"
-            class="menu-item menu-accordion"
-            data-kt-menu-sub="accordion"
-            data-kt-menu-trigger="click"
-          >
-            <span class="menu-link">
+      <template v-for="(menuItem, j) in MainMenuConfig" :key="j">
+        <template v-if="menuItem.heading">
+          <div class="menu-item">
+            <router-link
+              class="menu-link"
+              active-class="active"
+              :to="menuItem.route"
+            >
               <span
                 v-if="menuItem.svgIcon || menuItem.fontIcon"
                 class="menu-icon"
@@ -87,72 +49,97 @@
                   <inline-svg :src="menuItem.svgIcon" />
                 </span>
               </span>
-              <span class="menu-title">{{
-                translate(menuItem.sectionTitle)
-              }}</span>
-              <span class="menu-arrow"></span>
-            </span>
-            <div
-              :class="{ show: hasActiveChildren(menuItem.route) }"
-              class="menu-sub menu-sub-accordion"
-            >
-              <template v-for="(item2, k) in menuItem.sub" :key="k">
-                <div v-if="item2.heading" class="menu-item">
-                  <router-link
-                    class="menu-link"
-                    active-class="active"
-                    :to="item2.route"
-                  >
-                    <span class="menu-bullet">
-                      <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{
-                      translate(item2.heading)
-                    }}</span>
-                  </router-link>
-                </div>
-                <div
-                  v-if="item2.sectionTitle"
-                  :class="{ show: hasActiveChildren(item2.route) }"
-                  class="menu-item menu-accordion"
-                  data-kt-menu-sub="accordion"
-                  data-kt-menu-trigger="click"
-                >
-                  <span class="menu-link">
-                    <span class="menu-bullet">
-                      <span class="bullet bullet-dot"></span>
-                    </span>
-                    <span class="menu-title">{{
-                      translate(item2.sectionTitle)
-                    }}</span>
-                    <span class="menu-arrow"></span>
-                  </span>
-                  <div
-                    :class="{ show: hasActiveChildren(item2.route) }"
-                    class="menu-sub menu-sub-accordion"
-                  >
-                    <template v-for="(item3, k) in item2.sub" :key="k">
-                      <div v-if="item3.heading" class="menu-item">
-                        <router-link
-                          class="menu-link"
-                          active-class="active"
-                          :to="item3.route"
-                        >
-                          <span class="menu-bullet">
-                            <span class="bullet bullet-dot"></span>
-                          </span>
-                          <span class="menu-title">{{
-                            translate(item3.heading)
-                          }}</span>
-                        </router-link>
-                      </div>
-                    </template>
-                  </div>
-                </div>
-              </template>
-            </div>
+              <span class="menu-title">{{ translate(menuItem.heading) }}</span>
+            </router-link>
           </div>
         </template>
+        <div
+          v-if="menuItem.sectionTitle"
+          :class="{ show: hasActiveChildren(menuItem.route) }"
+          class="menu-item menu-accordion"
+          data-kt-menu-sub="accordion"
+          data-kt-menu-trigger="click"
+        >
+          <span class="menu-link">
+            <span
+              v-if="menuItem.svgIcon || menuItem.fontIcon"
+              class="menu-icon"
+            >
+              <i
+                v-if="asideMenuIcons === 'font'"
+                :class="menuItem.fontIcon"
+                class="bi fs-3"
+              ></i>
+              <span
+                v-else-if="asideMenuIcons === 'svg'"
+                class="svg-icon svg-icon-2"
+              >
+                <inline-svg :src="menuItem.svgIcon" />
+              </span>
+            </span>
+            <span class="menu-title">{{
+              translate(menuItem.sectionTitle)
+            }}</span>
+            <span class="menu-arrow"></span>
+          </span>
+          <div
+            :class="{ show: hasActiveChildren(menuItem.route) }"
+            class="menu-sub menu-sub-accordion"
+          >
+            <template v-for="(item2, k) in menuItem.sub" :key="k">
+              <div v-if="item2.heading" class="menu-item">
+                <router-link
+                  class="menu-link"
+                  active-class="active"
+                  :to="item2.route"
+                >
+                  <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                  </span>
+                  <span class="menu-title">{{ translate(item2.heading) }}</span>
+                </router-link>
+              </div>
+              <div
+                v-if="item2.sectionTitle"
+                :class="{ show: hasActiveChildren(item2.route) }"
+                class="menu-item menu-accordion"
+                data-kt-menu-sub="accordion"
+                data-kt-menu-trigger="click"
+              >
+                <span class="menu-link">
+                  <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                  </span>
+                  <span class="menu-title">{{
+                    translate(item2.sectionTitle)
+                  }}</span>
+                  <span class="menu-arrow"></span>
+                </span>
+                <div
+                  :class="{ show: hasActiveChildren(item2.route) }"
+                  class="menu-sub menu-sub-accordion"
+                >
+                  <template v-for="(item3, k) in item2.sub" :key="k">
+                    <div v-if="item3.heading" class="menu-item">
+                      <router-link
+                        class="menu-link"
+                        active-class="active"
+                        :to="item3.route"
+                      >
+                        <span class="menu-bullet">
+                          <span class="bullet bullet-dot"></span>
+                        </span>
+                        <span class="menu-title">{{
+                          translate(item3.heading)
+                        }}</span>
+                      </router-link>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
       </template>
     </div>
     <!--end::Menu-->
@@ -166,8 +153,7 @@ import {
   onMounted,
   ref,
   computed,
-  watch,
-  reactive,
+  watchEffect,
 } from "vue";
 import { useI18n } from "vue-i18n/index";
 import { useRoute } from "vue-router";
@@ -184,66 +170,53 @@ export default defineComponent({
     const user = computed(() => store.getters.getUser);
     const MainMenu = [
       {
-        pages: [
-          {
-            heading: "dashboard",
-            route: "/dashboard",
-            svgIcon: "media/icons/duotune/general/gen001.svg",
-            fontIcon: "bi-layers",
-          },
-          {
-            heading: "expert-profile",
-            route: "/expert-profile",
-            svgIcon: "media/icons/duotune/general/gen019.svg",
-            fontIcon: "bi-layers",
-          },
-          {
-            heading: "investor-profile",
-            route: "/investor-profile",
-            svgIcon: "media/icons/duotune/general/gen019.svg",
-            fontIcon: "bi-layers",
-          },
-          {
-            heading: "find-experts",
-            route: "/find-experts",
-            svgIcon: "media/icons/duotune/general/gen019.svg",
-            fontIcon: "bi-layers",
-          },
-          {
-            heading: "find-investment-opportunities",
-            route: "/find-investment-opportunities",
-            svgIcon: "media/icons/duotune/general/gen019.svg",
-            fontIcon: "bi-layers",
-          },
-          {
-            heading: "addRole",
-            route: "/add-role",
-            svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
-            fontIcon: "bi-cart",
-          },
-          {
-            heading: "businesses",
-            route: "/businesses",
-            svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
-            fontIcon: "bi-cart",
-          },
-        ],
+        heading: "dashboard",
+        route: "/dashboard",
+        svgIcon: "media/icons/duotune/general/gen001.svg",
+        fontIcon: "bi-layers",
+      },
+      {
+        heading: "expert-profile",
+        route: "/expert-profile",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
+      {
+        heading: "investor-profile",
+        route: "/investor-profile",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
+      {
+        heading: "find-experts",
+        route: "/find-experts",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
+      {
+        heading: "find-investment-opportunities",
+        route: "/find-investment-opportunities",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
+      {
+        heading: "addRole",
+        route: "/add-role",
+        svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
+        fontIcon: "bi-cart",
+      },
+      {
+        heading: "businesses",
+        route: "/businesses",
+        svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
+        fontIcon: "bi-cart",
       },
     ];
-    const MainMenuTemp = [...MainMenu];
-    let MainMenuConfig = reactive(MainMenuTemp);
-    watch(
-      [
-        () => user.value.investor,
-        () => user.value.expert,
-        () => user.value.founderBusiness,
-      ],
-      () => {
-        filterItems();
-      }
-    );
+    let MainMenuTemp = [...MainMenu];
+    let MainMenuConfig = ref(MainMenuTemp);
     const filterItems = () => {
-      MainMenuTemp[0].pages = MainMenuTemp[0].pages.filter((config) => {
+      MainMenuTemp = [...MainMenu];
+      MainMenuTemp = MainMenuTemp.filter((config) => {
         if (
           config.heading == "expert-profile" &&
           !(user.value.expert instanceof Array) &&
@@ -283,18 +256,12 @@ export default defineComponent({
           return true;
         } else if (
           config.heading == "find-experts" &&
-          objectPath.get(user.value, "founderBusiness.length", false) &&
-          user.value?.userRoles?.some(
-            (role) => role.name.toLowerCase() == "founder"
-          )
+          objectPath.get(user.value, "founderBusiness.length", false)
         ) {
           return true;
         } else if (
           config.heading == "businesses" &&
-          objectPath.get(user.value, "founderBusiness.length", false) &&
-          user.value?.userRoles?.some(
-            (role) => role.name.toLowerCase() == "founder"
-          )
+          objectPath.get(user.value, "founderBusiness.length", false)
         ) {
           return true;
         } else if (
@@ -309,8 +276,11 @@ export default defineComponent({
           return true;
         } else return false;
       });
-      MainMenuConfig = MainMenuTemp;
+      MainMenuConfig.value = MainMenuTemp;
     };
+    watchEffect(() => {
+      if (user.value) filterItems();
+    });
     filterItems();
     const { t, te } = useI18n();
     const route = useRoute();
