@@ -399,7 +399,7 @@ export default defineComponent({
     IndustrySectorsBusinesses,
   },
   setup() {
-    const touched = ref<boolean>(false)
+    const touched = ref<boolean>(false);
     const teamMembersLength = ref<number>(0);
     let roleId = 0;
     const roles = computed(() => {
@@ -427,9 +427,8 @@ export default defineComponent({
       expertExpertise: [],
     });
     const handleTouch = () => {
-      if(_stepperObj.value?.currentStepIndex == 6)
-        touched.value = true
-    }
+      if (_stepperObj.value?.currentStepIndex == 6) touched.value = true;
+    };
     onMounted(async () => {
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
@@ -571,7 +570,12 @@ export default defineComponent({
 
     const formSubmit = async () => {
       try {
-        if (!objectPath.get(user.value, "founderBusiness.length")) {
+        if (
+          !objectPath.get(user.value, "founderBusiness.length") &&
+          !user.value?.userRoleRequests?.some((request) => {
+            return request?.role?.name === "founder"
+          })
+        ) {
           const attachRoleResponse = await store.dispatch(Actions.ATTACH_ROLE, {
             id: roleId,
           });
@@ -647,7 +651,7 @@ export default defineComponent({
       fileSizeError,
       teamMembersLength,
       touched,
-      handleTouch
+      handleTouch,
     };
   },
 });
