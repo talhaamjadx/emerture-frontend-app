@@ -108,7 +108,7 @@
           :introduction="expert.introduction"
           :online="true"
           :expertId="expert.id"
-          avatar="media/avatars/150-12.jpg"
+          avatar="media/avatars/blank.png"
           :connected="false"
           avg-earnings="$14,560"
           total-sales="$236,400"

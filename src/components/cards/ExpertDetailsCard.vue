@@ -10,8 +10,7 @@
           <img
             :style="`
               background-image: url('${profilePicture ?? avatar}');
-              background-size: cover;`
-            "
+              background-size: cover;`"
           />
         </div>
         <div v-else class="symbol symbol-65px symbol-circle mb-5">
@@ -91,27 +90,29 @@
         >
           View Profile
         </router-link>
-        <a
-          v-if="isConnected"
-          href="javacript:void(0)"
-          class="btn btn-sm btn-light-primary"
-        >
-          <span class="svg-icon svg-icon-3">
-            <inline-svg src="media/icons/duotune/arrows/arr012.svg" />
-          </span>
-          Connected
-        </a>
-        <a
-          @click="attachExpert"
-          v-else
-          href="javascript:void(0)"
-          class="btn btn-sm btn-light"
-        >
-          <span class="svg-icon svg-icon-3">
-            <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
-          </span>
-          Connect
-        </a>
+        <div v-if="!fromConnectedExperts">
+          <a
+            v-if="isConnected"
+            href="javacript:void(0)"
+            class="btn btn-sm btn-light-primary"
+          >
+            <span class="svg-icon svg-icon-3">
+              <inline-svg src="media/icons/duotune/arrows/arr012.svg" />
+            </span>
+            Connected
+          </a>
+          <a
+            @click="attachExpert"
+            v-else
+            href="javascript:void(0)"
+            class="btn btn-sm btn-light"
+          >
+            <span class="svg-icon svg-icon-3">
+              <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
+            </span>
+            Connect
+          </a>
+        </div>
         <!--end::Follow-->
       </div>
       <!--begin::Card body-->
@@ -159,6 +160,8 @@ export default defineComponent({
     expertId: String,
 
     isAlreadyConnected: Boolean,
+
+    fromConnectedExperts: Boolean,
   },
   setup(props) {
     const store = useStore();

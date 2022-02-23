@@ -148,13 +148,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  ref,
-  computed,
-  watchEffect,
-} from "vue";
+import { defineComponent, onMounted, ref, computed, watchEffect } from "vue";
 import { useI18n } from "vue-i18n/index";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -211,6 +205,12 @@ export default defineComponent({
         svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
         fontIcon: "bi-cart",
       },
+      {
+        heading: "connected-experts",
+        route: "/connected-experts",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
     ];
     let MainMenuTemp = [...MainMenu];
     let MainMenuConfig = ref(MainMenuTemp);
@@ -224,6 +224,11 @@ export default defineComponent({
           user.value?.userRoles?.some(
             (role) => role.name.toLowerCase() == "expert"
           )
+        ) {
+          return true;
+        } else if (
+          config.heading == "connected-experts" &&
+          objectPath.get(user.value, "founderBusiness.length", false)
         ) {
           return true;
         } else if (
@@ -271,7 +276,8 @@ export default defineComponent({
           config.heading !== "find-experts" &&
           config.heading !== "businesses" &&
           config.heading !== "find-investment-opportunities" &&
-          config.heading !== "dashboard"
+          config.heading !== "dashboard" &&
+          config.heading !== "connected-experts"
         ) {
           return true;
         } else return false;

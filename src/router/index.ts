@@ -92,6 +92,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/connected-experts",
+        name: "connected-experts",
+        component: () => import("@/views/crafted/pages/connected-experts.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/find-investment-opportunities",
         name: "find-investment-opportunities",
         component: () => import("@/views/crafted/pages/FindInvestmentOpportunities.vue"),

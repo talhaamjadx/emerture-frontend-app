@@ -31,6 +31,12 @@ const DocMenuConfig = [
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-layers",
       },
+      {
+        heading: "connected-experts",
+        route: "/connected-experts",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
       // {
       //   heading: "widgetsStatistics",
       //   route: "/crafted/widgets/statistics",
