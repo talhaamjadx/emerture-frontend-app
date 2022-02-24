@@ -125,6 +125,17 @@
           />
           Continue with Google
         </button>
+        <button
+          @click="linkedInLogin"
+          class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
+        >
+          <img
+            alt="Logo"
+            src="media/svg/brand-logos/linkedin.svg"
+            class="h-20px me-3"
+          />
+          Continue with LinkedIn
+        </button>
         <!--end::Google link-->
 
         <!--begin::Google link-->
@@ -194,6 +205,11 @@ export default defineComponent({
         process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GOOGLE_LOGIN_URL
       );
     };
+    const linkedInLogin = () => {
+      location.replace(
+        process.env.VUE_APP_BASE_URL + process.env.VUE_APP_LINKEDIN_LOGIN_URL
+      );
+    };
     const areRolesAdded = (user) => {
     return (user.userRoles?.some(
         (role) => role.name.toLowerCase() == "expert"
@@ -260,6 +276,7 @@ export default defineComponent({
     };
 
     return {
+      linkedInLogin,
       googleLogin,
       onSubmitLogin,
       login,
