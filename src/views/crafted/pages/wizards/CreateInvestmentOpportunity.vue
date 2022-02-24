@@ -323,7 +323,7 @@
               style="color: #ffffff; background-color: #236db5"
             >
               <span class="indicator-label">
-                Submit
+                Next
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg
                     src="media/icons/duotune/arrows/arr064.svg"
