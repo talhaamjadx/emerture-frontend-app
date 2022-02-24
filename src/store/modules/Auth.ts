@@ -26,8 +26,11 @@ interface AuthUser {
 const errorHandler = (err, context) => {
     if (err?.response?.data?.code == 400 || err?.response?.data?.code == 500)
         context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.message", []));
-    else if (err?.response?.data?.code == 422)
-        context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors[0]", []));
+    else if (err?.response?.data?.code == 422) {
+        const errors = objectPath.get(err, "response.data.errors", {})
+        const errorKeys = Object.keys(errors)
+        context.commit(Mutations.SET_ERROR, (errors?.[errorKeys?.[0]] ?? [])?.[0] ?? "Something Went Wrong");
+    }
     else {
         context.commit(Mutations.SET_ERROR, 'An error has occured!');
     }
