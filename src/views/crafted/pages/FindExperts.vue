@@ -23,21 +23,27 @@
               data-bs-parent="#kt_accordion_1"
             >
               <div class="accordion-body">
-                <div
-                  v-for="e in expertise"
-                  :key="e.id"
-                  class="form-check form-check-custom form-check-solid my-3"
-                >
-                  <input
-                    @input="addToExpertise($event)"
-                    class="form-check-input"
-                    type="checkbox"
-                    id="flexCheckDefault"
-                    :data-id="e.id"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    {{ e.name }}
-                  </label>
+                <div class="row">
+                  <div
+                    v-for="e in expertise"
+                    :key="e.id"
+                    class="
+                      form-check form-check-custom form-check-solid
+                      my-3
+                      col-md-3
+                    "
+                  >
+                    <input
+                      @input="addToExpertise($event)"
+                      class="form-check-input"
+                      type="checkbox"
+                      id="flexCheckDefault"
+                      :data-id="e.id"
+                    />
+                    <label class="form-check-label" for="flexCheckDefault">
+                      {{ e.name }}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -63,35 +69,36 @@
               data-bs-parent="#kt_accordion_1"
             >
               <div class="accordion-body">
-                <div
-                  v-for="is in industrySectors"
-                  :key="is.id"
-                  class="form-check form-check-custom form-check-solid my-3"
-                >
-                  <input
-                    @input="addToIndustrySectors($event)"
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                    :data-id="is.id"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    {{ is.name }}
-                  </label>
+                <div class="row">
+                  <div
+                    v-for="is in industrySectors"
+                    :key="is.id"
+                    class="
+                      form-check form-check-custom form-check-solid
+                      my-3
+                      col-md-3
+                    "
+                  >
+                    <input
+                      @input="addToIndustrySectors($event)"
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckDefault"
+                      :data-id="is.id"
+                    />
+                    <label class="form-check-label" for="flexCheckDefault">
+                      {{ is.name }}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <p v-if="showError" style="color: red">
-          Select Atleast One To Find Experts
+          Select Atleast one {{ selectedExpertise.length ? (selectedIndustrySectors.length ? '' : 'Industry Sector') : 'Expertise' }} to Find Experts
         </p>
-        <div class="mt-8">
-          <button @click="findExperts" class="btn btn-primary float-end">
-            Find Experts
-          </button>
-        </div>
       </div>
     </div>
     <div class="row">
@@ -162,6 +169,7 @@ export default defineComponent({
           return e != event.target.dataset["id"];
         });
       }
+      findExperts();
     };
     const addToIndustrySectors = (event) => {
       showError.value = false;
@@ -177,6 +185,7 @@ export default defineComponent({
           }
         );
       }
+      findExperts();
     };
     const findExperts = async () => {
       if (
@@ -212,6 +221,8 @@ export default defineComponent({
       findExperts,
       filteredExperts,
       isAlreadyConnected,
+      selectedExpertise,
+      selectedIndustrySectors
     };
   },
 });

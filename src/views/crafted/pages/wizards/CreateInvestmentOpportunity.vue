@@ -188,6 +188,25 @@
 
             <!--end::Label-->
           </div>
+          <div class="stepper-item" data-kt-stepper-element="nav">
+            <!--begin::Line-->
+            <div class="stepper-line w-40px"></div>
+            <!--end::Line-->
+
+            <!--begin::Icon-->
+            <div class="stepper-icon w-40px h-40px">
+              <i class="stepper-check fas fa-check"></i>
+              <span class="stepper-number">9</span>
+            </div>
+            <!--end::Icon-->
+
+            <!--begin::Label-->
+            <div class="stepper-label">
+              <h3 class="stepper-title">Find Experts</h3>
+            </div>
+
+            <!--end::Label-->
+          </div>
         </div>
         <!--end::Nav-->
       </div>
@@ -265,6 +284,10 @@
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></FundingRound>
+        </div>
+        <div data-kt-stepper-element="content">
+          <FindExperts
+          ></FindExperts>
         </div>
         <!--end::Step 4-->
         <!--begin::Actions-->
@@ -353,6 +376,7 @@ import AdvancedAssurance from "@/components/wizard/steps/AdvancedAssurance.vue";
 import IndustrySectorsBusinesses from "@/components/wizard/steps/IndustrySectorsBusinesses.vue";
 import TeamMembers from "@/components/wizard/steps/TeamMembers.vue";
 import FundingRound from "@/components/wizard/steps/FundingRound.vue";
+import FindExperts from "@/views/crafted/pages/FindExperts.vue";
 import { StepperComponent } from "@/assets/ts/components";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
@@ -397,6 +421,7 @@ export default defineComponent({
     AdvancedAssurance,
     TeamMembers,
     IndustrySectorsBusinesses,
+    FindExperts
   },
   setup() {
     const touched = ref<boolean>(false);
