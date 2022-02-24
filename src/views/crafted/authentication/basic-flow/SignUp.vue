@@ -40,6 +40,18 @@
         />
         Sign in with Google
       </button>
+      <button
+        type="button"
+        @click="linkedInLogin"
+        class="btn btn-light-primary fw-bolder w-100 mb-10"
+      >
+        <img
+          alt="Logo"
+          src="media/svg/brand-logos/linkedin.svg"
+          class="h-20px me-3"
+        />
+        Sign in with LinkedIn
+      </button>
       <!--end::Action-->
 
       <!--begin::Separator-->
@@ -266,6 +278,11 @@ export default defineComponent({
         process.env.VUE_APP_BASE_URL + process.env.VUE_APP_GOOGLE_LOGIN_URL
       );
     };
+    const linkedInLogin = () => {
+      location.replace(
+        process.env.VUE_APP_BASE_URL + process.env.VUE_APP_LINKEDIN_LOGIN_URL
+      );
+    };
     const registration = Yup.object().shape({
       firstName: Yup.string().required().label("Name"),
       lastName: Yup.string().required().label("Surname"),
@@ -332,6 +349,7 @@ export default defineComponent({
       onSubmitRegister,
       submitButton,
       googleLogin,
+      linkedInLogin
     };
   },
 });
