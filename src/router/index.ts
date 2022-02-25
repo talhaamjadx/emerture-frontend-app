@@ -92,6 +92,22 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/stripe",
+        name: "stripe",
+        component: () => import("@/views/crafted/pages/stripe.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
+        path: "/authenticate-payment",
+        name: "authenticate-payment",
+        component: () => import("@/views/crafted/pages/authenticate-payment.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/connected-experts",
         name: "connected-experts",
         component: () => import("@/views/crafted/pages/connected-experts.vue"),

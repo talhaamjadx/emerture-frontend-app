@@ -56,7 +56,10 @@ enum Actions {
   DEACTIVATE = "deactivate",
   CREATE_BUSINESS_DRAFT = "createBusinessDraft",
   GET_BUSINESS_DRAFT = "getBusinessDraft",
-  DELETE_BUSINESS_DRAFT = "deleteBusinessDraft"
+  DELETE_BUSINESS_DRAFT = "deleteBusinessDraft",
+  SETUP_INTENT = "setupIntent",
+  SAVE_CARD = "saveCard",
+  GET_PAYMENT_INTENT = "getPaymentIntent"
 }
 
 enum Mutations {
