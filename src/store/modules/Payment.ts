@@ -20,6 +20,14 @@ const errorHandler = (err, context) => {
 
 @Module
 export default class Auth extends VuexModule {
+    cards = []
+    get cardsGetter() {
+        return this.cards
+    }
+    @Mutation
+    [Mutations.SET_CARDS](payload) {
+        this.cards = payload
+    }
     @Action
     [Actions.SETUP_INTENT](): Promise<AxiosResponse> {
         return ApiService.get("/payment/stripe/setup-intent")
@@ -36,6 +44,51 @@ export default class Auth extends VuexModule {
         return ApiService.get(`/payment/stripe/payment-intent/${data}`)
             .then(paymentIntent => {
                 return paymentIntent
+            })
+            .catch(err => {
+                errorHandler(err, this.context)
+                return err.response
+            })
+    }
+    @Action
+    [Actions.CHANGE_PAYMENT_STATUS](data): Promise<AxiosResponse> {
+        return ApiService.post(`/payment/stripe/update-status`, data)
+            .then(status => {
+                return status.data
+            })
+            .catch(err => {
+                errorHandler(err, this.context)
+                return err.response
+            })
+    }
+    @Action
+    [Actions.CHANGE_ACTIVE_CARD_STATUS]({ cardId, status }): Promise<AxiosResponse> {
+        return ApiService.get(`/payment/stripe/update-card-status/${cardId}/${status}`)
+            .then(status => {
+                return status.data
+            })
+            .catch(err => {
+                errorHandler(err, this.context)
+                return err.response
+            })
+    }
+    @Action
+    [Actions.CREATE_PAYMENT](): Promise<AxiosResponse> {
+        return ApiService.get(`/payment/stripe/payment-intent`)
+            .then(payment => {
+                return payment.data
+            })
+            .catch(err => {
+                errorHandler(err, this.context)
+                return err.response
+            })
+    }
+    @Action
+    [Actions.GET_CARDS](): Promise<AxiosResponse> {
+        return ApiService.get(`/payment/stripe/customer-cards`)
+            .then(cards => {
+                this.context.commit(Mutations.SET_CARDS, cards?.data?.data ?? [])
+                return cards.data
             })
             .catch(err => {
                 errorHandler(err, this.context)

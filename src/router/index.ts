@@ -92,9 +92,9 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "/stripe",
+        path: "/subscription",
         name: "stripe",
-        component: () => import("@/views/crafted/pages/stripe.vue"),
+        component: () => import("@/views/crafted/pages/subscription.vue"),
         meta: {
           loginRequired: true
         }

@@ -59,7 +59,12 @@ enum Actions {
   DELETE_BUSINESS_DRAFT = "deleteBusinessDraft",
   SETUP_INTENT = "setupIntent",
   SAVE_CARD = "saveCard",
-  GET_PAYMENT_INTENT = "getPaymentIntent"
+  GET_PAYMENT_INTENT = "getPaymentIntent",
+  CREATE_PAYMENT = "createPayment",
+  GET_CARDS = "getCards",
+  CHANGE_PAYMENT_STATUS = "changePaymentStatus",
+  CHANGE_ACTIVE_CARD_STATUS = "changeActiveCardStatus",
+  GET_PLANS = "getPlans"
 }
 
 enum Mutations {
@@ -88,7 +93,9 @@ enum Mutations {
   SET_FOUNDER = "setFounder",
   SET_EXPERTS = "setExperts",
   SET_INVESTMENT_OPPORTUNITIES = "setInvestmentOpportunities",
-  SET_BUSINESS_DRAFT = "setBusinessDraft"
+  SET_BUSINESS_DRAFT = "setBusinessDraft",
+  SET_CARDS = "setCards",
+  SET_PLANS = "setPlans"
 }
 
 export { Actions, Mutations };
