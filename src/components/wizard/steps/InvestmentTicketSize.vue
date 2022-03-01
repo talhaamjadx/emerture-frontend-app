@@ -289,8 +289,8 @@ export default defineComponent({
     const enums = reactive({
       stageOfEvolutionPreSeed: "Pre-seed",
       stageOfEvolutionSeed: "Seed",
-      stageOfEvolutionPreSeriesA: "Pre-series-A",
-      stageOfEvolutionSeriesA: "Series As",
+      stageOfEvolutionPreSeriesA: "Pre-series A",
+      stageOfEvolutionSeriesA: "Series A",
       minimumTractionPreMvp: "Pre-MVP",
       minimumTractionPostMvp: "Post-MVP",
       minimumTractionPreRevenue: "Pre-Revenue",

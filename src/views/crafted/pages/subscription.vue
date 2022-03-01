@@ -258,6 +258,7 @@ export default defineComponent({
           cardElement,
           {}
         );
+        console.log({response})
         if (response?.error) {
           this.getSetupIntent();
           throw new Error(response?.error?.message);
@@ -278,7 +279,13 @@ export default defineComponent({
         });
         this.getCards();
       } catch (err) {
-        console.log({ err });
+        this.store.commit("setAlert", {
+          message: "Error",
+          subMessage: err,
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
       }
     },
   },

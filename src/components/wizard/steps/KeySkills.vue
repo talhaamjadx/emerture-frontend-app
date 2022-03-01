@@ -10,23 +10,24 @@
       <!--end::Label-->
       <label class="form-label">Areas of Expertise</label>
       <!--end::Label-->
-
-      <div
-        v-for="e in expertise"
-        :key="e.id"
-        class="form-check form-check-custom form-check-solid my-3"
-      >
-        <input
-          :checked="isSelected('expertise', e.id)"
-          @input="addToExpertise($event)"
-          class="form-check-input"
-          type="checkbox"
-          id="flexCheckDefault"
-          :data-id="e.id"
-        />
-        <label class="form-check-label" for="flexCheckDefault">
-          {{ e.name }}
-        </label>
+      <div class="row">
+        <div
+          v-for="e in expertise"
+          :key="e.id"
+          class="form-check form-check-custom form-check-solid my-3 col-md-4"
+        >
+          <input
+            :checked="isSelected('expertise', e.id)"
+            @input="addToExpertise($event)"
+            class="form-check-input"
+            type="checkbox"
+            id="flexCheckDefault"
+            :data-id="e.id"
+          />
+          <label class="form-check-label" for="flexCheckDefault">
+            {{ e.name }}
+          </label>
+        </div>
       </div>
       <!--end::Input-->
     </div>
@@ -34,24 +35,25 @@
       <!--end::Label-->
       <label class="form-label">Industry Sectors</label>
       <!--end::Label-->
-
-      <div
-        v-for="is in industrySectors"
-        :key="is.id"
-        class="form-check form-check-custom form-check-solid my-3"
-      >
-        <input
-          :checked="isSelected('industrySectors', is.id)"
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-          :data-id="is.id"
-          @input="addToIndustrySectors($event)"
-        />
-        <label class="form-check-label" for="flexCheckDefault">
-          {{ is.name }}
-        </label>
+      <div class="row">
+        <div
+          v-for="is in industrySectors"
+          :key="is.id"
+          class="form-check form-check-custom form-check-solid my-3 col-md-4"
+        >
+          <input
+            :checked="isSelected('industrySectors', is.id)"
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="flexCheckDefault"
+            :data-id="is.id"
+            @input="addToIndustrySectors($event)"
+          />
+          <label class="form-check-label" for="flexCheckDefault">
+            {{ is.name }}
+          </label>
+        </div>
       </div>
       <!--end::Input-->
     </div>
