@@ -212,6 +212,7 @@ import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
+import { useRouter } from "vue-router";
 
 interface IStep1 {
   currencyCode: string;
@@ -233,6 +234,7 @@ export default defineComponent({
     IndustrySectors,
   },
   setup() {
+    const router = useRouter();
     const store = useStore();
     let formDataTemp = ref<Record<string, unknown>>({});
     let roleId = 0;
@@ -375,42 +377,43 @@ export default defineComponent({
           await store.dispatch(Actions.AUTH_USER);
 
           store.commit("setAlert", {
-              message: "Success",
-              subMessage: "Role is pending for approval",
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
+            message: "Success",
+            subMessage: "Role is pending for approval",
+            variant: "primary",
+            duration: 4000,
+            show: true,
+          });
         } catch (err) {
           const error = store.getters.getErrors;
 
           store.commit("setAlert", {
-              message: "Error",
-              subMessage: error,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+            message: "Error",
+            subMessage: error,
+            variant: "danger",
+            duration: 4000,
+            show: true,
+          });
         }
         store.commit("setAlert", {
-              message: "Success",
-              subMessage: `Investor Profile ${
+          message: "Success",
+          subMessage: `Investor Profile ${
             doesInvestorProfileExist.value ? "Updated" : "Created"
           }`,
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
+        router.push("/find-investment-opportunities");
       } catch (err) {
         store.commit("setAlert", {
-              message: "Error",
-              subMessage: `Investor Profile ${
+          message: "Error",
+          subMessage: `Investor Profile ${
             doesInvestorProfileExist.value ? "Updation" : "Creation"
           } Unsuccessful`,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
       }
     };
 

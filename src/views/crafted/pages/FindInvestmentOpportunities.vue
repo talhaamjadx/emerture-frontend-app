@@ -94,6 +94,7 @@
       </div>
     </div>
     <InvestmentOpportunities
+      :fromConnectedInvestmentOpportunities="false"
       :investmentOpportunitiesMain="investmentOpportunities"
     />
   </div>
@@ -150,10 +151,12 @@ export default defineComponent({
     const findOpportunityInvestment = async () => {
       try {
         const response = await store.dispatch(
-          Actions.FIND_INVESTMENT_OPPORTUNITIES, selectedIndustrySectors.value.length ?
-          {
-            industrySectorIds: selectedIndustrySectors.value,
-          } : null
+          Actions.FIND_INVESTMENT_OPPORTUNITIES,
+          selectedIndustrySectors.value.length
+            ? {
+                industrySectorIds: selectedIndustrySectors.value,
+              }
+            : null
         );
         if (response !== true) throw new Error();
       } catch (err) {

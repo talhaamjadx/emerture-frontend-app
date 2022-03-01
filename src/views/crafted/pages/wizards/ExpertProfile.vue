@@ -355,6 +355,8 @@ export default defineComponent({
         introduction: Yup.string().required().label("Introduction"),
         bio: Yup.string().required().label("Bio"),
       }),
+      {},
+      {}
     ];
 
     const currentSchema = computed(() => {
@@ -383,7 +385,7 @@ export default defineComponent({
 
     const handleStep = handleSubmit((values) => {
       if (!formDataTemp.value.get("documents") && currentStepIndex.value == 2) {
-        if (!expertProfile.value.document) {
+        if (!expertProfile?.value?.document) {
           isDocumentAdded.value = false;
           return;
         }

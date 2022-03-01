@@ -126,17 +126,16 @@
           Continue with Google
         </button>
         <button
-        type="button"
-        @click="linkedInLogin"
-        class="btn btn-light-primary fw-bolder w-100 mb-10"
-      >
-        <img
-          alt="Logo"
-          src="media/svg/brand-logos/linkedin.svg"
-          class="h-20px me-3"
-        />
-        Sign in with LinkedIn
-      </button>
+          @click="linkedInLogin"
+          class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
+        >
+          <img
+            alt="Logo"
+            src="media/svg/brand-logos/linkedin.svg"
+            class="h-20px me-3"
+          />
+          Continue with LinkedIn
+        </button>
         <!--end::Google link-->
 
         <!--begin::Google link-->

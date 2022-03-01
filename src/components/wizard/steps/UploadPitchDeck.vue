@@ -9,7 +9,7 @@
     <!--end::Heading-->
     <div class="fv-row mb-10 d-flex flex-column">
       <!--end::Label-->
-      <label class="form-label">Documents</label>
+      <label class="form-label required">Documents</label>
       <!--end::Label-->
 
       <!--begin::Input-->

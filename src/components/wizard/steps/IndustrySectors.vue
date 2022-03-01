@@ -4,11 +4,10 @@
     <!--begin::Heading-->
     <div class="pb-10 pb-lg-12">
       <!--begin::Title-->
-      <h2 class="fw-bolder text-dark">Key Skills</h2>
+      <h2 class="fw-bolder text-dark">Industry Sectors</h2>
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
-      <label class="form-label">Industry Sectors</label>
       <!--end::Label-->
 
       <div

@@ -9,6 +9,8 @@ import Role from "@/store/modules/Role";
 import Expert from "@/store/modules/Expert";
 import Business from "@/store/modules/Business";
 import Founder from "@/store/modules/Founder";
+import Payment from "@/store/modules/Payment";
+import Plans from "@/store/modules/Plans";
 import BodyModule from "@/store/modules/BodyModule";
 import BreadcrumbsModule from "@/store/modules/BreadcrumbsModule";
 import ConfigModule from "@/store/modules/ConfigModule";
@@ -42,7 +44,9 @@ const store = createStore({
     Business,
     Founder,
     Configuration,
-    Miscellaneous
+    Miscellaneous,
+    Payment,
+    Plans
   },
 });
 

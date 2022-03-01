@@ -14,7 +14,7 @@
                 <div>
                   <img
                     class="rounded-circle my-2"
-                    :src="`${opportunity.logo ?? '/media/avatars/blank.png'}`"
+                    :src="`${opportunity.logo ?? 'media/avatars/blank.png'}`"
                     style="border: 3px solid white; width: 120px; height: 118px"
                   />
                 </div>
@@ -26,7 +26,7 @@
                   View Investment Opportunity
                 </router-link>
                 <router-link
-                  v-if="!connectedIds[opportunity.id]"
+                  v-if="!connectedIds[opportunity.id] && !props.fromConnectedInvestmentOpportunities"
                   :to="`/disclaimer/${opportunity.id}`"
                   type="button"
                   style="width: 70%; display: block; margin:auto;"
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, defineComponent, onMounted } from "vue";
+import { ref, watch, defineComponent, onMounted, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 
@@ -82,12 +82,15 @@ export default defineComponent({
   props: {
     investmentOpportunitiesMain: {
       required: true,
-      type: Array,
+      type: Object,
     },
+    fromConnectedInvestmentOpportunities: {
+      type: Boolean
+    }
   },
   setup(props) {
     const store = useStore();
-    const investmentOpportunities = ref<Array<Record<string, unknown>>>([]);
+    const investmentOpportunities = ref<Record<string, unknown>>({});
     let connectedIds = ref<Record<string, unknown>>({});
     const refresh = async () => {
       try {
@@ -97,7 +100,7 @@ export default defineComponent({
         if (!response.success) throw new Error();
         connectedIds.value = {};
         for (let i = 0; i < response.data.length; i++) {
-          connectedIds.value[response.data[i].founderBusinessId] = true;
+          connectedIds.value[response.data?.[i]?.founderBusiness?.id] = true;
         }
       } catch (err) {
         //
@@ -106,16 +109,13 @@ export default defineComponent({
     onMounted(() => {
       refresh();
     });
-    watch(
-      () => props.investmentOpportunitiesMain,
-      (value) =>
-        (investmentOpportunities.value = value as Array<
-          Record<string, unknown>
-        >)
-    );
+    watchEffect(() => {
+      investmentOpportunities.value = props.investmentOpportunitiesMain
+    })
     return {
       investmentOpportunities,
       connectedIds,
+      props
     };
   },
 });
