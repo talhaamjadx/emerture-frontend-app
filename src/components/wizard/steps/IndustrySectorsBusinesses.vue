@@ -9,24 +9,25 @@
     <div class="fv-row mb-10">
       <!--end::Label-->
       <!--end::Label-->
-
-      <div
-        v-for="is in industrySectors"
-        :key="is.id"
-        class="form-check form-check-custom form-check-solid my-3"
-      >
-        <input
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-          :data-id="is.id"
-          @input="addToIndustrySectors($event)"
-          :checked="checkedIndustrySectors[is.id]"
-        />
-        <label class="form-check-label" for="flexCheckDefault">
-          {{ is.name }}
-        </label>
+      <div class="row">
+        <div
+          v-for="is in industrySectors"
+          :key="is.id"
+          class="form-check form-check-custom form-check-solid my-3 col-md-4"
+        >
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="flexCheckDefault"
+            :data-id="is.id"
+            @input="addToIndustrySectors($event)"
+            :checked="checkedIndustrySectors[is.id]"
+          />
+          <label class="form-check-label" for="flexCheckDefault">
+            {{ is.name }}
+          </label>
+        </div>
       </div>
       <!--end::Input-->
     </div>
@@ -35,7 +36,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed, reactive, watch } from "vue";
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  computed,
+  reactive,
+  watch,
+} from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 
@@ -55,13 +63,19 @@ export default defineComponent({
     let selectedIndustrySectors = ref<Array<number>>([]);
     const businessDraft = computed(() => store.getters.businessDraftGetter);
     let tempBusinessDraft = { ...businessDraft.value };
-    const checkedIndustrySectors = reactive<Record<string, boolean>>({})
+    const checkedIndustrySectors = reactive<Record<string, boolean>>({});
     watch(businessDraft, (value) => {
       tempBusinessDraft = { ...value };
-      const temp = [...(businessDraft.value?.industrySectors ?? [])]
-      selectedIndustrySectors.value = temp.length ? [...temp] : [...selectedIndustrySectors.value]
-      for(let i = 0; i < (businessDraft.value?.industrySectors?.length ?? 0); i++){
-        checkedIndustrySectors[businessDraft.value?.industrySectors[i]] = true
+      const temp = [...(businessDraft.value?.industrySectors ?? [])];
+      selectedIndustrySectors.value = temp.length
+        ? [...temp]
+        : [...selectedIndustrySectors.value];
+      for (
+        let i = 0;
+        i < (businessDraft.value?.industrySectors?.length ?? 0);
+        i++
+      ) {
+        checkedIndustrySectors[businessDraft.value?.industrySectors[i]] = true;
       }
     });
     watch(
@@ -118,7 +132,7 @@ export default defineComponent({
       industrySectors,
       addToIndustrySectors,
       selectedIndustrySectors,
-      checkedIndustrySectors
+      checkedIndustrySectors,
     };
   },
 });

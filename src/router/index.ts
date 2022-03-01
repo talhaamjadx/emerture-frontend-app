@@ -116,6 +116,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/connected-investment-opportunities",
+        name: "connected-investment-opportunities",
+        component: () => import("@/views/crafted/pages/connected-investment-opportunites.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/find-investment-opportunities",
         name: "find-investment-opportunities",
         component: () => import("@/views/crafted/pages/FindInvestmentOpportunities.vue"),

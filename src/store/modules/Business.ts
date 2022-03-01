@@ -8,8 +8,12 @@ import objectPath from "object-path";
 export default class Business extends VuexModule {
     businesses = []
     investmentOpportunities = []
+    connectedInvestmentOpportunities = []
     get getInvestmentOpportunities() {
         return this.investmentOpportunities
+    }
+    get getConnectedInvestmentOpportunities() {
+        return this.connectedInvestmentOpportunities
     }
     get getBusinesses() {
         return this.businesses
@@ -17,6 +21,10 @@ export default class Business extends VuexModule {
     @Mutation
     [Mutations.SET_FOUNDER_BUSINESSES](payload): void {
         this.businesses = payload
+    }
+    @Mutation
+    [Mutations.SET_CONNECTED_INVESTMENT_OPPORTUNITIES](payload): void {
+        this.connectedInvestmentOpportunities = payload
     }
     @Mutation
     [Mutations.SET_INVESTMENT_OPPORTUNITIES](payload): void {
@@ -146,6 +154,7 @@ export default class Business extends VuexModule {
         ApiService.setHeader("application/json")
         return ApiService.get(`/investor-business-connection`)
             .then(connectedInvestmentOpportunities => {
+                this.context.commit(Mutations.SET_CONNECTED_INVESTMENT_OPPORTUNITIES, connectedInvestmentOpportunities?.data?.data ?? [])
                 return connectedInvestmentOpportunities.data
             })
             .catch(err => {

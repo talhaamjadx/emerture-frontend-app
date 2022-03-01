@@ -95,7 +95,8 @@ enum Mutations {
   SET_INVESTMENT_OPPORTUNITIES = "setInvestmentOpportunities",
   SET_BUSINESS_DRAFT = "setBusinessDraft",
   SET_CARDS = "setCards",
-  SET_PLANS = "setPlans"
+  SET_PLANS = "setPlans",
+  SET_CONNECTED_INVESTMENT_OPPORTUNITIES = "setConnectedInvestmentOpportunities"
 }
 
 export { Actions, Mutations };

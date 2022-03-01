@@ -53,7 +53,7 @@ export default defineComponent({
           if (statusResponse?.success) {
             store.commit("setAlert", {
               message: "Error",
-              subMessage: "Client Authentication Failed",
+              subMessage: response?.error?.message ?? "",
               variant: "danger",
               duration: 4000,
               show: true,
@@ -91,9 +91,10 @@ export default defineComponent({
           Actions.GET_PAYMENT_INTENT,
           paymentIntentId.value
         );
-        if (response?.status != 200) throw new Error(response?.data?.error);
-        paymentIntent.value = response?.data;
-        error_message.value = response?.data?.last_payment_error?.message ?? "";
+        console.log({response})
+        if (response?.status != 200) throw new Error(response?.data?.data?.error);
+        paymentIntent.value = response?.data?.data;
+        error_message.value = response?.data?.data?.last_payment_error?.message ?? "";
       } catch (err) {
         //
       }

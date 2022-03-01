@@ -211,6 +211,12 @@ export default defineComponent({
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-layers",
       },
+      {
+        heading: "connected-investment-opportunities",
+        route: "/connected-investment-opportunities",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-layers",
+      },
     ];
     let MainMenuTemp = [...MainMenu];
     let MainMenuConfig = ref(MainMenuTemp);
