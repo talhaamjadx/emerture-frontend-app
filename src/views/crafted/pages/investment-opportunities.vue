@@ -15,7 +15,7 @@
                   <img
                     class="rounded-circle my-2"
                     :src="`${opportunity.logo ?? 'media/avatars/blank.png'}`"
-                    style="border: 3px solid white; width: 120px; height: 118px"
+                    style="border: 3px solid white; width: 120px; height: 118px; object-fit: cover;"
                   />
                 </div>
                 <router-link
