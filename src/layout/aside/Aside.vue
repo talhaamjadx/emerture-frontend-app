@@ -19,10 +19,10 @@
     <div class="aside-logo flex-column-auto" id="kt_aside_logo">
       <!--begin::Logo-->
       <a href="#" v-if="asideTheme === 'dark'">
-        <img alt="Logo" :src="require('@/assets/img/nav-logo.png')" style="height: 29px !important" class="logo" />
+        <img alt="Logo" :src="require('@/assets/img/emerture.png')" style="height: 29px !important" class="logo" />
       </a>
       <a href="#" v-if="asideTheme === 'light'">
-        <img alt="Logo" :src="require('@/assets/img/nav-logo.png')" style="height: 29px !important" class="logo" />
+        <img alt="Logo" :src="require('@/assets/img/emerture.png')" style="height: 29px !important" class="logo" />
       </a>
       <!--end::Logo-->
 

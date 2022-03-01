@@ -5,23 +5,23 @@
   >
     <div class="container-fluid p-0">
       <div class="row m-3 g-0">
-        <div class="col-xl-7 col-12 order-md-first order-last">
+        <div class="col-12 order-md-first order-last">
           <div class="content" style="background-color: #1b283f">
             <div class="row">
               <div
-                class="col-sm-5 col-12 order-sm-first order-last text-center"
+                class="col-sm-4 col-12 order-sm-first order-last text-center offset-sm-1"
               >
                 <div>
                   <img
                     class="rounded-circle my-2"
                     :src="`${opportunity.logo ?? 'media/avatars/blank.png'}`"
-                    style="border: 3px solid white; width: 120px; height: 118px"
+                    style="border: 3px solid white; width: 120px; height: 118px; object-fit: cover;"
                   />
                 </div>
                 <router-link
                   :to="`/investment-opportunity-profile/${opportunity.id}`"
                   type="button"
-                  class="btn btn-danger my-sm-2 my-3"
+                  class="btn btn-danger my-sm-2 my-3" style="display: block; margin: auto; width: 70%"
                 >
                   View Investment Opportunity
                 </router-link>
@@ -29,7 +29,7 @@
                   v-if="!connectedIds[opportunity.id] && !props.fromConnectedInvestmentOpportunities"
                   :to="`/disclaimer/${opportunity.id}`"
                   type="button"
-                  style="width: 92%"
+                  style="width: 70%; display: block; margin:auto;"
                   class="btn btn-danger my-sm-2 my-3"
                 >
                   Connect
@@ -38,7 +38,7 @@
                   v-else
                   disabled
                   type="button"
-                  style="width: 92%"
+                  style="width: 70%; display: block; margin:auto;"
                   class="btn btn-danger my-sm-2 my-3"
                 >
                   Connected
@@ -47,11 +47,11 @@
 
               <div
                 class="
-                  col-sm-7 col-12
+                  col-sm-4 col-12
                   order-sm-last order-first
                   text-white text-center
                   my-sm-auto
-                  mt-3
+                  mt-3 offset-sm-1
                 "
               >
                 <h3 style="color: white !important">{{ opportunity.name }}</h3>
@@ -60,14 +60,14 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-5 col-12 order-md-last order-first">
+        <!-- <div class="col-xl-5 col-12 order-md-last order-first">
           <div class="contnt">
             <img
               :src="`${opportunity.headerImage}`"
               style="width: 100%; height: 242px"
             />
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

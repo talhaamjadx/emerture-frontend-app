@@ -3,7 +3,7 @@
   <div>
     <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
       <!--begin::Card header-->
-      <div class="card-header cursor-pointer px-0">
+      <div class="card-header cursor-pointer p-9">
         <!--begin::Card title-->
         <div class="card-title m-0">
           <div
@@ -203,7 +203,7 @@
             <span
               v-for="sector in business.industrySectors"
               :key="sector.id"
-              class="badge badge-light-primary"
+              class="badge badge-light-primary me-2"
               >{{ sector.name }}&nbsp;</span
             >
           </div>

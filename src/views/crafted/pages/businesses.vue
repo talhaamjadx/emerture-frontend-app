@@ -13,13 +13,13 @@
           <div class="content" style="background-color: #1b283f">
             <div class="row">
               <div
-                class="col-sm-4 col-12 order-sm-first order-last text-center offset-1"
+                class="col-sm-4 col-12 order-sm-first order-last text-center offset-sm-1"
               >
                 <div>
                   <img
                     class="rounded-circle my-2"
                     :src="`${business.logo ?? '/media/avatars/blank.png'}`"
-                    style="border: 3px solid white; width: 120px; height: 118px"
+                    style="border: 3px solid white; width: 120px; height: 118px; object-fit: cover;"
                   />
                 </div>
                 <router-link
@@ -37,7 +37,7 @@
                   order-sm-last order-first
                   text-white text-center
                   my-sm-auto
-                  mt-3 offset-1
+                  mt-3 offset-sm-1
                 "
               >
                 <h3 style="color: white !important">{{ business.name }}</h3>

@@ -222,7 +222,7 @@ export default defineComponent({
         heading: "subscription",
         route: "/subscription",
         svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-currency-euro",
+        fontIcon: "bi-currency-pound",
       },
     ];
     let MainMenuTemp = [...MainMenu];
