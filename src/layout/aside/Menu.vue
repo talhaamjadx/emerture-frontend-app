@@ -153,13 +153,14 @@ import { useI18n } from "vue-i18n/index";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { version } from "@/core/helpers/documentation";
-import { asideMenuIcons } from "@/core/helpers/config";
+// import { asideMenuIcons } from "@/core/helpers/config";
 import objectPath from "object-path";
 
 export default defineComponent({
   name: "kt-menu",
   components: {},
   setup() {
+    const asideMenuIcons = "font"
     const store = useStore();
     const user = computed(() => store.getters.getUser);
     const MainMenu = [
@@ -167,55 +168,61 @@ export default defineComponent({
         heading: "dashboard",
         route: "/dashboard",
         svgIcon: "media/icons/duotune/general/gen001.svg",
-        fontIcon: "bi-layers",
+        fontIcon: "bi-bar-chart",
       },
       {
         heading: "expert-profile",
         route: "/expert-profile",
         svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-layers",
+        fontIcon: "bi-person",
       },
       {
         heading: "investor-profile",
         route: "/investor-profile",
         svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-layers",
+        fontIcon: "bi-person",
       },
       {
         heading: "find-experts",
         route: "/find-experts",
         svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-layers",
+        fontIcon: "bi-search",
       },
       {
         heading: "find-investment-opportunities",
         route: "/find-investment-opportunities",
         svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-layers",
+        fontIcon: "bi-search",
       },
       {
         heading: "addRole",
         route: "/add-role",
         svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
-        fontIcon: "bi-cart",
+        fontIcon: "bi-person-plus",
       },
       {
         heading: "businesses",
         route: "/businesses",
         svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
-        fontIcon: "bi-cart",
+        fontIcon: "bi-building",
       },
       {
         heading: "connected-experts",
         route: "/connected-experts",
         svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-layers",
+        fontIcon: "bi-person-check-fill",
       },
       {
         heading: "connected-investment-opportunities",
         route: "/connected-investment-opportunities",
         svgIcon: "media/icons/duotune/general/gen019.svg",
-        fontIcon: "bi-layers",
+        fontIcon: "bi-diagram-3",
+      },
+      {
+        heading: "subscription",
+        route: "/subscription",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-currency-euro",
       },
     ];
     let MainMenuTemp = [...MainMenu];
@@ -257,7 +264,8 @@ export default defineComponent({
           return true;
         } else if (
           (config.heading == "investor-profile" ||
-            config.heading == "find-investment-opportunities") &&
+            config.heading == "find-investment-opportunities" ||
+            config.heading == "connected-investment-opportunities") &&
           !(user.value?.investor instanceof Array) &&
           user.value.investor &&
           user.value?.userRoles?.some(
@@ -283,7 +291,8 @@ export default defineComponent({
           config.heading !== "businesses" &&
           config.heading !== "find-investment-opportunities" &&
           config.heading !== "dashboard" &&
-          config.heading !== "connected-experts"
+          config.heading !== "connected-experts" &&
+          config.heading !== "connected-investment-opportunities"
         ) {
           return true;
         } else return false;
