@@ -1,8 +1,24 @@
 <template>
-  <div>{{ error_message }}</div>
-  <button class="btn btn-primary" @click="authenticateAndPay">
-    Authenticate
-  </button>
+  <div class="card my-3">
+    <!--begin::Card body-->
+    <div class="card-body p-0">
+      <!--begin::Wrapper-->
+      <div class="card-px text-center py-20 my-10">
+        <!--begin::Title-->
+        <h2 class="fs-2x fw-bolder mb-10">Authentication Required</h2>
+        <!--end::Title-->
+
+        <!--begin::Description-->
+        <p class="text-gray-400 fs-4 fw-bold mb-10">
+          {{ error_message }}
+        </p>
+        <button class="btn btn-primary" @click="authenticateAndPay">
+          Authenticate
+        </button>
+      </div>
+    </div>
+    <!--end::Card body-->
+  </div>
 </template>
 
 <script lang="ts">
@@ -91,10 +107,12 @@ export default defineComponent({
           Actions.GET_PAYMENT_INTENT,
           paymentIntentId.value
         );
-        console.log({response})
-        if (response?.status != 200) throw new Error(response?.data?.data?.error);
+        console.log({ response });
+        if (response?.status != 200)
+          throw new Error(response?.data?.data?.error);
         paymentIntent.value = response?.data?.data;
-        error_message.value = response?.data?.data?.last_payment_error?.message ?? "";
+        error_message.value =
+          response?.data?.data?.last_payment_error?.message ?? "";
       } catch (err) {
         //
       }
