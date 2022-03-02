@@ -88,7 +88,10 @@
       <Field
         @keypress="limitInput($event)"
         v-model="telephone"
-        @input="fieldChanged($event); formatTelephone($event)"
+        @input="
+          fieldChanged($event);
+          formatTelephone($event);
+        "
         type="text"
         name="telephone"
         class="form-control form-control-lg form-control-solid"
@@ -137,8 +140,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch } from "vue";
+import { defineComponent, ref, inject, watch, computed } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "PersonalDetails",
@@ -153,22 +157,31 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const store = useStore();
+    const user = computed(() => store.getters.getUser);
     const name = ref<string | unknown>("");
     const jobTitle = ref<string | unknown>("");
     const telephone = ref<string | unknown>("");
-    const formatTelephone = e => {
-      if(e.target.value.charCodeAt(0) != 48 && e.target.value){
-        telephone.value = "0" + telephone.value
-      }
-      if(e.target.value.length == 6){
-        telephone.value = (telephone.value as string).substr(0,5) + " " + (telephone.value as string).substr(5)
-      }
-    }
-    const linkedInProfileUrl = ref<string | unknown>("");
+    name.value = user.value?.firstName + " " + user.value?.lastName;
+    telephone.value = user.value?.telephone;
     const formData = ref<FormData>(props.formDataTemp);
+    formData.value.append("name", name.value as string);
+    formData.value.append("telephone", telephone.value as string);
+    const formatTelephone = (e) => {
+      if (e.target.value.charCodeAt(0) != 48 && e.target.value) {
+        telephone.value = "0" + telephone.value;
+      }
+      if (e.target.value.length == 6) {
+        telephone.value =
+          (telephone.value as string).substr(0, 5) +
+          " " +
+          (telephone.value as string).substr(5);
+      }
+    };
+    const linkedInProfileUrl = ref<string | unknown>("");
     const expertProfile = inject("expertProfile");
     const limitInput = (event) => {
-      if(event.target.value.length > 11) event.preventDefault()
+      if (event.target.value.length > 11) event.preventDefault();
       if (event.charCode < 48 || event.charCode > 57) {
         event.preventDefault();
       }

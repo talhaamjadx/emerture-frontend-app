@@ -62,65 +62,6 @@
         <!--end::Hint-->
       </div>
     </div>
-    <div class="fv-row mb-10 d-flex flex-column">
-      <!--end::Label-->
-      <label class="form-label">Header Image</label>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <div class="col-lg-8">
-        <!--begin::Image input-->
-        <div
-          class="image-input image-input-outline"
-          data-kt-image-input="true"
-          style="background-image: url(media/avatars/blank.png)"
-        >
-          <!--begin::Preview existing avatar-->
-          <div
-            ref="profilePictureRef"
-            class="image-input-wrapper w-125px h-125px"
-            :style="`background-image: ${
-              newImageAddedHeader
-                ? `url(${tempImageHeader})`
-                : `url(${business.headerImage})`
-            }`"
-          ></div>
-          <!--end::Preview existing avatar-->
-
-          <!--begin::Label-->
-          <label
-            class="
-              btn btn-icon btn-circle btn-active-color-primary
-              w-25px
-              h-25px
-              bg-white
-              shadow
-            "
-            data-kt-image-input-action="change"
-            data-bs-toggle="tooltip"
-            title="Change avatar"
-          >
-            <i class="bi bi-pencil-fill fs-7"></i>
-
-            <!--begin::Inputs-->
-            <input
-              @change="handleImageUpload($event)"
-              type="file"
-              name="headerImage"
-              accept=".png, .jpg, .jpeg"
-            />
-            <input type="hidden" name="avatar_remove" />
-            <!--end::Inputs-->
-          </label>
-        </div>
-        <!--end::Image input-->
-
-        <!--begin::Hint-->
-        <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
-        <!--end::Hint-->
-      </div>
-      <!--end::Input-->
-    </div>
   </div>
   <!--end::Wrapper-->
 </template>
@@ -142,19 +83,13 @@ export default defineComponent({
     const business = inject("business");
     const newImageAddedLogo = ref<boolean>(false);
     const tempImageLogo = ref<string>("");
-    const newImageAddedHeader = ref<boolean>(false);
-    const tempImageHeader = ref<string>("");
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (file) => {
-        event.target.name === "logo"
-          ? tempImageLogo.value = file?.target?.result as string
-          : (tempImageHeader.value = file?.target?.result as string);
-        event.target.name === "logo"
-          ? (newImageAddedLogo.value = true)
-          : (newImageAddedHeader.value = true);
+        tempImageLogo.value = file?.target?.result as string;
+        newImageAddedLogo.value = true;
       };
       const tempEvent = {
         target: {
@@ -165,7 +100,7 @@ export default defineComponent({
       fieldChanged(tempEvent);
     };
     const fieldChanged = (event) => {
-      console.log({event})
+      console.log({ event });
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);
@@ -179,8 +114,6 @@ export default defineComponent({
       business,
       newImageAddedLogo,
       tempImageLogo,
-      newImageAddedHeader,
-      tempImageHeader,
     };
   },
 });
