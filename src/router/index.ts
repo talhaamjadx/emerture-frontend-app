@@ -116,6 +116,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/connected-founders",
+        name: "connected-founders",
+        component: () => import("@/views/crafted/pages/connected-founders.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
         path: "/connected-investment-opportunities",
         name: "connected-investment-opportunities",
         component: () => import("@/views/crafted/pages/connected-investment-opportunites.vue"),
@@ -151,6 +159,14 @@ const routes: Array<RouteRecordRaw> = [
         path: "/expert/:id",
         name: "expert-global",
         component: () => import("@/views/crafted/pages/ExpertProfileGlobal.vue"),
+        meta: {
+          loginRequired: true
+        }
+      },
+      {
+        path: "/founder/:id",
+        name: "founder-global",
+        component: () => import("@/views/crafted/pages/FounderProfileGlobal.vue"),
         meta: {
           loginRequired: true
         }

@@ -46,14 +46,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-xl-5 col-12 order-xl-last order-first">
-          <div class="contnt">
-            <img
-              :src="`${business.headerImage}`"
-              style="width: 100%; height: 247px"
-            />
-          </div>
-        </div> -->
       </div>
     </div>
   </div>

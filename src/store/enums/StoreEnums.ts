@@ -64,7 +64,9 @@ enum Actions {
   GET_CARDS = "getCards",
   CHANGE_PAYMENT_STATUS = "changePaymentStatus",
   CHANGE_ACTIVE_CARD_STATUS = "changeActiveCardStatus",
-  GET_PLANS = "getPlans"
+  GET_PLANS = "getPlans",
+  CONNECTED_FOUNDERS = "expertConnectedFounders",
+  GET_USER_PROFILE = "getUserProfile"
 }
 
 enum Mutations {
@@ -96,7 +98,8 @@ enum Mutations {
   SET_BUSINESS_DRAFT = "setBusinessDraft",
   SET_CARDS = "setCards",
   SET_PLANS = "setPlans",
-  SET_CONNECTED_INVESTMENT_OPPORTUNITIES = "setConnectedInvestmentOpportunities"
+  SET_CONNECTED_INVESTMENT_OPPORTUNITIES = "setConnectedInvestmentOpportunities",
+  SET_CONNECTED_FOUNDERS = "setExpertConnectedFounders"
 }
 
 export { Actions, Mutations };

@@ -10,6 +10,10 @@ export default class Expert extends VuexModule {
     filteredExperts = []
     expertise = []
     industrySectors = []
+    connectedFounders = []
+    get connectedFoundersGetter() {
+        return this.connectedFounders
+    }
     get expertProfileGetter() {
         return this.expert
     }
@@ -21,6 +25,10 @@ export default class Expert extends VuexModule {
     }
     get filteredExpertsGetter() {
         return this.filteredExperts
+    }
+    @Mutation
+    [Mutations.SET_CONNECTED_FOUNDERS](payload): void {
+        this.connectedFounders = payload
     }
     @Mutation
     [Mutations.SET_EXPERT_PROFILE](payload): void {
@@ -71,6 +79,19 @@ export default class Expert extends VuexModule {
             .then(expert => {
                 this.context.commit(Mutations.SET_EXPERT_PROFILE, expert.data.data)
                 return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
+    [Actions.GET_USER_PROFILE](id): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/user/${id}`)
+            .then(user => {
+                return user.data
             })
             .catch(err => {
                 console.log(err)
@@ -139,6 +160,20 @@ export default class Expert extends VuexModule {
         return ApiService.post(`/founder-requisite-expert`, payload)
             .then(() => {
                 return true
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.responses
+            })
+    }
+    @Action
+    [Actions.CONNECTED_FOUNDERS](): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/expert-connected-founders`)
+            .then(connectedFounders => {
+                this.context.commit(Mutations.SET_CONNECTED_FOUNDERS, connectedFounders?.data?.data?.users ?? [])
+                return connectedFounders.data
             })
             .catch(err => {
                 console.log(err)

@@ -160,7 +160,7 @@ export default defineComponent({
   name: "kt-menu",
   components: {},
   setup() {
-    const asideMenuIcons = "font"
+    const asideMenuIcons = "font";
     const store = useStore();
     const user = computed(() => store.getters.getUser);
     const MainMenu = [
@@ -209,6 +209,12 @@ export default defineComponent({
       {
         heading: "connected-experts",
         route: "/connected-experts",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-person-check-fill",
+      },
+      {
+        heading: "connected-founders",
+        route: "/connected-founders",
         svgIcon: "media/icons/duotune/general/gen019.svg",
         fontIcon: "bi-person-check-fill",
       },
