@@ -13,27 +13,19 @@
             "
           >
             <img
-              :src="
-                op.get(expert, 'user.profileImage', null) ??
-                require('@/assets/img/blank.png')
-              "
+              :src="founder?.profileImage ?? require('@/assets/img/blank.png')"
               alt="image"
             />
           </div>
-          <h3 class="fw-bolder m-0 mx-3">{{ expert.name }}</h3>
+          <h3 class="fw-bolder m-0 mx-3">
+            {{ founder?.firstName }} {{ founder?.lastName }}
+          </h3>
         </div>
       </div>
       <!--begin::Card header-->
 
       <!--begin::Card body-->
       <div class="card-body p-9">
-        <a
-          v-if="expert.document"
-          download
-          :href="expert.document"
-          class="btn btn-primary my-3"
-          ><i class="fas fa-download fs-4 me-2"></i>Document</a
-        >
         <div class="row mb-7 mt-4">
           <!--begin::Label-->
           <label class="col-lg-4 fw-bold text-muted">Name</label>
@@ -41,7 +33,9 @@
 
           <!--begin::Col-->
           <div class="col-lg-8">
-            <span class="fw-bolder fs-6 text-dark">{{ expert.name }}</span>
+            <span class="fw-bolder fs-6 text-dark"
+              >{{ founder?.firstName }} {{ founder?.lastName }}</span
+            >
           </div>
           <!--end::Col-->
         </div>
@@ -50,28 +44,15 @@
         <!--begin::Input group-->
         <div class="row mb-7">
           <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted">Introduction</label>
+          <label class="col-lg-4 fw-bold text-muted">Email</label>
           <!--end::Label-->
 
           <!--begin::Col-->
           <div class="col-lg-8 fv-row">
-            <span class="fw-bold fs-6">{{ expert.introduction }}</span>
+            <span class="fw-bold fs-6">{{ founder?.email }}</span>
           </div>
           <!--end::Col-->
         </div>
-        <!--end::Input group-->
-        <div class="row mb-7">
-          <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted">Bio</label>
-          <!--end::Label-->
-
-          <!--begin::Col-->
-          <div class="col-lg-8 fv-row">
-            <span class="fw-bold fs-6">{{ expert.bio }}</span>
-          </div>
-          <!--end::Col-->
-        </div>
-        <!--begin::Input group-->
         <div class="row mb-7">
           <!--begin::Label-->
           <label class="col-lg-4 fw-bold text-muted"> Telephone </label>
@@ -79,7 +60,9 @@
 
           <!--begin::Col-->
           <div class="col-lg-8 d-flex align-items-center">
-            <span class="fw-bolder fs-6 me-2">{{ expert.telephone }}</span>
+            <span class="fw-bolder fs-6 me-2">{{
+              founder?.telephone ?? "None"
+            }}</span>
           </div>
           <!--end::Col-->
         </div>
@@ -93,7 +76,9 @@
 
           <!--begin::Col-->
           <div class="col-lg-8">
-            <span class="fw-bolder fs-6 me-2">{{ expert.jobTitle }}</span>
+            <span class="fw-bolder fs-6 me-2">{{
+              founder?.jobTitle ?? "None"
+            }}</span>
           </div>
           <!--end::Col-->
         </div>
@@ -109,9 +94,11 @@
           <div class="col-lg-8">
             <span class="fw-bolder fs-6 text-dark">
               <a
-                :href="op.get(expert, 'linkedInProfileUrl', '#')"
+                :href="op.get(founder, 'linkedInProfileUrl', '#')"
                 target="_blank"
-                >{{ op.get(expert, "linkedInProfileUrl", "None") ?? "None" }}</a
+                >{{
+                  op.get(founder, "linkedInProfileUrl", "None") ?? "None"
+                }}</a
               >
             </span>
           </div>
@@ -119,44 +106,40 @@
         </div>
         <div class="row mb-7">
           <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted"> External Document </label>
+          <label class="col-lg-4 fw-bold text-muted">Business Clicks</label>
           <!--end::Label-->
 
           <!--begin::Col-->
           <div class="col-lg-8">
-            <span class="fw-bolder fs-6 text-dark">
-              <a
-                :href="op.get(expert, 'externalDocumentUrl', '#')"
-                target="_blank"
-                >{{ op.get(expert, "externalDocumentUrl", "None") ?? "None" }}</a
-              >
-            </span>
+            <span class="fw-bolder fs-6 me-2">{{
+              founder?.founderBusinessClicks ?? 0
+            }}</span>
           </div>
           <!--end::Col-->
         </div>
         <div class="row mb-7">
           <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted"> Industry Sectors </label>
+          <label class="col-lg-4 fw-bold text-muted">Business Shows</label>
           <!--end::Label-->
 
           <!--begin::Col-->
           <div class="col-lg-8">
-            <span class="fw-bolder fs-6 text-dark">
-              {{ arrayStringConstructor(op.get(expert, 'industrySectors', [])) }}
-            </span>
+            <span class="fw-bolder fs-6 me-2">{{
+              founder?.founderBusinessShows ?? 0
+            }}</span>
           </div>
           <!--end::Col-->
         </div>
         <div class="row mb-7">
           <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted"> Expertise </label>
+          <label class="col-lg-4 fw-bold text-muted">Total Connections</label>
           <!--end::Label-->
 
           <!--begin::Col-->
           <div class="col-lg-8">
-            <span class="fw-bolder fs-6 text-dark">
-              {{ arrayStringConstructor(op.get(expert, 'expertise', [])) }}
-            </span>
+            <span class="fw-bolder fs-6 me-2">{{
+              founder?.founderTotalConnections ?? 0
+            }}</span>
           </div>
           <!--end::Col-->
         </div>
@@ -164,49 +147,108 @@
       <!--end::Card body-->
     </div>
   </div>
-  <!--end::details View-->
+  <div class="card mb-5 mb-xl-10">
+    <!--begin::Card header-->
+    <div class="card-header border-0" style="min-height: 60px !important">
+      <!--begin::Card title-->
+      <div class="card-title m-0">
+        <h3 class="fw-bolder m-0">Businesses</h3>
+      </div>
+      <!--end::Card title-->
+    </div>
+    <div v-for="business in founder.founderBusiness" :key="business.id">
+      <div class="container-fluid p-0">
+        <div class="row m-3 g-0">
+          <div class="col-12 order-xl-first order-last">
+            <div class="content" style="background-color: #1b283f">
+              <div class="row">
+                <div
+                  class="
+                    col-sm-4 col-12
+                    order-sm-first order-last
+                    text-center
+                    offset-sm-1
+                  "
+                >
+                  <div>
+                    <img
+                      class="rounded-circle my-2"
+                      :src="`${business.logo ?? '/media/avatars/blank.png'}`"
+                      style="
+                        border: 3px solid white;
+                        width: 120px;
+                        height: 118px;
+                        object-fit: cover;
+                      "
+                    />
+                  </div>
+                  <router-link
+                    :to="`/business/${business.id}`"
+                    type="button"
+                    class="btn btn-danger my-sm-2 my-3"
+                  >
+                    View Business
+                  </router-link>
+                </div>
+
+                <div
+                  class="
+                    col-sm-4 col-12
+                    order-sm-last order-first
+                    text-white text-center
+                    my-sm-auto
+                    mt-3
+                    offset-sm-1
+                  "
+                >
+                  <h3 style="color: white !important">{{ business.name }}</h3>
+                  <p>{{ business.summary }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, computed, ref } from "vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-// import FundingRounds from "@/components/widgets/lists/funding-rounds.vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
 import objectPath from "object-path";
 
 export default defineComponent({
-  name: "business-details",
-  components: {
-    // FundingRounds,
-  },
+  name: "founder-details",
   setup() {
     const op = computed(() => objectPath);
     const store = useStore();
     const route = useRoute();
-    const expert = ref<Record<string, unknown>>({});
+    const founder = ref<Record<string, unknown>>({});
     const toUpperCase = (value) => {
       return value?.toUpperCase();
     };
     const parseJSON = (value) => {
       return value ? JSON.parse(value) : [];
     };
-    const arrayStringConstructor = arr  => {
-        let arrayString = ""
-        for(let i = 0; i < arr.length; i++){
-            arrayString = arrayString + `${(arr[i]).name}${arr[i+1] ? ", " : ""}`
-        }
-        return arrayString
-    }
+    const arrayStringConstructor = (arr) => {
+      let arrayString = "";
+      for (let i = 0; i < arr.length; i++) {
+        arrayString = arrayString + `${arr[i].name}${arr[i + 1] ? ", " : ""}`;
+      }
+      return arrayString;
+    };
     onMounted(async () => {
       try {
         const response = await store.dispatch(
-          Actions.GET_EXPERT_PROFILE_GLOBAL,
+          Actions.GET_USER_PROFILE,
           route.params.id
         );
         if (!response.success) throw new Error();
-        expert.value = response.data;
+        founder.value = response.data;
       } catch (err) {
         console.log(err);
       }
@@ -218,9 +260,9 @@ export default defineComponent({
       toUpperCase,
       parseJSON,
       route,
-      expert,
+      founder,
       op,
-      arrayStringConstructor
+      arrayStringConstructor,
     };
   },
 });

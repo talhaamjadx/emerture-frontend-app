@@ -165,6 +165,7 @@ export default defineComponent({
       fieldChanged(tempEvent);
     };
     const fieldChanged = (event) => {
+      console.log({event})
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
       } else formData.value.append(event.target.name, event.target.value);

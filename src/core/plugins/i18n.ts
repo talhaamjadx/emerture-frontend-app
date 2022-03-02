@@ -79,6 +79,7 @@ const messages = {
     "businesses": "Businesses",
     "find-investment-opportunities": "Find Investment Opportunities",
     "connected-experts": "Connected Experts",
+    "connected-founders": "Connected Founders",
     "connected-investment-opportunities": "Connected Investment Opportunities",
     "subscription": "Subscription"
   },
