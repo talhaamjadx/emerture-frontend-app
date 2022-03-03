@@ -15,7 +15,11 @@
       <!--begin::Input-->
       <Field
         v-model="telephone"
-        @input="fieldChanged($event)"
+        @keypress="limitInput($event)"
+        @input="
+          fieldChanged($event);
+          formatTelephone($event);
+        "
         type="textarea"
         name="telephone"
         class="form-control form-control-lg form-control-solid"
@@ -76,7 +80,7 @@
     </div>
     <div class="fv-row mb-10">
       <!--begin::Label-->
-      <label class="form-label required">Geo Focus</label>
+      <label class="form-label required">Geo Base</label>
       <!--end::Label-->
 
       <!--begin::Input-->
@@ -132,6 +136,25 @@ export default defineComponent({
     watch(business as Record<string, unknown>, (value) => {
       syncData(value);
     });
+    const limitInput = (event) => {
+      if (event.target.value.length > 11) {
+        event.preventDefault();
+      }
+      if (event.charCode < 48 || event.charCode > 57) {
+        event.preventDefault();
+      }
+    };
+    const formatTelephone = (e) => {
+      if (e.target.value.charCodeAt(0) != 48 && e.target.value) {
+        telephone.value = "0" + telephone.value;
+      }
+      if (e.target.value.length == 6) {
+        telephone.value =
+          (telephone.value as string).substr(0, 5) +
+          " " +
+          (telephone.value as string).substr(5);
+      }
+    };
     const syncData = (value) => {
       telephone.value = value.telephone;
       currencyCode.value = value.currencyCode;
@@ -145,6 +168,8 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
+      limitInput,
+      formatTelephone,
       formData,
       fieldChanged,
       telephone,

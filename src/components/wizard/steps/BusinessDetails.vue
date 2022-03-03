@@ -82,7 +82,7 @@
     </div>
     <div class="fv-row mb-10">
       <!--begin::Label-->
-      <label class="form-label required">Geo Focus</label>
+      <label class="form-label required">Geo Base</label>
       <!--end::Label-->
 
       <!--begin::Input-->

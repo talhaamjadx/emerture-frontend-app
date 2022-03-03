@@ -62,6 +62,7 @@ export default defineComponent({
       { name: "advanceAssuranceSeis", value: false },
       { name: "advanceAssuranceEis", value: false },
       { name: "advanceAssuranceAppliedFor", value: false },
+      { name: "advanceAssuranceNotApplicable", value: false },
     ]);
     onMounted(() => {
       for (let i = 0; i < advancedAssuranceOptions.length; i++) {
@@ -106,6 +107,7 @@ export default defineComponent({
       advanceAssuranceSeis: "SEIS",
       advanceAssuranceEis: "EIS",
       advanceAssuranceAppliedFor: "Applied For",
+      advanceAssuranceNotApplicable: "Not Applicable",
     });
     return {
       formData,

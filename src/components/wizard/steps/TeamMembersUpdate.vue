@@ -37,6 +37,11 @@
               <div
                 ref="profilePictureRef"
                 class="image-input-wrapper w-125px h-125px"
+                :style="`background-image: ${
+                  teamMembers[index].profilePicture
+                    ? `url(${teamMembers[index].profilePicture})`
+                    : 'url(media/avatars/blank.png)'
+                }`"
               ></div>
               <!--end::Preview existing avatar-->
 
@@ -79,12 +84,13 @@
         <Field
           v-model="teamMembers[index].name"
           @input="fieldChanged($event)"
-          name="name"
+          :name="`team-member-name-${index}`"
           class="form-control form-control-lg form-control-solid"
           value=""
         />
         <ErrorMessage
-          name="name"
+          v-show="touched"
+          :name="`team-member-name-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
         <!--end::Input-->
@@ -111,13 +117,14 @@
         <Field
           v-model="teamMembers[index].jobTitle"
           @input="fieldChanged($event)"
-          name="jobTitle"
+          :name="`team-member-jobTitle-${index}`"
           class="form-control form-control-lg form-control-solid"
           value=""
         />
         <!--end::Input-->
         <ErrorMessage
-          name="jobTitle"
+          v-show="touched"
+          :name="`team-member-jobTitle-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
 
@@ -149,12 +156,13 @@
           v-model="teamMembers[index].linkedInProfileUrl"
           @input="fieldChanged($event)"
           type="text"
-          name="linkedInProfileUrl"
+          :name="`team-member-linkedInProfileUrl-${index}`"
           class="form-control form-control-lg form-control-solid"
           rows="3"
         ></Field>
         <ErrorMessage
-          name="linkedInProfileUrl"
+          v-show="touched"
+          :name="`team-member-linkedInProfileUrl-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
         <!--end::Input-->
@@ -180,12 +188,13 @@
           v-model="teamMembers[index].introduction"
           @input="fieldChanged($event)"
           type="text"
-          name="introduction"
+          :name="`team-member-introduction-${index}`"
           class="form-control form-control-lg form-control-solid"
           rows="3"
         ></Field>
         <ErrorMessage
-          name="introduction"
+          v-show="touched"
+          :name="`team-member-introduction-${index}`"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
         <!--end::Input-->
@@ -202,6 +211,8 @@
 <script lang="ts">
 import { defineComponent, ref, inject, watch } from "vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { useStore } from "vuex";
+import { Actions } from "@/store/enums/StoreEnums";
 
 interface TeamMember {
   name: string;
@@ -222,11 +233,21 @@ export default defineComponent({
       type: FormData,
       required: true,
     },
+    touchedParent: {
+      type: Boolean,
+      required: true,
+    },
   },
   setup(props, { emit }) {
+    const store = useStore();
+    const touched = ref<boolean>(false);
     const teamMembers = ref<Array<TeamMember>>([]);
     const formData = ref<FormData>(props.formDataTemp);
     const business = inject("business");
+    watch(
+      () => props.touchedParent,
+      (value) => (touched.value = value)
+    );
     watch(business as Record<string, unknown>, (value) => {
       try {
         const arr = JSON.parse(value.teamMembers as string);
@@ -234,28 +255,35 @@ export default defineComponent({
       } catch (err) {
         // pass
       }
+      emit("teamMembersLength", teamMembers.value.length);
     });
     const addTeamMember = () => {
-      teamMembers.value = [
-        ...teamMembers.value,
-        {
-          name: "",
-          profilePicture: "",
-          linkedInProfileUrl: "",
-          jobTitle: "",
-          introduction: "",
-        },
-      ];
+      teamMembers.value.unshift({
+        name: "",
+        profilePicture: "",
+        linkedInProfileUrl: "",
+        jobTitle: "",
+        introduction: "",
+      });
+      touched.value = false;
+      emit("resetTouch", false);
+      emit("teamMembersLength", teamMembers.value.length);
     };
     const removeTeamMember = (index) => {
       teamMembers.value.splice(index, 1);
+      touched.value = false;
+      emit("resetTouch", false);
     };
-    const fileAdded = (index, event) => {
-      var reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-      reader.onload = function () {
-        teamMembers.value[index].profilePicture = reader.result as string;
-      };
+    const fileAdded = async (index, event) => {
+      try {
+        const formData = new FormData();
+        formData.append("file", event.target.files[0]);
+        const response = await store.dispatch(Actions.UPLOAD_FILE, formData);
+        if (!response.includes("https://")) throw new Error();
+        teamMembers.value[index].profilePicture = response;
+      } catch (err) {
+        //}
+      }
     };
     const fieldChanged = () => {
       if (formData.value.get("teamMembers")) {
@@ -271,6 +299,7 @@ export default defineComponent({
       fieldChanged,
       addTeamMember,
       removeTeamMember,
+      touched,
     };
   },
 });
