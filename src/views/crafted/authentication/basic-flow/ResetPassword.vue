@@ -57,13 +57,14 @@
       <!--begin::Actions-->
       <div class="d-flex flex-wrap justify-content-center pb-lg-0">
         <button
+          :data-kt-indicator="loading ? 'on' : null"
           type="submit"
           ref="submitButton"
           id="kt_password_reset_submit"
           class="btn btn-lg btn-primary fw-bolder me-4"
         >
-          <span class="indicator-label"> Submit </span>
-          <span class="indicator-progress">
+          <span v-if="!loading" class="indicator-label"> Submit </span>
+          <span v-if="loading" class="indicator-progress">
             Please wait...
             <span
               class="spinner-border spinner-border-sm align-middle ms-2"
@@ -100,6 +101,7 @@ export default defineComponent({
     ErrorMessage,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
@@ -115,13 +117,14 @@ export default defineComponent({
 
     //Form submit function
     const onSubmitResetPassword = async (values) => {
+      loading.value = true;
       try {
         const response = await store.dispatch(Actions.RESET_PASSWORD, {
           ...values,
           resetToken: route.query.token,
         });
         if (response !== true) throw new Error();
-
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: "`Password has been reset successfully!`",
@@ -133,7 +136,7 @@ export default defineComponent({
           router.push("/sign-in");
         }, 2000);
       } catch (err) {
-        store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
+        loading.value = false;
         const error = store.getters.getErrors;
 
         store.commit("setAlert", {
@@ -147,6 +150,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       onSubmitResetPassword,
       resetPassword,
       submitButton,

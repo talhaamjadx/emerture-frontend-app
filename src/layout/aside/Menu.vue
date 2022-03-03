@@ -237,7 +237,9 @@ export default defineComponent({
       MainMenuTemp = [...MainMenu];
       MainMenuTemp = MainMenuTemp.filter((config) => {
         if (
-          config.heading == "expert-profile" &&
+          (config.heading == "expert-profile" ||
+            config.heading == "connected-founders" ||
+            config.heading == "subscription") &&
           !(user.value.expert instanceof Array) &&
           user.value.expert &&
           user.value?.userRoles?.some(
@@ -298,7 +300,9 @@ export default defineComponent({
           config.heading !== "find-investment-opportunities" &&
           config.heading !== "dashboard" &&
           config.heading !== "connected-experts" &&
-          config.heading !== "connected-investment-opportunities"
+          config.heading !== "connected-investment-opportunities" &&
+          config.heading !== "connected-founders" &&
+          config.heading !== "subscription"
         ) {
           return true;
         } else return false;

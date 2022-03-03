@@ -28,6 +28,7 @@
 
         <!--begin::Action-->
         <button
+          :data-kt-indicator="loading ? 'on' : null"
           :disabled="
             user?.userPlan ?? false
               ? user?.userPlan?.status == 1
@@ -38,19 +39,27 @@
           @click="subscribe"
           class="btn btn-primary"
         >
-          {{
-            user?.userPlan ?? false
-              ? user?.userPlan?.status == 1
-                ? `Subscribed ${
-                    user?.userPlan?.planId
-                      ? `(${user?.userPlan?.planId?.planForMonths} months for £${user?.userPlan?.planId?.pricePerMonth})`
-                      : `(Trail Expires on ${formatDate(
-                          user?.userPlan?.renewSubscriptionAt ?? null
-                        )})`
-                  }`
+          <span v-if="!loading" class="indicator-label">
+            {{
+              user?.userPlan ?? false
+                ? user?.userPlan?.status == 1
+                  ? `Subscribed ${
+                      user?.userPlan?.planId
+                        ? `(${user?.userPlan?.planId?.planForMonths} months for £${user?.userPlan?.planId?.pricePerMonth})`
+                        : `(Trail Expires on ${formatDate(
+                            user?.userPlan?.renewSubscriptionAt ?? null
+                          )})`
+                    }`
+                  : "Subscribe"
                 : "Subscribe"
-              : "Subscribe"
-          }}
+            }}
+          </span>
+          <span v-if="loading" class="indicator-progress">
+            Please wait...
+            <span
+              class="spinner-border spinner-border-sm align-middle ms-2"
+            ></span>
+          </span>
         </button>
         <!--end::Action-->
       </div>
@@ -61,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed } from "vue";
+import { defineComponent, onMounted, computed, ref } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import moment from "moment";
@@ -75,6 +84,7 @@ export default defineComponent({
   },
 
   setup() {
+    const loading = ref<boolean>(false);
     const formatDate = (date) => {
       return moment(date).format("DD-MM-YYYY");
     };
@@ -116,10 +126,15 @@ export default defineComponent({
       }`;
     };
     const subscribe = async () => {
+      loading.value = true
       const createPaymentResponse = await store.dispatch(
         Actions.CREATE_PAYMENT
       );
-      if (createPaymentResponse.status == 400 || createPaymentResponse.status == 500) {
+      if (
+        createPaymentResponse.status == 400 ||
+        createPaymentResponse.status == 500
+      ) {
+        loading.value = false
         store.commit("setAlert", {
           message: "Error",
           subMessage: createPaymentResponse?.data?.message ?? "",
@@ -130,6 +145,7 @@ export default defineComponent({
         return;
       }
       store.dispatch(Actions.AUTH_USER);
+      loading.value = false
       store.commit("setAlert", {
         message: "Success",
         subMessage: "Subscription Successful!",
@@ -141,6 +157,7 @@ export default defineComponent({
     const user = computed(() => store.getters.getUser);
 
     return {
+      loading,
       formatDate,
       user,
       firstOrderPlan,

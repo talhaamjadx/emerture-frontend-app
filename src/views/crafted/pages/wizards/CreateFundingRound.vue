@@ -154,19 +154,20 @@
           <!--begin::Wrapper-->
           <div>
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               type="button"
               class="btn btn-lg btn-primary me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
               @click="formSubmit()"
             >
-              <span class="indicator-label">
+              <span v-if="!loading" class="indicator-label">
                 Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
               </span>
-              <span class="indicator-progress">
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -238,6 +239,7 @@ export default defineComponent({
     RoundTimeline,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const router = useRouter();
     const route = useRoute();
     const store = useStore();
@@ -338,6 +340,7 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
+      loading.value = true;
       try {
         formDataTemp.value.append(
           "founderBusinessId",
@@ -348,7 +351,7 @@ export default defineComponent({
           formDataTemp.value
         );
         if (response !== true) throw new Error();
-
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Funding Round ${"Created"}`,
@@ -360,6 +363,7 @@ export default defineComponent({
           router.push(`/business/${route.query.businessId}`);
         }, 2000);
       } catch (err) {
+        loading.value = false;
         store.commit("setAlert", {
           message: "Error",
           subMessage: "`Funding Round Creation Unsuccessful`",
@@ -371,6 +375,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       formDataTemp,
       verticalWizardRef,
       previousStep,

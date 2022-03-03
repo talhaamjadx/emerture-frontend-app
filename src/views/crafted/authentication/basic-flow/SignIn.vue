@@ -91,14 +91,15 @@
       <div class="text-center">
         <!--begin::Submit button-->
         <button
+          :data-kt-indicator="loading ? 'on' : null"
           type="submit"
           ref="submitButton"
           id="kt_sign_in_submit"
           class="btn btn-lg btn-primary w-100 mb-5"
         >
-          <span class="indicator-label"> Continue </span>
+          <span v-if="!loading" class="indicator-label"> Continue </span>
 
-          <span class="indicator-progress">
+          <span v-if="loading" class="indicator-progress">
             Please wait...
             <span
               class="spinner-border spinner-border-sm align-middle ms-2"
@@ -191,6 +192,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
+    const loading = ref<boolean>(false);
 
     const submitButton = ref<HTMLButtonElement | null>(null);
 
@@ -211,18 +213,17 @@ export default defineComponent({
       );
     };
     const areRolesAdded = (user) => {
-    return (user.userRoles?.some(
-        (role) => role.name.toLowerCase() == "expert"
-      ) && user?.userRoles?.some(
-        (role) => role.name.toLowerCase() == "investor"
-      ) && user?.userRoles?.some(
-        (role) => role.name.toLowerCase() == "founder"
-      ))
-}
+      return (
+        user.userRoles?.some((role) => role.name.toLowerCase() == "expert") &&
+        user?.userRoles?.some(
+          (role) => role.name.toLowerCase() == "investor"
+        ) &&
+        user?.userRoles?.some((role) => role.name.toLowerCase() == "founder")
+      );
+    };
     const onSubmitLogin = (values) => {
-      // Clear existing errors
+      loading.value = true;
       store.dispatch(Actions.LOGOUT);
-      store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");
       if (submitButton.value) {
         // eslint-disable-next-line
         submitButton.value!.disabled = true;
@@ -233,40 +234,43 @@ export default defineComponent({
         .dispatch(Actions.SIGNIN, values)
         .then(async (res) => {
           if (res !== true) throw new Error();
-          store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
+          loading.value = false;
           store.commit("setAlert", {
-              message: "Logged In",
-              subMessage: "You have logged in successfully!",
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
-            try {
-              const response = await store.dispatch(Actions.AUTH_USER);
-              if (response !== true) throw new Error();
-              areRolesAdded(store.getters.getUser) ? router.push({ name: "dashboard" }) : router.push("/add-role")
-            } catch (err) {
-              store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-              const error = store.getters.getErrors;
-              store.commit("setAlert", {
+            message: "Logged In",
+            subMessage: "You have logged in successfully!",
+            variant: "primary",
+            duration: 4000,
+            show: true,
+          });
+          try {
+            const response = await store.dispatch(Actions.AUTH_USER);
+            if (response !== true) throw new Error();
+            loading.value = false
+            areRolesAdded(store.getters.getUser)
+              ? router.push({ name: "dashboard" })
+              : router.push("/add-role");
+          } catch (err) {
+            loading.value = false;
+            const error = store.getters.getErrors;
+            store.commit("setAlert", {
               message: "Error",
               subMessage: error,
               variant: "danger",
               duration: 4000,
               show: true,
             });
-            }
+          }
         })
         .catch(() => {
-          store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "page-loading");
-          const error = store.getters.getErrors
+          loading.value = false;
+          const error = store.getters.getErrors;
           store.commit("setAlert", {
-              message: "Error",
-              subMessage: error,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+            message: "Error",
+            subMessage: error,
+            variant: "danger",
+            duration: 4000,
+            show: true,
+          });
         });
 
       //Deactivate indicator
@@ -276,6 +280,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       linkedInLogin,
       googleLogin,
       onSubmitLogin,

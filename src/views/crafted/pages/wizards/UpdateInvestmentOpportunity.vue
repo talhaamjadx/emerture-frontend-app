@@ -261,19 +261,20 @@
           <!--begin::Wrapper-->
           <div>
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               type="button"
               class="btn btn-lg btn-primary me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
               @click="formSubmit()"
             >
-              <span class="indicator-label">
+              <span v-if="!loading" class="indicator-label">
                 Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
               </span>
-              <span class="indicator-progress">
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -365,6 +366,7 @@ export default defineComponent({
     IndustrySectorsBusinessesUpdate,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const fileSizeError = ref<boolean>(false);
     const touched = ref<boolean>(false);
     const teamMembersLength = ref<number>(0);
@@ -551,12 +553,14 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
+      loading.value = true
       try {
         const response = await store.dispatch(Actions.UPDATE_FOUNDER_BUSINESS, {
           id: route.params.id,
           payload: formDataTemp.value,
         });
         if (response !== true) throw new Error();
+        loading.value = false
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Investment Opportunity ${"Updated"}`,
@@ -568,6 +572,7 @@ export default defineComponent({
           router.push("/businesses");
         }, 2000);
       } catch (err) {
+        loading.value = false
         store.commit("setAlert", {
           message: "Error",
           subMessage: "`Investment Opportunity Updation Unsuccessful`",
@@ -578,6 +583,7 @@ export default defineComponent({
       }
     };
     return {
+      loading,
       fileSizeError,
       touched,
       teamMembersLength,
