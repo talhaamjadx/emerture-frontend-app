@@ -217,8 +217,8 @@ export default class Business extends VuexModule {
     [Actions.CREATE_FUNDING_ROUND_INVESTMENT](payload): Promise<AxiosResponse> {
         ApiService.setHeader("application/json")
         return ApiService.post(`/funding-round-investment`, payload)
-            .then(() => {
-                return true
+            .then(response => {
+                return response?.data ?? {}
             })
             .catch(err => {
                 console.log(err)
