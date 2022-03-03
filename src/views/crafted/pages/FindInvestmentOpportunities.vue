@@ -54,11 +54,15 @@
               data-bs-parent="#kt_accordion_1"
             >
               <div class="accordion-body">
-                <div v-if="globalSearch">
+                <div class="row" v-if="globalSearch">
                   <div
                     v-for="is in industrySectors"
                     :key="is.id"
-                    class="form-check form-check-custom form-check-solid my-3"
+                    class="
+                      form-check form-check-custom form-check-solid
+                      my-3
+                      col-md-4
+                    "
                   >
                     <input
                       @input="addToIndustrySectors($event)"
@@ -85,10 +89,20 @@
         </p>
         <div v-if="globalSearch" class="mt-8">
           <button
+            :data-kt-indicator="loading ? 'on' : null"
             @click="findOpportunityInvestment"
             class="btn btn-primary float-end"
           >
-            Find Investment Opportunities
+            <span v-if="!loading" class="indicator-label"
+              >Find Investment Opportunities</span
+            >
+            <span class="indicator-progress">
+              Please wait...
+              <span
+                v-if="loading"
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span
+            ></span>
           </button>
         </div>
       </div>
@@ -114,6 +128,7 @@ export default defineComponent({
     InvestmentOpportunities,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const globalSearch = ref<boolean>(false);
     const store = useStore();
     const user = computed(() => store.getters.getUser);
@@ -149,6 +164,7 @@ export default defineComponent({
       }
     };
     const findOpportunityInvestment = async () => {
+      loading.value = true;
       try {
         const response = await store.dispatch(
           Actions.FIND_INVESTMENT_OPPORTUNITIES,
@@ -159,8 +175,9 @@ export default defineComponent({
             : null
         );
         if (response !== true) throw new Error();
+        loading.value = false;
       } catch (err) {
-        //
+        loading.value = false;
       }
     };
     onMounted(async () => {
@@ -172,6 +189,7 @@ export default defineComponent({
     });
 
     return {
+      loading,
       globalSearch,
       showError,
       industrySectors,

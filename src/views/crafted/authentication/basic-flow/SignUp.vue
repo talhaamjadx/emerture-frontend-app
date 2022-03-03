@@ -231,13 +231,14 @@
       <!--begin::Actions-->
       <div class="text-center">
         <button
+          :data-kt-indicator="loading ? 'on' : null"
           id="kt_sign_up_submit"
           ref="submitButton"
           type="submit"
           class="btn btn-lg btn-primary"
         >
-          <span class="indicator-label"> Submit </span>
-          <span class="indicator-progress">
+          <span v-if="!loading" class="indicator-label"> Submit </span>
+          <span v-if="loading" class="indicator-progress">
             Please wait...
             <span
               class="spinner-border spinner-border-sm align-middle ms-2"
@@ -271,7 +272,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
-
+    const loading = ref<boolean>(false);
     const submitButton = ref<HTMLButtonElement | null>(null);
     const googleLogin = () => {
       location.replace(
@@ -301,7 +302,7 @@ export default defineComponent({
     });
 
     const onSubmitRegister = (values) => {
-      // Clear existing errors
+      loading.value = true;
       store.dispatch(Actions.LOGOUT);
 
       // eslint-disable-next-line
@@ -316,6 +317,7 @@ export default defineComponent({
         .dispatch(Actions.SIGNUP, values)
         .then((res) => {
           if (res !== true) throw new Error();
+          loading.value = false;
           store.commit("setAlert", {
             message: "Success",
             subMessage: "You have successfully created new account!",
@@ -328,6 +330,7 @@ export default defineComponent({
           }, 2000);
         })
         .catch(() => {
+          loading.value = false;
           const error = store.getters.getErrors;
 
           store.commit("setAlert", {
@@ -345,11 +348,12 @@ export default defineComponent({
     };
 
     return {
+      loading,
       registration,
       onSubmitRegister,
       submitButton,
       googleLogin,
-      linkedInLogin
+      linkedInLogin,
     };
   },
 });

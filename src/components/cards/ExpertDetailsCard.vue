@@ -102,15 +102,25 @@
             Connected
           </a>
           <a
+            :data-kt-indicator="loading ? 'on' : null"
             @click="attachExpert"
             v-else
             href="javascript:void(0)"
             class="btn btn-sm btn-light"
           >
-            <span class="svg-icon svg-icon-3">
-              <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
+            <span v-if="!loading" class="indicator-label">
+              <span class="svg-icon svg-icon-3">
+                <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
+              </span>
+              Connect
             </span>
-            Connect
+            <span class="indicator-progress">
+              Please wait...
+              <span
+                v-if="loading"
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span
+            ></span>
           </a>
         </div>
         <!--end::Follow-->
@@ -164,6 +174,7 @@ export default defineComponent({
     fromConnectedExperts: Boolean,
   },
   setup(props) {
+    const loading = ref<boolean>(false);
     const store = useStore();
     const isConnected = ref<boolean>(props.isAlreadyConnected);
     watch(
@@ -171,6 +182,7 @@ export default defineComponent({
       (value) => (isConnected.value = value)
     );
     const attachExpert = async () => {
+      loading.value = true;
       try {
         const response = await store.dispatch(
           Actions.FOUNDER_REQUISITE_EXPERT,
@@ -180,7 +192,7 @@ export default defineComponent({
         );
         if (response !== true) throw new Error();
         store.dispatch(Actions.AUTH_USER);
-
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: "A Request has been sent to the expert",
@@ -189,6 +201,7 @@ export default defineComponent({
           show: true,
         });
       } catch (err) {
+        loading.value = false;
         store.commit("setAlert", {
           message: "Error",
           subMessage:
@@ -200,6 +213,7 @@ export default defineComponent({
       }
     };
     return {
+      loading,
       attachExpert,
       isConnected,
     };

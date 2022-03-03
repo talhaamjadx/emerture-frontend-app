@@ -286,8 +286,7 @@
           ></FundingRound>
         </div>
         <div data-kt-stepper-element="content">
-          <FindExperts
-          ></FindExperts>
+          <FindExperts></FindExperts>
         </div>
         <!--end::Step 4-->
         <!--begin::Actions-->
@@ -315,6 +314,7 @@
           <!--begin::Wrapper-->
           <div>
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               type="button"
               class="btn btn-lg me-3"
               data-kt-stepper-action="submit"
@@ -322,7 +322,7 @@
               @click="formSubmit()"
               style="color: #ffffff; background-color: #236db5"
             >
-              <span class="indicator-label">
+              <span v-if="!loading" class="indicator-label">
                 Next
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg
@@ -331,7 +331,7 @@
                   />
                 </span>
               </span>
-              <span class="indicator-progress">
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -421,9 +421,10 @@ export default defineComponent({
     AdvancedAssurance,
     TeamMembers,
     IndustrySectorsBusinesses,
-    FindExperts
+    FindExperts,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const touched = ref<boolean>(false);
     const teamMembersLength = ref<number>(0);
     let roleId = 0;
@@ -594,17 +595,19 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
+      loading.value = true;
       try {
         if (
           !objectPath.get(user.value, "founderBusiness.length") &&
           !user.value?.userRoleRequests?.some((request) => {
-            return request?.role?.name === "founder"
+            return request?.role?.name === "founder";
           })
         ) {
           const attachRoleResponse = await store.dispatch(Actions.ATTACH_ROLE, {
             id: roleId,
           });
           if (attachRoleResponse !== true) {
+            loading.value = false;
             store.commit("setAlert", {
               message: "Error",
               subMessage: "`Error in Attaching Role`",
@@ -625,6 +628,7 @@ export default defineComponent({
         );
         if (deleteResponse !== true) throw new Error("Error in deleting draft");
         else await store.dispatch(Actions.GET_BUSINESS_DRAFT);
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Investment Opportunity ${"Created"}`,
@@ -644,6 +648,7 @@ export default defineComponent({
               ? router.push("/find-experts")
               : router.push("/businesses");
           } catch (err) {
+            loading.value = false;
             store.commit("setAlert", {
               message: "Error",
               subMessage: "`Error in Business Creation`",
@@ -654,6 +659,7 @@ export default defineComponent({
           }
         }, 2000);
       } catch (err) {
+        loading.value = false;
         store.commit("setAlert", {
           message: "Error",
           subMessage: "`Investment Opportunity Creation Unsuccessful`",
@@ -665,6 +671,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       createAccountSchema,
       formDataTemp,
       verticalWizardRef,

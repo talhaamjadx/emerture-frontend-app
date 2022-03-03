@@ -8,7 +8,20 @@
     ></div>
     <div class="row">
       <div class="col-md-12">
-        <button @click="connect" class="btn btn-primary my-3 float-end">Accept</button>
+        <button
+          :data-kt-indicator="loading ? 'on' : null"
+          @click="connect"
+          class="btn btn-primary my-3 float-end"
+        >
+          <span v-if="!loading" class="indicator-label">Accept</span>
+          <span class="indicator-progress">
+            Please wait...
+            <span
+              v-if="loading"
+              class="spinner-border spinner-border-sm align-middle ms-2"
+            ></span
+          ></span>
+        </button>
       </div>
     </div>
   </div>
@@ -25,12 +38,14 @@ import { useRouter, useRoute } from "vue-router";
 export default defineComponent({
   name: "disclaimer",
   setup() {
+    const loading = ref<boolean>(false);
     const store = useStore();
-    const route = useRoute()
+    const route = useRoute();
     let termsAndConditions = { value: "" };
     const inner = ref<string>("");
     const router = useRouter();
     const connect = async (id) => {
+      loading.value = true;
       try {
         const response = await store.dispatch(
           Actions.INVESTMENT_OPPORTUNITY_CONNECT,
@@ -39,6 +54,7 @@ export default defineComponent({
           }
         );
         if (response !== true) throw new Error();
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: "Investment Opportunity Connected",
@@ -50,6 +66,7 @@ export default defineComponent({
           router.push("/find-investment-opportunities");
         }, 2000);
       } catch (err) {
+        loading.value = false;
         store.commit("setAlert", {
           message: "Error",
           subMessage: "Investment Opportunity Not Connected",
@@ -76,6 +93,7 @@ export default defineComponent({
       }
     });
     return {
+      loading,
       inner,
       connect,
     };

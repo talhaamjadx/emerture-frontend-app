@@ -203,13 +203,14 @@
           </button>
 
           <button
+            :data-kt-indicator="loading ? 'on' : null"
             type="submit"
             id="kt_account_profile_details_submit"
             ref="submitButton1"
             class="btn btn-primary"
           >
-            <span class="indicator-label"> Save Changes </span>
-            <span class="indicator-progress">
+            <span v-if="!loading" class="indicator-label"> Save Changes </span>
+            <span v-if="loading" class="indicator-progress">
               Please wait...
               <span
                 class="spinner-border spinner-border-sm align-middle ms-2"
@@ -332,9 +333,13 @@
           </div>
           <!--begin::Password-->
           <!--end::Password-->
-          <button type="submit" class="btn btn-primary">
-            <span class="indicator-label"> Save Changes </span>
-            <span class="indicator-progress">
+          <button
+            :data-kt-indicator="loading2 ? 'on' : null"
+            type="submit"
+            class="btn btn-primary"
+          >
+            <span v-if="!loading2" class="indicator-label"> Save Changes </span>
+            <span v-if="loading2" class="indicator-progress">
               Please wait...
               <span
                 class="spinner-border spinner-border-sm align-middle ms-2"
@@ -452,7 +457,7 @@
     </div>
     <!--end::Content-->
   </div>
-  <DeactivateAccountModal/>
+  <DeactivateAccountModal />
 </template>
 
 <script lang="ts">
@@ -463,7 +468,7 @@ import { ErrorMessage, Field, Form } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import * as Yup from "yup";
 import { useRouter } from "vue-router";
-import DeactivateAccountModal from "@/views/crafted/modals/forms/DeactivateAccountModal.vue"
+import DeactivateAccountModal from "@/views/crafted/modals/forms/DeactivateAccountModal.vue";
 
 interface ProfileDetails {
   firstName: string;
@@ -481,10 +486,11 @@ export default defineComponent({
     ErrorMessage,
     Field,
     Form,
-    DeactivateAccountModal
+    DeactivateAccountModal,
   },
   setup() {
-    const router = useRouter();
+    const loading = ref<boolean>(false);
+    const loading2 = ref<boolean>(false);
     const tempImage = ref<string>("");
     const newImageAdded = ref<boolean>(false);
     const store = useStore();
@@ -547,6 +553,7 @@ export default defineComponent({
       };
     };
     const saveChanges1 = async () => {
+      loading.value = true;
       try {
         let fd = new FormData();
         if (file) fd.append("profileImage", file, file.name);
@@ -562,6 +569,7 @@ export default defineComponent({
         const response = await store.dispatch(Actions.UPDATE_PROFILE, fd);
         if (response !== true) throw new Error();
         store.dispatch(Actions.AUTH_USER);
+        loading.value = false;
         store.commit("setAlert", {
           message: "Profile Updated",
           subMessage: "Profile has been updated successfully",
@@ -570,6 +578,7 @@ export default defineComponent({
           show: true,
         });
       } catch (err) {
+        loading.value = false;
         const error = store.getters.getErrors;
         store.commit("setAlert", {
           message: "Error",
@@ -581,12 +590,14 @@ export default defineComponent({
       }
     };
     const changePasswordSubmit = async (values) => {
+      loading2.value = true;
       try {
         const response = await store.dispatch(Actions.CHANGE_PASSWORD, values);
         if (response !== true) throw new Error();
         oldPasswordRef.value.reset();
         newPasswordRef.value.reset();
         passwordConfirmationRef.value.reset();
+        loading2.value = false;
         store.commit("setAlert", {
           message: "Password Updated",
           subMessage: "Password has been updated successfully",
@@ -595,11 +606,12 @@ export default defineComponent({
           show: true,
         });
       } catch (err) {
-        const [error] = Object.keys(store.getters.getErrors);
+        loading2.value = false;
+        const error = store.getters.getErrors
         store.commit("setAlert", {
-          message: "Password Updation Failure",
-          subMessage: "An error has occured",
-          variant: "primary",
+          message: error,
+          subMessage: "",
+          variant: "danger",
           duration: 4000,
           show: true,
         });
@@ -681,6 +693,8 @@ export default defineComponent({
     });
 
     return {
+      loading,
+      loading2,
       profilePictureRef,
       tempImage,
       newImageAdded,

@@ -50,15 +50,26 @@
           </div>
         </div>
         <div class="text-center mb-10">
-          <button type="submit" class="btn btn-lg btn-primary fw-bolder">
-            Submit
+          <button
+            :data-kt-indicator="loading ? 'on' : null"
+            type="submit"
+            class="btn btn-lg btn-primary fw-bolder"
+          >
+            <span v-if="!loading" class="indicator-label">Submit</span>
+            <span class="indicator-progress">
+              Please wait...
+              <span
+                v-if="loading"
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span
+            ></span>
           </button>
         </div>
       </Form>
       <!--end::Action-->
       <!--begin::Action-->
       <div class="fs-5">
-        <span class="fw-bold text-gray-700">Did’t receive an email?</span>
+        <span class="fw-bold text-gray-700">Did’t receive an email? </span>
         <a
           href="javascript:void(0)"
           class="link-primary fw-bolder"
@@ -103,6 +114,7 @@ export default defineComponent({
     Form,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const store = useStore();
     const router = useRouter();
     const verificationCode = ref<string>("");
@@ -125,6 +137,13 @@ export default defineComponent({
       try {
         const response = await store.dispatch(Actions.RESEND_VERIFY_CODE);
         if (response.status !== 200) throw new Error();
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: "Verification Code Resent!",
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
         clearInterval(interval.value);
         localStorage.setItem(
           "verification_code_time",
@@ -145,41 +164,44 @@ export default defineComponent({
       } catch (err) {
         const error = store.getters.getErrors;
         store.commit("setAlert", {
-              message: "Error",
-              subMessage: error,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+          message: "Error",
+          subMessage: error,
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
       }
     };
     const verify = async (values) => {
+      loading.value = true;
       try {
         const response = await store.dispatch(Actions.VERIFY_AUTH, {
           code: values.verificationCode,
         });
         if (response[0] !== true) throw new Error();
+        loading.value = false;
         store.commit("setAlert", {
-              message: "Success",
-              subMessage: "Verification Successful!",
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
-          await store.dispatch(Actions.AUTH_USER);
-          nextTick(() => {
-            router.push("/add-role");
-          });
+          message: "Success",
+          subMessage: "Verification Successful!",
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
+        await store.dispatch(Actions.AUTH_USER);
+        nextTick(() => {
+          router.push("/add-role");
+        });
       } catch (err) {
+        loading.value = false;
         const error = store.getters.getErrors;
 
         store.commit("setAlert", {
-              message: "Error",
-              subMessage: error,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+          message: "Error",
+          subMessage: error,
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
       }
     };
     const verificationCodeTime = () => {
@@ -244,6 +266,7 @@ export default defineComponent({
       verificationCodeTime();
     });
     return {
+      loading,
       verificationCode,
       emailVerificationSchema,
       verify,
