@@ -184,8 +184,15 @@
               </div>
             </div>
           </div>
-          <button @click="createInvestment" class="btn btn-primary float-end">
-            Save
+          <button :data-kt-indicator="loading ? 'on' : null" @click="createInvestment" class="btn btn-primary float-end">
+            <span v-if="!loading" class="indicator-label">Save</span>
+          <span class="indicator-progress">
+            Please wait...
+            <span
+              v-if="loading"
+              class="spinner-border spinner-border-sm align-middle ms-2"
+            ></span
+          ></span>
           </button>
         </div>
       </div>
@@ -210,6 +217,7 @@ export default defineComponent({
     InvestmentHistory,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const store = useStore();
     const route = useRoute();
     const business = ref<Record<string, unknown>>({});
@@ -231,17 +239,20 @@ export default defineComponent({
       Object.keys(fundingRound.value).length ? true : false
     );
     const createInvestment = async () => {
+      loading.value = true
       try {
         const response = await store.dispatch(
           Actions.CREATE_FUNDING_ROUND_INVESTMENT,
           {
             fundingRoundId: route.params.id,
             investment: investmentAmount.value,
+            businessId: route.query.businessId
           }
         );
-        if (response !== true) throw new Error("error in API");
+        if (!response?.success) throw new Error(response?.data?.message);
         investmentAmount.value = "";
         await refresh();
+        loading.value = false
         store.commit("setAlert", {
               message: "Success",
               subMessage: "Investment Created",
@@ -250,7 +261,14 @@ export default defineComponent({
               show: true,
             });
       } catch (err) {
-        console.log(err);
+        loading.value = false
+         store.commit("setAlert", {
+              message: "Error",
+              subMessage: err,
+              variant: "danger",
+              duration: 4000,
+              show: true,
+            });
       }
     };
     const formatDate = (date) => moment(date).format("YYYY-MM-DD");
@@ -299,6 +317,7 @@ export default defineComponent({
       setCurrentPageBreadcrumbs("Funding Round", ["Business Details"]);
     });
     return {
+      loading,
       formatter,
       business,
       route,

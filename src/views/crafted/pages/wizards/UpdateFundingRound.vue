@@ -154,19 +154,20 @@
           <!--begin::Wrapper-->
           <div>
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               type="button"
               class="btn btn-lg btn-primary me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
               @click="formSubmit()"
             >
-              <span class="indicator-label">
+              <span v-if="!loading" class="indicator-label">
                 Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
               </span>
-              <span class="indicator-progress">
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -238,6 +239,7 @@ export default defineComponent({
     RoundTimelineUpdate,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const router = useRouter();
     const route = useRoute();
     const store = useStore();
@@ -391,6 +393,7 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
+      loading.value = true;
       try {
         fundingRound.value["founderBusinessId"] = business.value.id;
         const response = await store.dispatch(Actions.UPDATE_FUNDING_ROUND, {
@@ -398,6 +401,7 @@ export default defineComponent({
           data: fundingRound.value,
         });
         if (response !== true) throw new Error();
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Funding Round ${"Updated"}`,
@@ -409,6 +413,7 @@ export default defineComponent({
           router.push(`/business/${business.value.id}`);
         }, 2000);
       } catch (err) {
+        loading.value = false;
         store.commit("setAlert", {
           message: "Error",
           subMessage: `Funding Round Updation Unsuccessful`,
@@ -420,6 +425,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       fundingRound,
       verticalWizardRef,
       previousStep,
