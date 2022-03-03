@@ -70,6 +70,9 @@
             </div>
           </div>
         </div>
+        <div class="row d-flex justify-content-center" v-if="!cards.length">
+          No Payment Method Added
+        </div>
       </div>
     </div>
   </div>

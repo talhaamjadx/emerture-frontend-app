@@ -187,19 +187,20 @@
           <!--begin::Wrapper-->
           <div>
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               type="button"
               class="btn btn-lg btn-primary me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
               @click="formSubmit()"
             >
-              <span class="indicator-label">
+              <span v-if="!loading" class="indicator-label">
                 {{ doesExpertProfileExist ? "Update" : "Submit" }}
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
               </span>
-              <span class="indicator-progress">
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -272,6 +273,7 @@ export default defineComponent({
     KeySkills,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const store = useStore();
     let roleId = 0;
     const isDocumentAdded = ref<boolean>(true);
@@ -356,7 +358,7 @@ export default defineComponent({
         bio: Yup.string().required().label("Bio"),
       }),
       {},
-      {}
+      {},
     ];
 
     const currentSchema = computed(() => {
@@ -415,6 +417,7 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
+      loading.value = true;
       try {
         const response = await store.dispatch(
           doesExpertProfileExist.value
@@ -431,48 +434,51 @@ export default defineComponent({
           });
           if (response !== true) throw new Error();
           await store.dispatch(Actions.AUTH_USER);
+          loading.value = false;
           store.commit("setAlert", {
-              message: "Success",
-              subMessage: "Role is pending for approval",
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
+            message: "Success",
+            subMessage: "Role is pending for approval",
+            variant: "primary",
+            duration: 4000,
+            show: true,
+          });
         } catch (err) {
+          loading.value = false;
           const error = store.getters.getErrors;
           store.commit("setAlert", {
-              message: "Error",
-              subMessage: error,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+            message: "Error",
+            subMessage: error,
+            variant: "danger",
+            duration: 4000,
+            show: true,
+          });
         }
-
+        loading.value = false;
         store.commit("setAlert", {
-              message: "Success",
-              subMessage: `Expert Profile ${
+          message: "Success",
+          subMessage: `Expert Profile ${
             doesExpertProfileExist.value ? "Updated" : "Created"
           }`,
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
       } catch (err) {
-
+        loading.value = false;
         store.commit("setAlert", {
-              message: "Error",
-              subMessage: `Expert Profile ${
+          message: "Error",
+          subMessage: `Expert Profile ${
             doesExpertProfileExist.value ? "Updation" : "Creation"
           } Unsuccessful`,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
       }
     };
 
     return {
+      loading,
       isDocumentAdded,
       doesExpertProfileExist,
       formDataTemp,

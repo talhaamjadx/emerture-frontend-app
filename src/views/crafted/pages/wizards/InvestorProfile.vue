@@ -154,19 +154,20 @@
           <!--begin::Wrapper-->
           <div>
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               type="button"
               class="btn btn-lg btn-primary me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
               @click="formSubmit()"
             >
-              <span class="indicator-label">
+              <span v-if="!loading" class="indicator-label">
                 {{ doesInvestorProfileExist ? "Update" : "Submit" }}
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
               </span>
-              <span class="indicator-progress">
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -234,6 +235,7 @@ export default defineComponent({
     IndustrySectors,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const router = useRouter();
     const store = useStore();
     let formDataTemp = ref<Record<string, unknown>>({});
@@ -359,6 +361,7 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
+      loading.value = true;
       try {
         const response = await store.dispatch(
           doesInvestorProfileExist.value
@@ -375,7 +378,7 @@ export default defineComponent({
           });
           if (response !== true) throw new Error();
           await store.dispatch(Actions.AUTH_USER);
-
+          loading.value = false;
           store.commit("setAlert", {
             message: "Success",
             subMessage: "Role is pending for approval",
@@ -384,6 +387,7 @@ export default defineComponent({
             show: true,
           });
         } catch (err) {
+          loading.value = false;
           const error = store.getters.getErrors;
 
           store.commit("setAlert", {
@@ -394,6 +398,7 @@ export default defineComponent({
             show: true,
           });
         }
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Investor Profile ${
@@ -405,6 +410,7 @@ export default defineComponent({
         });
         router.push("/find-investment-opportunities");
       } catch (err) {
+        loading.value = false;
         store.commit("setAlert", {
           message: "Error",
           subMessage: `Investor Profile ${
@@ -418,6 +424,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       doesInvestorProfileExist,
       formDataTemp,
       verticalWizardRef,

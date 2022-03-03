@@ -197,6 +197,7 @@
         <!--begin::Step 2-->
         <div data-kt-stepper-element="content">
           <UploadPitchDeckUpdate
+            @file-size-error="fileSizeError = $event"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></UploadPitchDeckUpdate>
@@ -227,6 +228,9 @@
         </div>
         <div data-kt-stepper-element="content">
           <TeamMembersUpdate
+            @resetTouch="touched = $event"
+            :touchedParent="touched"
+            @teamMembersLength="teamMembersLength = $event"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></TeamMembersUpdate>
@@ -257,19 +261,20 @@
           <!--begin::Wrapper-->
           <div>
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               type="button"
               class="btn btn-lg btn-primary me-3"
               data-kt-stepper-action="submit"
               v-if="currentStepIndex === totalSteps - 1"
               @click="formSubmit()"
             >
-              <span class="indicator-label">
+              <span v-if="!loading" class="indicator-label">
                 Submit
                 <span class="svg-icon svg-icon-3 ms-2 me-0">
                   <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
                 </span>
               </span>
-              <span class="indicator-progress">
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -277,7 +282,12 @@
               </span>
             </button>
 
-            <button v-else type="submit" class="btn btn-lg btn-primary">
+            <button
+              @click="handleTouch"
+              v-else
+              type="submit"
+              class="btn btn-lg btn-primary"
+            >
               Continue
               <span class="svg-icon svg-icon-4 ms-1 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
@@ -296,7 +306,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, provide } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  ref,
+  provide,
+  watchEffect,
+} from "vue";
 import ImagesUpdate from "@/components/wizard/steps/ImagesUpdate.vue";
 import UploadPitchDeckUpdate from "@/components/wizard/steps/UploadPitchDeckUpdate.vue";
 import BusinessDescriptionUpdate from "@/components/wizard/steps/BusinessDescriptionUpdate.vue";
@@ -349,6 +366,10 @@ export default defineComponent({
     IndustrySectorsBusinessesUpdate,
   },
   setup() {
+    const loading = ref<boolean>(false);
+    const fileSizeError = ref<boolean>(false);
+    const touched = ref<boolean>(false);
+    const teamMembersLength = ref<number>(0);
     const router = useRouter();
     const route = useRoute();
     const store = useStore();
@@ -385,6 +406,9 @@ export default defineComponent({
         } else formDataTemp.value.append(key, business.value[key] as string);
       }
     };
+    const handleTouch = () => {
+      if (_stepperObj.value?.currentStepIndex == 6) touched.value = true;
+    };
     onMounted(async () => {
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
@@ -416,30 +440,72 @@ export default defineComponent({
         "Businesses",
       ]);
     });
-    const createAccountSchema = [
-      {},
-      {},
-      Yup.object({
-        name: Yup.string().required().label("Name"),
-        summary: Yup.string().required().label("Summary"),
-        overview: Yup.string().required().label("Overview"),
-        defensibleUsp: Yup.string().required().label("Defensible USP"),
-      }),
-      Yup.object({
-        telephone: Yup.string().required().label("Telephone"),
-        website: Yup.string().required().label("Website"),
-        currencyCode: Yup.string().required().label("Currency"),
-        geoFocusCountryCode: Yup.string().required().label("Geo Focus"),
-      }),
-      {},
-      {},
-      {},
-    ];
-
-    const currentSchema = computed(() => {
-      return createAccountSchema[currentStepIndex.value];
+    const createAccountSchema = computed(() => {
+      let tempObj = {};
+      for (let i = 0; i < +teamMembersLength.value; i++) {
+        tempObj[`team-member-name-${i}`] = Yup.string()
+          .required()
+          .label("Name");
+        tempObj[`team-member-linkedInProfileUrl-${i}`] = Yup.string()
+          .required()
+          .label("LinkedIn Profile");
+        tempObj[`team-member-jobTitle-${i}`] = Yup.string()
+          .required()
+          .label("Job Title");
+        tempObj[`team-member-introduction-${i}`] = Yup.string()
+          .required()
+          .label("Introduction");
+      }
+      return [
+        {},
+        Yup.object({
+          pitchDeckDocument: Yup.mixed()
+            .required()
+            .label("Pitch Deck Document"),
+        }),
+        Yup.object({
+          name: Yup.string().required().label("Name"),
+          summary: Yup.string().required().label("Summary"),
+          overview: Yup.string().required().label("Overview"),
+          defensibleUsp: Yup.string().required().label("Defensible USP"),
+        }),
+        Yup.object({
+          telephone: Yup.string()
+            .required()
+            .min(12, "Telephone must be 11 characters long.")
+            .label("Telephone"),
+          website: Yup.string()
+            .matches(
+              /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+              "Enter correct url!"
+            )
+            .required()
+            .label("Website"),
+          currencyCode: Yup.string().required().label("Currency"),
+          geoFocusCountryCode: Yup.string().required().label("Geo Focus"),
+        }),
+        {},
+        tempObj,
+        {},
+        Yup.object({
+          fundingRoundName: Yup.string().required().label("Name"),
+          fundingRoundInvestmentRequired: Yup.string()
+            .required()
+            .label("Investment Required"),
+          fundingRoundPreMoneyValuation: Yup.string()
+            .required()
+            .label("Pre-Money Valuation"),
+          fundingRoundMinimumInvestment: Yup.string()
+            .required()
+            .label("Minimum Investment"),
+        }),
+      ];
     });
 
+    const currentSchema = ref<Record<string, unknown>>({});
+    watchEffect(() => {
+      currentSchema.value = createAccountSchema.value[currentStepIndex.value];
+    });
     const { resetForm, handleSubmit } = useForm<
       IStep1 | IStep2 | IStep3 | IStep4
     >({
@@ -461,7 +527,7 @@ export default defineComponent({
     });
 
     const handleStep = handleSubmit((values) => {
-      console.log({ values });
+      if (fileSizeError.value) return;
       formData.value = {
         ...formData.value,
         ...values,
@@ -487,12 +553,14 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
+      loading.value = true
       try {
         const response = await store.dispatch(Actions.UPDATE_FOUNDER_BUSINESS, {
           id: route.params.id,
           payload: formDataTemp.value,
         });
         if (response !== true) throw new Error();
+        loading.value = false
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Investment Opportunity ${"Updated"}`,
@@ -504,6 +572,7 @@ export default defineComponent({
           router.push("/businesses");
         }, 2000);
       } catch (err) {
+        loading.value = false
         store.commit("setAlert", {
           message: "Error",
           subMessage: "`Investment Opportunity Updation Unsuccessful`",
@@ -514,6 +583,10 @@ export default defineComponent({
       }
     };
     return {
+      loading,
+      fileSizeError,
+      touched,
+      teamMembersLength,
       formDataTemp,
       verticalWizardRef,
       previousStep,
@@ -521,6 +594,7 @@ export default defineComponent({
       formSubmit,
       totalSteps,
       currentStepIndex,
+      handleTouch,
     };
   },
 });

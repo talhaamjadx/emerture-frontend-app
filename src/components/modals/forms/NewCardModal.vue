@@ -113,14 +113,15 @@
             </button>
 
             <button
+              :data-kt-indicator="loading ? 'on' : null"
               @click="addPaymentMethod"
               ref="submitButtonRef"
               type="submit"
               id="kt_modal_new_card_submit"
               class="btn btn-primary"
             >
-              <span class="indicator-label"> Submit </span>
-              <span class="indicator-progress">
+              <span v-if="!loading" class="indicator-label"> Submit </span>
+              <span v-if="loading" class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
@@ -153,6 +154,7 @@ export default defineComponent({
     StripeElement,
   },
   setup() {
+    const loading = ref<boolean>(false);
     const store = useStore();
     onBeforeMount(() => {
       const stripePromise = loadStripe(stripeKey.value);
@@ -205,6 +207,7 @@ export default defineComponent({
       getSetupIntent();
     });
     return {
+      loading,
       clear,
       submitButtonRef,
       newCardModalRef,
@@ -226,6 +229,7 @@ export default defineComponent({
   },
   methods: {
     async addPaymentMethod() {
+      this.loading = true;
       const cardElement = this.cardNumber.stripeElement;
       try {
         const response = await this.elms.instance.handleCardSetup(
@@ -248,6 +252,7 @@ export default defineComponent({
         this.cardExpiry.stripeElement?.clear();
         this.cardCvc.stripeElement?.clear();
         this.postalCode.stripeElement?.clear();
+        this.loading = false;
         hideModal(this.newCardModalRef);
         this.store.commit("setAlert", {
           message: "Success",
@@ -258,6 +263,7 @@ export default defineComponent({
         });
         this.getCards();
       } catch (err) {
+        this.loading = false;
         hideModal(this.newCardModalRef);
         this.store.commit("setAlert", {
           message: "Error",

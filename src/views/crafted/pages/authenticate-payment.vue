@@ -12,8 +12,19 @@
         <p class="text-gray-400 fs-4 fw-bold mb-10">
           {{ error_message }}
         </p>
-        <button class="btn btn-primary" @click="authenticateAndPay">
-          Authenticate
+        <button
+          :data-kt-indicator="loading ? 'on' : null"
+          class="btn btn-primary"
+          @click="authenticateAndPay"
+        >
+          <span v-if="!loading" class="indicator-label">Authenticate</span>
+          <span class="indicator-progress">
+            Please wait...
+            <span
+              v-if="loading"
+              class="spinner-border spinner-border-sm align-middle ms-2"
+            ></span
+          ></span>
         </button>
       </div>
     </div>
@@ -31,6 +42,7 @@ import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
+    const loading = ref<boolean>(false);
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
@@ -50,6 +62,7 @@ export default defineComponent({
     const paymentIntent = ref<Record<string, unknown>>({});
     let stripe = ref();
     const authenticateAndPay = async () => {
+      loading.value = true;
       try {
         const response = await stripe.value?.handleCardPayment(
           paymentIntent.value?.client_secret,
@@ -66,6 +79,7 @@ export default defineComponent({
               status: 2,
             }
           );
+          loading.value = false;
           if (statusResponse?.success) {
             store.commit("setAlert", {
               message: "Error",
@@ -84,6 +98,7 @@ export default defineComponent({
               status: 1,
             }
           );
+          loading.value = false;
           if (statusResponse?.success) {
             store.commit("setAlert", {
               message: "Success",
@@ -97,6 +112,7 @@ export default defineComponent({
           }
         }
       } catch (err) {
+        loading.value = false;
         console.log("error", err);
       }
     };
@@ -118,6 +134,7 @@ export default defineComponent({
       }
     });
     return {
+      loading,
       authenticateAndPay,
       error_message,
     };

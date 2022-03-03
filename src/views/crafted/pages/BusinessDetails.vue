@@ -101,7 +101,7 @@
         <!--begin::Input group-->
         <div class="row mb-7">
           <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted"> Geo Focus </label>
+          <label class="col-lg-4 fw-bold text-muted"> Geo Base </label>
           <!--end::Label-->
 
           <!--begin::Col-->

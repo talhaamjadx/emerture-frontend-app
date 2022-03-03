@@ -46,6 +46,7 @@ export default defineComponent({
       { name: "advanceAssuranceSeis", value: false },
       { name: "advanceAssuranceEis", value: false },
       { name: "advanceAssuranceAppliedFor", value: false },
+      { name: "advanceAssuranceNotApplicable", value: false },
     ]);
     const business = inject("business");
     watch(business as Record<string, unknown>, (value) => {
@@ -56,6 +57,7 @@ export default defineComponent({
       if (value.advanceAssuranceEis) advancedAssuranceOptions[1].value = true;
       if (value.advanceAssuranceAppliedFor)
         advancedAssuranceOptions[2].value = true;
+      if (value.advanceAssuranceNotApplicable) advancedAssuranceOptions[3].value = true;
       for (let i = 0; i < advancedAssuranceOptions.length; i++) {
         if (
           !eval(formData.value.get(advancedAssuranceOptions[i].name) as string)
@@ -83,6 +85,7 @@ export default defineComponent({
       advanceAssuranceSeis: "SEIS",
       advanceAssuranceEis: "EIS",
       advanceAssuranceAppliedFor: "Applied For",
+      advanceAssuranceNotApplicable: "Not Applicable",
     });
     return {
       formData,
