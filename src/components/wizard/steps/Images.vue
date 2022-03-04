@@ -20,7 +20,7 @@
           <!--begin::Preview existing avatar-->
           <div
             ref="profilePictureRef"
-            class="image-input-wrapper w-125px h-125px"
+            class="image-input-wrapper w-250px h-250px"
             :style="`background-image: ${`url(${
               businessDraft?.logo ?? tempImageLogo
             })`}`"
