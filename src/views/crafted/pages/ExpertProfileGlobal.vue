@@ -22,6 +22,39 @@
           </div>
           <h3 class="fw-bolder m-0 mx-3">{{ expert.name }}</h3>
         </div>
+        <div class="d-flex align-items-center mx-5">
+          <a
+            v-if="isConnected"
+            href="javacript:void(0)"
+            class="btn btn-sm btn-light-primary"
+          >
+            <span class="svg-icon svg-icon-3">
+              <inline-svg src="media/icons/duotune/arrows/arr012.svg" />
+            </span>
+            Connected
+          </a>
+          <a
+            :data-kt-indicator="loading ? 'on' : null"
+            @click="attachExpert"
+            v-else
+            href="javascript:void(0)"
+            class="btn btn-sm btn-light"
+          >
+            <span v-if="!loading" class="indicator-label">
+              <span class="svg-icon svg-icon-3">
+                <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
+              </span>
+              Connect
+            </span>
+            <span class="indicator-progress">
+              Please wait...
+              <span
+                v-if="loading"
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span
+            ></span>
+          </a>
+          </div>
       </div>
       <!--begin::Card header-->
 
@@ -128,7 +161,9 @@
               <a
                 :href="op.get(expert, 'externalDocumentUrl', '#')"
                 target="_blank"
-                >{{ op.get(expert, "externalDocumentUrl", "None") ?? "None" }}</a
+                >{{
+                  op.get(expert, "externalDocumentUrl", "None") ?? "None"
+                }}</a
               >
             </span>
           </div>
@@ -142,7 +177,9 @@
           <!--begin::Col-->
           <div class="col-lg-8">
             <span class="fw-bolder fs-6 text-dark">
-              {{ arrayStringConstructor(op.get(expert, 'industrySectors', [])) }}
+              {{
+                arrayStringConstructor(op.get(expert, "industrySectors", []))
+              }}
             </span>
           </div>
           <!--end::Col-->
@@ -155,7 +192,7 @@
           <!--begin::Col-->
           <div class="col-lg-8">
             <span class="fw-bolder fs-6 text-dark">
-              {{ arrayStringConstructor(op.get(expert, 'expertise', [])) }}
+              {{ arrayStringConstructor(op.get(expert, "expertise", [])) }}
             </span>
           </div>
           <!--end::Col-->
@@ -168,9 +205,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed, ref } from "vue";
+import { defineComponent, onMounted, computed, ref, watchEffect } from "vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-// import FundingRounds from "@/components/widgets/lists/funding-rounds.vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
@@ -182,23 +218,68 @@ export default defineComponent({
     // FundingRounds,
   },
   setup() {
+    const loading = ref<boolean>(false);
+    const user = computed(() => store.getters.getUser);
     const op = computed(() => objectPath);
     const store = useStore();
     const route = useRoute();
     const expert = ref<Record<string, unknown>>({});
+    const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
+    watchEffect(() => {
+      founderRequisiteExperts.value = user.value.founderRequisiteExpert;
+    });
+    const isConnected = computed(() => {
+      return founderRequisiteExperts.value.some((expert) => {
+        return (
+          objectPath.get(expert, "id", false) ==
+          (route.params.id as string | boolean)
+        );
+      });
+    });
     const toUpperCase = (value) => {
       return value?.toUpperCase();
     };
     const parseJSON = (value) => {
       return value ? JSON.parse(value) : [];
     };
-    const arrayStringConstructor = arr  => {
-        let arrayString = ""
-        for(let i = 0; i < arr.length; i++){
-            arrayString = arrayString + `${(arr[i]).name}${arr[i+1] ? ", " : ""}`
-        }
-        return arrayString
-    }
+    const arrayStringConstructor = (arr) => {
+      let arrayString = "";
+      for (let i = 0; i < arr.length; i++) {
+        arrayString = arrayString + `${arr[i].name}${arr[i + 1] ? ", " : ""}`;
+      }
+      return arrayString;
+    };
+    const attachExpert = async () => {
+      loading.value = true;
+      try {
+        const response = await store.dispatch(
+          Actions.FOUNDER_REQUISITE_EXPERT,
+          {
+            expertId: route.params.id,
+          }
+        );
+        if (response !== true) throw new Error();
+        store.dispatch(Actions.AUTH_USER);
+        loading.value = false;
+        store.commit("setAlert", {
+          message: "Success",
+          subMessage: "A Request has been sent to the expert",
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
+      } catch (err) {
+        loading.value = false;
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage:
+            "Sorry, looks like there are some errors detected, please try again.",
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
+      }
+    };
     onMounted(async () => {
       try {
         const response = await store.dispatch(
@@ -215,12 +296,15 @@ export default defineComponent({
       ]);
     });
     return {
+      loading,
+      isConnected,
+      attachExpert,
       toUpperCase,
       parseJSON,
       route,
       expert,
       op,
-      arrayStringConstructor
+      arrayStringConstructor,
     };
   },
 });
