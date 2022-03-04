@@ -182,13 +182,13 @@
                       "
                     />
                   </div>
-                  <router-link
+                  <!-- <router-link
                     :to="`/business/${business.id}`"
                     type="button"
                     class="btn btn-danger my-sm-2 my-3"
                   >
                     View Business
-                  </router-link>
+                  </router-link> -->
                 </div>
 
                 <div
