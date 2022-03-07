@@ -27,6 +27,14 @@ export default class Expert extends VuexModule {
         return this.filteredExperts
     }
     @Mutation
+    [Mutations.SET_DEFAULT_EXPERT_STORE](): void {
+        this.expert = null
+        this.filteredExperts = []
+        this.expertise = []
+        this.industrySectors = []
+        this.connectedFounders = []
+    }
+    @Mutation
     [Mutations.SET_CONNECTED_FOUNDERS](payload): void {
         this.connectedFounders = payload
     }

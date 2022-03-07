@@ -222,7 +222,7 @@
           />
           <span class="form-check-label fw-bold text-gray-700 fs-6">
             I Agree &
-            <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
+            <router-link to="/terms-and-conditions" class="ms-1 link-primary">Terms and conditions</router-link>.
           </span>
         </label>
       </div>
@@ -320,7 +320,7 @@ export default defineComponent({
           loading.value = false;
           store.commit("setAlert", {
             message: "Success",
-            subMessage: "You have successfully created new account!",
+            subMessage: "You have successfully created a new account!",
             variant: "primary",
             duration: 4000,
             show: true,

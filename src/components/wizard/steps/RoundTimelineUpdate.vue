@@ -19,12 +19,14 @@
         >
         </i>
       </label>
-      <input
-        v-model="fundingRoundOpensAt"
+      <el-date-picker
         name="fundingRoundOpensAt"
         type="date"
-        @input="fieldChanged($event)"
-      />
+        v-model="fundingRoundOpensAt"
+        placeholder="Pick a Starting Date"
+        format="DD-MM-YYYY"
+      >
+      </el-date-picker>
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
@@ -39,12 +41,14 @@
         >
         </i>
       </label>
-      <input
-        v-model="fundingRoundClosesAt"
+      <el-date-picker
         name="fundingRoundClosesAt"
         type="date"
-        @input="fieldChanged($event)"
-      />
+        v-model="fundingRoundClosesAt"
+        placeholder="Pick an Ending Date"
+        format="DD-MM-YYYY"
+      >
+      </el-date-picker>
     </div>
     <!--begin::Input group-->
   </div>
@@ -68,9 +72,31 @@ export default defineComponent({
     const fundingRoundOpensAt = ref<string>("");
     const fundingRoundClosesAt = ref<string>("");
     const syncData = (value) => {
-      fundingRoundOpensAt.value = moment(value.fundingRoundOpensAt).format("YYYY-MM-DD");
-      fundingRoundClosesAt.value = moment(value.fundingRoundClosesAt).format("YYYY-MM-DD");
+      fundingRoundOpensAt.value = moment(value.fundingRoundOpensAt).format(
+        "YYYY-MM-DD"
+      );
+      fundingRoundClosesAt.value = moment(value.fundingRoundClosesAt).format(
+        "YYYY-MM-DD"
+      );
     };
+    watch(fundingRoundOpensAt, (value) => {
+      const event = {
+        target: {
+          name: "fundingRoundOpensAt",
+          value: moment(value).format("YYYY-MM-DD"),
+        },
+      };
+      fieldChanged(event);
+    });
+    watch(fundingRoundClosesAt, (value) => {
+      const event = {
+        target: {
+          name: "fundingRoundClosesAt",
+          value: moment(value).format("YYYY-MM-DD"),
+        },
+      };
+      fieldChanged(event);
+    });
     watch(
       () => props.fundingRound,
       (value) => {
@@ -86,7 +112,7 @@ export default defineComponent({
       formData,
       fieldChanged,
       fundingRoundOpensAt,
-      fundingRoundClosesAt
+      fundingRoundClosesAt,
     };
   },
 });

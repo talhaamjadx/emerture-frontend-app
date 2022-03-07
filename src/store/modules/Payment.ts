@@ -25,6 +25,10 @@ export default class Auth extends VuexModule {
         return this.cards
     }
     @Mutation
+    [Mutations.SET_DEFAULT_PAYMENT_STORE]() {
+        this.cards = []
+    }
+    @Mutation
     [Mutations.SET_CARDS](payload) {
         this.cards = payload
     }

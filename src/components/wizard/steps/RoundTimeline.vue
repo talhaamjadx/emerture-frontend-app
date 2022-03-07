@@ -19,11 +19,14 @@
         >
         </i>
       </label>
-      <input
+      <el-date-picker
         name="fundingRoundOpensAt"
         type="date"
-        @input="fieldChanged($event)"
-      />
+        v-model="opensAt"
+        placeholder="Pick a Starting Date"
+        format="DD-MM-YYYY"
+      >
+      </el-date-picker>
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
@@ -38,11 +41,14 @@
         >
         </i>
       </label>
-      <input
+      <el-date-picker
         name="fundingRoundClosesAt"
         type="date"
-        @input="fieldChanged($event)"
-      />
+        v-model="closesAt"
+        placeholder="Pick an Ending Date"
+        format="DD-MM-YYYY"
+      >
+      </el-date-picker>
     </div>
     <!--begin::Input group-->
   </div>
@@ -50,7 +56,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
+import moment from "moment";
 
 export default defineComponent({
   name: "PersonalDetails",
@@ -62,6 +69,26 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formData = ref<FormData>(props.formDataTemp);
+    const opensAt = ref<string>("");
+    const closesAt = ref<string>("");
+    watch(opensAt, (value) => {
+      const event = {
+        target: {
+          name: "fundingRoundOpensAt",
+          value: moment(value).format("YYYY-MM-DD"),
+        },
+      };
+      fieldChanged(event);
+    });
+    watch(closesAt, (value) => {
+      const event = {
+        target: {
+          name: "fundingRoundClosesAt",
+          value: moment(value).format("YYYY-MM-DD"),
+        },
+      };
+      fieldChanged(event);
+    });
     const fieldChanged = (event) => {
       if (formData.value.has(event.target.name)) {
         formData.value.set(event.target.name, event.target.value);
@@ -69,6 +96,8 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
+      opensAt,
+      closesAt,
       formData,
       fieldChanged,
     };

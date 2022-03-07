@@ -214,12 +214,12 @@ export default defineComponent({
       try {
         let fd = new FormData();
         if (file) fd.append("profileImage", file, file.name);
-        fd.append("firstName", user.value.firstName);
-        fd.append("lastName", user.value.lastName);
-        fd.append("linkedInProfileUrl", user.value.linkedInProfileUrl);
-        fd.append("jobTitle", user.value.jobTitle);
-        fd.append("telephone", user.value.telephone);
-        fd.append("introduction", user.value.introduction);
+        fd.append("firstName", user?.value?.firstName ?? "");
+        fd.append("lastName", user?.value?.lastName ?? "");
+        fd.append("linkedInProfileUrl", user?.value?.linkedInProfileUrl ?? "");
+        fd.append("jobTitle", user?.value?.jobTitle ?? "");
+        fd.append("telephone", user?.value?.telephone ?? "");
+        fd.append("introduction", user?.value?.introduction ?? "");
         const response = await store.dispatch(Actions.UPDATE_PROFILE, fd);
         if (response !== true) throw new Error();
         store.dispatch(Actions.AUTH_USER);
