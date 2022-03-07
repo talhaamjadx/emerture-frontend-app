@@ -151,6 +151,8 @@
             <!--begin::Col-->
             <div class="col-lg-8 fv-row">
               <Field
+                @input="formatTelephone($event);"
+                @keypress="limitInput($event)"
                 type="tel"
                 name="telephone"
                 class="form-control form-control-lg form-control-solid"
@@ -467,7 +469,6 @@ import { defineComponent, onMounted, ref, computed, Ref } from "vue";
 import { ErrorMessage, Field, Form } from "vee-validate";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import * as Yup from "yup";
-import { useRouter } from "vue-router";
 import DeactivateAccountModal from "@/views/crafted/modals/forms/DeactivateAccountModal.vue";
 
 interface ProfileDetails {
@@ -533,7 +534,23 @@ export default defineComponent({
         .oneOf([Yup.ref("password"), null], "Passwords must match")
         .label("Password Confirmation"),
     });
-
+    const limitInput = (event) => {
+      if (event.target.value.length > 11) event.preventDefault();
+      if (event.charCode < 48 || event.charCode > 57) {
+        event.preventDefault();
+      }
+    };
+const formatTelephone = (e) => {
+      if (e.target.value.charCodeAt(0) != 48 && e.target.value) {
+        profileDetails.value.telephone = "0" + profileDetails.value.telephone;
+      }
+      if (e.target.value.length == 6) {
+        profileDetails.value.telephone =
+          (profileDetails.value.telephone as string).substr(0, 5) +
+          " " +
+          (profileDetails.value.telephone as string).substr(5);
+      }
+    };
     const profileDetails = ref<ProfileDetails>({
       firstName: user.value.firstName,
       lastName: user.value.lastName,
@@ -693,6 +710,8 @@ export default defineComponent({
     });
 
     return {
+      formatTelephone,
+      limitInput,
       loading,
       loading2,
       profilePictureRef,

@@ -239,6 +239,7 @@ import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import objectPath from "object-path";
 import { StepperComponent } from "@/assets/ts/components";
+import { useRouter } from "vue-router";
 
 interface IStep1 {
   name: string;
@@ -273,6 +274,7 @@ export default defineComponent({
     KeySkills,
   },
   setup() {
+    const router = useRouter();
     const loading = ref<boolean>(false);
     const store = useStore();
     let roleId = 0;
@@ -442,6 +444,7 @@ export default defineComponent({
             duration: 4000,
             show: true,
           });
+          router.push("/add-role");
         } catch (err) {
           loading.value = false;
           const error = store.getters.getErrors;

@@ -11,6 +11,10 @@ export default class Investor extends VuexModule {
         return this.investor
     }
     @Mutation
+    [Mutations.SET_DEFAULT_INVESTOR_STORE](): void {
+        this.investor = null
+    }
+    @Mutation
     [Mutations.SET_INVESTOR_PROFILE](payload): void {
         this.investor = payload
     }

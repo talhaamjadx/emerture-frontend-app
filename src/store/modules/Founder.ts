@@ -15,6 +15,11 @@ export default class Auth extends VuexModule {
         return this.businessDraft
     }
     @Mutation
+    [Mutations.SET_DEFAULT_FOUNDER_STORE](): void {
+        this.founder = {}
+        this.businessDraft = {}
+    }
+    @Mutation
     [Mutations.SET_FOUNDER](payload): void {
         this.founder = payload
     }
@@ -72,8 +77,8 @@ export default class Auth extends VuexModule {
                 return true
             })
             .catch(err => {
-                if(err?.response?.status == 400)
-                this.context.commit(Mutations.SET_BUSINESS_DRAFT, {})
+                if (err?.response?.status == 400)
+                    this.context.commit(Mutations.SET_BUSINESS_DRAFT, {})
                 this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
                 return err.response
             })

@@ -19,6 +19,12 @@ export default class Business extends VuexModule {
         return this.businesses
     }
     @Mutation
+    [Mutations.SET_DEFAULT_BUSINESS_STORE](): void {
+        this.businesses = []
+        this.investmentOpportunities = []
+        this.connectedInvestmentOpportunities = []
+    }
+    @Mutation
     [Mutations.SET_FOUNDER_BUSINESSES](payload): void {
         this.businesses = payload
     }

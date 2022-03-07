@@ -99,7 +99,14 @@ enum Mutations {
   SET_CARDS = "setCards",
   SET_PLANS = "setPlans",
   SET_CONNECTED_INVESTMENT_OPPORTUNITIES = "setConnectedInvestmentOpportunities",
-  SET_CONNECTED_FOUNDERS = "setExpertConnectedFounders"
+  SET_CONNECTED_FOUNDERS = "setExpertConnectedFounders",
+  SET_DEFAULT_BUSINESS_STORE = "setDefaultBusinessStore",
+  SET_DEFAULT_EXPERT_STORE = "setDefaultExpertStore",
+  SET_DEFAULT_FOUNDER_STORE = "setDefaultFounderStore",
+  SET_DEFAULT_INVESTOR_STORE = "setDefaultInvestorStore",
+  SET_DEFAULT_PAYMENT_STORE = "setDefaultPaymentStore",
+  SET_DEFAULT_PLANS_STORE = "setDefaultPlansStore",
+  SET_DEFAULT_ROLE_STORE = "setDefaultRoleStore"
 }
 
 export { Actions, Mutations };

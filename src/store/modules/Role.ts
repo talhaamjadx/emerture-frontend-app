@@ -12,6 +12,10 @@ export default class Role extends VuexModule {
         return this.roles
     }
     @Mutation
+    [Mutations.SET_DEFAULT_ROLE_STORE](): void {
+        this.roles = []
+    }
+    @Mutation
     [Mutations.SET_ROLES](payload): void {
         this.roles = payload
     }

@@ -187,10 +187,10 @@ export default defineComponent({
       }
     };
     const fetchData = (value) => {
-      name.value = value.name;
-      jobTitle.value = value.jobTitle;
-      telephone.value = value.telephone;
-      linkedInProfileUrl.value = value.linkedInProfileUrl;
+      name.value = value?.name;
+      jobTitle.value = value?.jobTitle;
+      telephone.value = value?.telephone;
+      linkedInProfileUrl.value = value?.linkedInProfileUrl;
       formData.value.append("name", name.value as string);
       formData.value.append("jobTitle", jobTitle.value as string);
       formData.value.append("telephone", telephone.value as string);

@@ -6,14 +6,14 @@
       <!--begin::Title-->
       <h2 class="fw-bolder text-dark">Industry Sectors</h2>
     </div>
-    <div class="fv-row mb-10">
+    <div class="fv-row mb-10 row">
       <!--end::Label-->
       <!--end::Label-->
 
       <div
         v-for="is in industrySectors"
         :key="is.id"
-        class="form-check form-check-custom form-check-solid my-3"
+        class="form-check form-check-custom form-check-solid my-3 col-md-4"
       >
         <input
           :checked="isSelected(is.id)"

@@ -25,6 +25,10 @@ export default class Plan extends VuexModule {
         return this.plans
     }
     @Mutation
+    [Mutations.SET_DEFAULT_PLANS_STORE]() {
+        this.plans = []
+    }
+    @Mutation
     [Mutations.SET_PLANS](payload) {
         this.plans = payload
     }

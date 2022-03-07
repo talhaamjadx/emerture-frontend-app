@@ -21,22 +21,21 @@
       <div class="menu-content d-flex align-items-center px-3">
         <!--begin::Avatar-->
         <div class="symbol symbol-50px me-5">
-              <div
-                class="image-input image-input-outline "
-                data-kt-image-input="true"
-                style="background-image: url(media/avatars/blank.png)"
-              >
-                <!--begin::Preview existing avatar-->
-                <div
-                  ref="profilePictureRef"
-                  class="image-input-wrapper"
-                  :style="`width:60px; height:60px;background-image: url(${
-                    op.get(user, 'profileImage', null) ?? require('@/assets/img/blank.png')
-                  })`"
-                ></div>
-
-              </div>
-         
+          <div
+            class="image-input image-input-outline"
+            data-kt-image-input="true"
+            style="background-image: url(media/avatars/blank.png)"
+          >
+            <!--begin::Preview existing avatar-->
+            <div
+              ref="profilePictureRef"
+              class="image-input-wrapper"
+              :style="`width:60px; height:60px;background-image: url(${
+                op.get(user, 'profileImage', null) ??
+                require('@/assets/img/blank.png')
+              })`"
+            ></div>
+          </div>
         </div>
         <!--end::Avatar-->
 
@@ -46,9 +45,11 @@
             {{ op.get(user, "firstName", "") }}
             {{ op.get(user, "lastName", "") }}
           </div>
-          <a href="#" class="fw-bold text-break text-muted text-hover-primary fs-7">{{
-            op.get(user, "email", "")
-          }}</a>
+          <a
+            href="#"
+            class="fw-bold text-break text-muted text-hover-primary fs-7"
+            >{{ op.get(user, "email", "") }}</a
+          >
         </div>
         <!--end::Username-->
       </div>
@@ -130,9 +131,20 @@ export default defineComponent({
         const response = await store.dispatch(Actions.SIGNOUT);
         if (response !== true) throw new Error();
         window.localStorage.removeItem("access_token");
-        store.commit(Mutations.SET_DEFAULT_AUTH);
         router.push("/sign-in");
+        setTimeout(() => {
+          store.commit(Mutations.SET_DEFAULT_AUTH);
+          store.commit(Mutations.SET_DEFAULT_BUSINESS_STORE);
+          store.commit(Mutations.SET_DEFAULT_EXPERT_STORE);
+          store.commit(Mutations.SET_DEFAULT_FOUNDER_STORE);
+          store.commit(Mutations.SET_DEFAULT_INVESTOR_STORE);
+          store.commit(Mutations.SET_DEFAULT_PAYMENT_STORE);
+          store.commit(Mutations.SET_DEFAULT_PLANS_STORE);
+          store.commit(Mutations.SET_DEFAULT_ROLE_STORE);
+        }, 100);
       } catch (err) {
+        window.localStorage.removeItem("access_token");
+        router.push("/sign-in");
         const [error] = Object.keys(store.getters.getErrors);
         Swal.fire({
           text: store.getters.getErrors[error],
