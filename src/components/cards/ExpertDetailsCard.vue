@@ -4,7 +4,8 @@
     <!--begin::Card-->
     <div class="card" :class="cardClasses">
       <!--begin::Card body-->
-      <div class="card-body d-flex flex-center flex-column p-9">
+      <div class="card-body d-flex flex-center flex-column p-9 border" style="background-color: #f5f8fa;
+    border-radius: 7px;">
         <!--begin::Avatar-->
         <div v-if="avatar" class="symbol symbol-65px symbol-circle mb-5">
           <img

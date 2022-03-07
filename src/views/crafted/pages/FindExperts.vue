@@ -101,7 +101,7 @@
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row" style="padding: 1.4rem; background-color: white; margin: 0px; border-radius: 5px;">
       <div
         v-for="expert in filteredExperts"
         :key="expert.id"
