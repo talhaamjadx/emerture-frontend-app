@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row p-3 bg-white">
     <div
       v-for="expert in founderRequisiteExperts"
       :key="expert.id"
