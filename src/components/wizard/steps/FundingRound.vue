@@ -43,7 +43,7 @@
       >
       </i>
       <div class="input-group mb-3" style="margin-top: 6px">
-        <span class="input-group-text" style="border: none;">£</span>
+        <span class="input-group-text" style="border: none">£</span>
         <Field
           @blur="createDraft"
           as="input"
@@ -80,7 +80,7 @@
       >
       </i>
       <div class="input-group mb-3" style="margin-top: 6px">
-        <span class="input-group-text" style="border: none;">£</span>
+        <span class="input-group-text" style="border: none">£</span>
         <Field
           @blur="createDraft"
           as="input"
@@ -117,7 +117,7 @@
       >
       </i>
       <div class="input-group mb-3" style="margin-top: 6px">
-        <span class="input-group-text" style="border: none;">£</span>
+        <span class="input-group-text" style="border: none">£</span>
         <Field
           @blur="createDraft"
           as="input"
@@ -159,9 +159,13 @@
         type="date"
         v-model="opensAt"
         placeholder="Pick a Starting Date"
-        format="DD-MM-YYYY">
-
+        format="DD-MM-YYYY"
+      >
       </el-date-picker>
+      <p style="color: red" v-if="!opensAtAdded">Start Date is required!</p>
+      <p style="color: red" v-if="dateCheck">
+        Start Date must be smaller than End Date
+      </p>
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
@@ -181,8 +185,13 @@
         type="date"
         v-model="closesAt"
         placeholder="Pick an Ending Date"
-        format="DD-MM-YYYY">
+        format="DD-MM-YYYY"
+      >
       </el-date-picker>
+      <p style="color: red" v-if="!closesAtAdded">End Date is required!</p>
+      <p style="color: red" v-if="dateCheck">
+        End Date must be greater than Start Date
+      </p>
     </div>
     <!--begin::Input group-->
   </div>
@@ -198,7 +207,7 @@ import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 
 export default defineComponent({
-  name: "PersonalDetails",
+  name: "FundingRound",
   components: {
     Field,
     ErrorMessage,
@@ -230,8 +239,11 @@ export default defineComponent({
       })();
       fundingRoundMinimumInvestment.value = (() => {
         if (fundingRoundMinimumInvestment.value) {
-          tempBusinessDraft["fundingRoundMinimumInvestment"] = fundingRoundMinimumInvestment.value.replace(/,/g, "").toString();
-          return fundingRoundMinimumInvestment.value.replace(/,/g, "").toString();
+          tempBusinessDraft["fundingRoundMinimumInvestment"] =
+            fundingRoundMinimumInvestment.value.replace(/,/g, "").toString();
+          return fundingRoundMinimumInvestment.value
+            .replace(/,/g, "")
+            .toString();
         }
         return value?.fundingRoundMinimumInvestment ?? "";
       })();
@@ -239,7 +251,9 @@ export default defineComponent({
         if (fundingRoundPreMoneyValuation.value) {
           tempBusinessDraft["fundingRoundPreMoneyValuation"] =
             fundingRoundPreMoneyValuation.value.replace(/,/g, "").toString();
-          return fundingRoundPreMoneyValuation.value.replace(/,/g, "").toString();
+          return fundingRoundPreMoneyValuation.value
+            .replace(/,/g, "")
+            .toString();
         }
         return value?.fundingRoundPreMoneyValuation ?? "";
       })();
@@ -247,7 +261,9 @@ export default defineComponent({
         if (fundingRoundInvestmentRequired.value) {
           tempBusinessDraft["fundingRoundInvestmentRequired"] =
             fundingRoundInvestmentRequired.value.replace(/,/g, "").toString();
-          return fundingRoundInvestmentRequired.value.replace(/,/g, "").toString();
+          return fundingRoundInvestmentRequired.value
+            .replace(/,/g, "")
+            .toString();
         }
         return value?.fundingRoundInvestmentRequired ?? "";
       })();
@@ -267,14 +283,40 @@ export default defineComponent({
       })();
     });
     const formatter = numberFormatter;
+    const dateCheck = computed(() => {
+      if (opensAt.value && closesAt.value) {
+        let areDatesValid = true;
+        if (
+          moment(opensAt.value).isValid() &&
+          moment(closesAt.value).isValid() &&
+          opensAtAdded.value &&
+          closesAtAdded.value
+        )
+          areDatesValid = moment(opensAt.value) > moment(closesAt.value);
+        emit("areDatesValid", areDatesValid);
+        return areDatesValid;
+      }
+      emit("areDatesValid", true);
+      return false;
+    });
+    const opensAtAdded = ref<boolean>(false);
+    const closesAtAdded = ref<boolean>(false);
     watch(opensAt, (value) => {
-      tempBusinessDraft["fundingRoundOpensAt"] =
-        moment(value).format("YYYY-MM-DD");
+      emit("opensAtAdded", value ? true : false);
+      opensAtAdded.value = value ? true : false;
+      if (moment(value).isValid())
+        tempBusinessDraft["fundingRoundOpensAt"] =
+          moment(value).format("YYYY-MM-DD");
+      else tempBusinessDraft["fundingRoundOpensAt"] = "";
       createDraft();
     });
     watch(closesAt, (value) => {
-      tempBusinessDraft["fundingRoundClosesAt"] =
-        moment(value).format("YYYY-MM-DD");
+      emit("closesAtAdded", value ? true : false);
+      closesAtAdded.value = value ? true : false;
+      if (moment(value).isValid())
+        tempBusinessDraft["fundingRoundClosesAt"] =
+          moment(value).format("YYYY-MM-DD");
+      else tempBusinessDraft["fundingRoundClosesAt"] = "";
       createDraft();
     });
     const formatInput = (e) => {
@@ -363,6 +405,9 @@ export default defineComponent({
       }
     };
     return {
+      closesAtAdded,
+      opensAtAdded,
+      dateCheck,
       createDraft,
       limitInput,
       formData,

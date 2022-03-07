@@ -68,7 +68,9 @@
                       @input="addToIndustrySectors($event)"
                       class="form-check-input"
                       type="checkbox"
-                      value=""
+                      :checked="
+                        selectedIndustrySectors.some((sis) => sis == is.id)
+                      "
                       id="flexCheckDefault"
                       :data-id="is.id"
                     />
@@ -115,7 +117,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed, ref, watchEffect } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  computed,
+  ref,
+  watchEffect,
+  watch,
+} from "vue";
 import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
@@ -130,6 +139,11 @@ export default defineComponent({
   setup() {
     const loading = ref<boolean>(false);
     const globalSearch = ref<boolean>(false);
+    watch(globalSearch, (value) => {
+      if (value) {
+        selectedIndustrySectors.value = industrySectors.value?.map(is => is.id)
+      }
+    });
     const store = useStore();
     const user = computed(() => store.getters.getUser);
     const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
@@ -198,6 +212,7 @@ export default defineComponent({
       isAlreadyConnected,
       investmentOpportunities,
       findOpportunityInvestment,
+      selectedIndustrySectors,
     };
   },
 });

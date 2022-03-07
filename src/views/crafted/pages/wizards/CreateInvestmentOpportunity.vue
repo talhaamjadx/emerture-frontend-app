@@ -281,6 +281,9 @@
         </div>
         <div data-kt-stepper-element="content">
           <FundingRound
+            @opensAtAdded="opensAtAdded = $event"
+            @closesAtAdded="closesAtAdded = $event"
+            @areDatesValid="areDatesValid = $event"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></FundingRound>
@@ -424,6 +427,9 @@ export default defineComponent({
     FindExperts,
   },
   setup() {
+    const opensAtAdded = ref<boolean>(false);
+    const closesAtAdded = ref<boolean>(false);
+    const areDatesValid = ref<boolean>(false);
     const loading = ref<boolean>(false);
     const touched = ref<boolean>(false);
     const teamMembersLength = ref<number>(0);
@@ -570,6 +576,9 @@ export default defineComponent({
 
     const handleStep = handleSubmit((values) => {
       if (fileSizeError.value) return;
+      if (areDatesValid.value && _stepperObj.value?.currentStepIndex == 8)
+        return;
+      if (!opensAtAdded.value || !closesAtAdded.value && _stepperObj.value?.currentStepIndex == 8) return;
       formData.value = {
         ...formData.value,
         ...values,
@@ -671,6 +680,9 @@ export default defineComponent({
     };
 
     return {
+      opensAtAdded,
+      closesAtAdded,
+      areDatesValid,
       loading,
       createAccountSchema,
       formDataTemp,
