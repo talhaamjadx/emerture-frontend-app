@@ -33,6 +33,7 @@
       <!--end::Label-->
 
       <Field
+        maxlength="200"
         v-model="summary"
         @input="fieldChanged($event)"
         type="text"
@@ -54,6 +55,7 @@
       <!--end::Label-->
 
       <Field
+        maxlength="200"
         v-model="overview"
         @input="fieldChanged($event)"
         type="text"
@@ -75,6 +77,7 @@
       <!--end::Label-->
 
       <Field
+        maxlength="200"
         v-model="defensibleUsp"
         @input="fieldChanged($event)"
         type="text"

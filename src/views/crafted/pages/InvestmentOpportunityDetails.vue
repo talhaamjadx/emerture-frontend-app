@@ -33,7 +33,7 @@
           download
           :href="business.pitchDeckDocument"
           class="btn btn-primary my-3"
-          ><i class="fas fa-download fs-4 me-2"></i> Pitch Deck Document</a
+          ><i class="fas fa-download fs-4 me-2"></i> Pitch Deck</a
         >
         <div class="row my-3"><h3>About</h3></div>
         <div class="row mb-7">
@@ -211,6 +211,14 @@
         </div>
       </div>
     </div>
+    <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+      <div class="card-header">
+        <h3 class="card-title">Funding Rounds</h3>
+      </div>
+      <div class="card-body pt-0">
+        <FundingRounds :fundingRounds="business?.fundingRounds ?? []" />
+      </div>
+    </div>
   </div>
   <!--end::details View-->
 </template>
@@ -221,10 +229,13 @@ import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
+import FundingRounds from "@/components/widgets/lists/funding-round-details-only.vue";
 
 export default defineComponent({
   name: "business-details",
-  components: {},
+  components: {
+    FundingRounds
+  },
   setup() {
     const store = useStore();
     const route = useRoute();

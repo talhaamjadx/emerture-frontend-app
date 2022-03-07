@@ -16,10 +16,10 @@
       <Field
         v-model="introduction"
         @input="fieldChanged($event)"
+        as="textarea"
         type="textarea"
         name="introduction"
         class="form-control form-control-lg form-control-solid"
-        rows="10"
       ></Field>
       <ErrorMessage
         name="introduction"
@@ -33,6 +33,7 @@
       <!--end::Label-->
 
       <Field
+        as="textarea"
         v-model="bio"
         @input="fieldChanged($event)"
         type="text"

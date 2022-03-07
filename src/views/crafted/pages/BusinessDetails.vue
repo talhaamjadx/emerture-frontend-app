@@ -38,7 +38,7 @@
           download
           :href="business.pitchDeckDocument"
           class="btn btn-primary my-3"
-          ><i class="fas fa-download fs-4 me-2"></i> Pitch Deck Document</a
+          ><i class="fas fa-download fs-4 me-2"></i> Pitch Deck</a
         >
         <div class="row my-3"><h3>About</h3></div>
         <div class="row mb-7">

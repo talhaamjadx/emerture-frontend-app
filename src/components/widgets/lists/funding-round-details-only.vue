@@ -8,28 +8,6 @@
             ><span>{{ round.name }}</span></strong
           >
         </div>
-        <div class="col text-end fa">
-          <router-link
-            class="w-un"
-            :to="`/view-funding-round/${round.id}?businessId=${round.businessId}`"
-          >
-            <span><i class="fa fa-eye px-2" aria-hidden="true"></i></span>
-          </router-link>
-          <router-link
-            class="w-un"
-            :to="`/update-funding-round/${round.id}?businessId=${round.businessId}`"
-          >
-            <span><i class="fa fa-edit px-2" aria-hidden="true"></i></span
-          ></router-link>
-          <a
-            data-bs-toggle="modal"
-            :data-bs-target="`#kt_modal_delete_round_${round.id}`"
-            class="w-un"
-            href="javascript:void(0)"
-          >
-            <span><i class="fa fa-trash px-2" aria-hidden="true"></i></span
-          ></a>
-        </div>
       </div>
       <hr style="width: 98%; margin: 6px auto" />
 
@@ -159,64 +137,34 @@
           >
         </div>
       </div>
-      <DeleteFundingRoundModal
-        @round-deleted="roundDeleted"
-        :businessId="round.businessId"
-        :id="round.id"
-      />
     </section>
   </div>
   <!--end::List Widget 6-->
 </template>
 
 <script lang="ts">
-import DeleteFundingRoundModal from "@/components/modals/forms/DeleteFundingRoundModal.vue";
-import { defineComponent, ref, watch, computed, onMounted } from "vue";
+import { defineComponent, ref, watchEffect, computed } from "vue";
 import { mainFormatter } from "@/utils/index";
 import moment from "moment";
-import { useStore } from "vuex";
-import { Actions } from "@/store/enums/StoreEnums";
-import { useRoute } from "vue-router";
 
 export default defineComponent({
   name: "funding-rounds",
   props: {
     widgetClasses: String,
+    fundingRounds: Array,
   },
-  components: {
-    DeleteFundingRoundModal,
-  },
+  components: {},
   setup(props) {
-    const route = useRoute();
-    const store = useStore();
     const rounds = ref<Array<Record<string, unknown>>>([]);
-    const businessId = ref<string>(route.params.id as string);
-    const refresh = async () => {
-      try {
-        const response = await store.dispatch(
-          Actions.GET_FUNDING_ROUNDS,
-          businessId.value
-        );
-        if (response instanceof Array) {
-          rounds.value = response;
-        }
-      } catch (err) {
-        //
-      }
-    };
-    onMounted(() => {
-      refresh();
-    });
-    const roundDeleted = () => {
-      refresh();
-    };
     const formatDate = (date) => moment(date).format("YYYY-MM-DD");
     const formatter = computed(() => mainFormatter);
+    watchEffect(() => {
+      rounds.value = props.fundingRounds as Array<Record<string, unknown>>;
+    });
     return {
       rounds,
       formatter,
       formatDate,
-      roundDeleted,
     };
   },
 });

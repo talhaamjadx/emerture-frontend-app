@@ -34,6 +34,7 @@
       <!--end::Label-->
 
       <Field
+        maxlength="200"
         @blur="createDraft"
         @keypress="limitInput($event)"
         @input="fieldChanged($event)"
@@ -57,6 +58,7 @@
       <!--end::Label-->
 
       <Field
+        maxlength="200"
         @blur="createDraft"
         @keypress="limitInput($event)"
         @input="fieldChanged($event)"
@@ -81,6 +83,7 @@
       <!--end::Label-->
 
       <Field
+        maxlength="200"
         @blur="createDraft"
         @keypress="limitInput($event)"
         @input="fieldChanged($event)"
@@ -143,24 +146,27 @@ export default defineComponent({
       })();
       summary.value = (() => {
         if (summary.value) {
-          tempBusinessDraft["summary"] = summary.value;
-          return summary.value;
+          tempBusinessDraft["summary"] = summary.value.slice(0, 200);
+          return summary.value.slice(0, 200);
         }
-        return value?.summary ?? "";
+        return value?.summary.slice(0, 200) ?? "";
       })();
       overview.value = (() => {
         if (overview.value) {
-          tempBusinessDraft["overview"] = overview.value;
-          return overview.value;
+          tempBusinessDraft["overview"] = overview.value.slice(0, 200);
+          return overview.value.slice(0, 200);
         }
         return value?.overview ?? "";
       })();
       defensibleUsp.value = (() => {
         if (defensibleUsp.value) {
-          tempBusinessDraft["defensibleUsp"] = defensibleUsp.value;
-          return defensibleUsp.value;
+          tempBusinessDraft["defensibleUsp"] = defensibleUsp.value.slice(
+            0,
+            200
+          );
+          return defensibleUsp.value.slice(0, 200);
         }
-        return value?.defensibleUsp ?? "";
+        return value?.defensibleUsp.slice(0, 200) ?? "";
       })();
     });
     const limitInput = (e) => {

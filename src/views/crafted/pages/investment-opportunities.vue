@@ -9,36 +9,51 @@
           <div class="content" style="background-color: #1b283f">
             <div class="row">
               <div
-                class="col-sm-4 col-12 order-sm-first order-last text-center offset-sm-1"
+                class="
+                  col-sm-4 col-12
+                  order-sm-first order-last
+                  text-center
+                  offset-sm-1
+                "
               >
                 <div>
                   <img
                     class="rounded-circle my-2"
                     :src="`${opportunity.logo ?? 'media/avatars/blank.png'}`"
-                    style="border: 3px solid white; width: 120px; height: 118px; object-fit: cover;"
+                    style="
+                      border: 3px solid white;
+                      width: 120px;
+                      height: 118px;
+                      object-fit: cover;
+                    "
                   />
                 </div>
                 <router-link
                   :to="`/investment-opportunity-profile/${opportunity.id}`"
                   type="button"
-                  class="btn btn-danger my-sm-2 my-3" style="display: block; margin: auto; width: 70%"
+                  class="btn btn-danger my-sm-2 my-3"
+                  style="display: block; margin: auto; width: 70%"
                 >
                   View Investment Opportunity
                 </router-link>
-                <router-link
-                  v-if="!connectedIds[opportunity.id] && !props.fromConnectedInvestmentOpportunities"
-                  :to="`/disclaimer/${opportunity.id}`"
+                <button
+                  v-if="
+                    !connectedIds[opportunity.id] &&
+                    !props.fromConnectedInvestmentOpportunities
+                  "
+                  data-bs-toggle="modal"
+                  :data-bs-target="`#kt_modal_delete_round_disclaimer_${opportunity.id}`"
                   type="button"
-                  style="width: 70%; display: block; margin:auto;"
+                  style="width: 70%; display: block; margin: auto"
                   class="btn btn-danger my-sm-2 my-3"
                 >
                   Connect
-                </router-link>
+                </button>
                 <button
                   v-else
                   disabled
                   type="button"
-                  style="width: 70%; display: block; margin:auto;"
+                  style="width: 70%; display: block; margin: auto"
                   class="btn btn-danger my-sm-2 my-3"
                 >
                   Connected
@@ -51,7 +66,8 @@
                   order-sm-last order-first
                   text-white text-center
                   my-sm-auto
-                  mt-3 offset-sm-1
+                  mt-3
+                  offset-sm-1
                 "
               >
                 <h3 style="color: white !important">{{ opportunity.name }}</h3>
@@ -70,13 +86,15 @@
         </div> -->
       </div>
     </div>
+    <DisclaimerModal :key="opportunity.id" @connected="refresh()" :businessId="opportunity.id" />
   </div>
 </template>
 
 <script lang="ts">
-import { ref, watch, defineComponent, onMounted, watchEffect } from "vue";
+import { ref, defineComponent, onMounted, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
+import DisclaimerModal from "@/components/modals/forms/DisclaimerModal.vue";
 
 export default defineComponent({
   props: {
@@ -85,8 +103,11 @@ export default defineComponent({
       type: Object,
     },
     fromConnectedInvestmentOpportunities: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
+  },
+  components: {
+    DisclaimerModal,
   },
   setup(props) {
     const store = useStore();
@@ -110,12 +131,13 @@ export default defineComponent({
       refresh();
     });
     watchEffect(() => {
-      investmentOpportunities.value = props.investmentOpportunitiesMain
-    })
+      investmentOpportunities.value = props.investmentOpportunitiesMain;
+    });
     return {
       investmentOpportunities,
       connectedIds,
-      props
+      props,
+      refresh
     };
   },
 });
