@@ -110,7 +110,7 @@
         <!--end::Input group-->
 
         <!--begin::Input group-->
-        <div class="row mb-7">
+        <div v-if="parseJSON(business.teamMembers)?.length" class="row mb-7">
           <!--begin::Label-->
           <label class="col-lg-4 fw-bold text-muted">The Team Members</label>
           <!--end::Label-->

@@ -95,7 +95,7 @@
         <!--end::Input group-->
         <div class="row mb-7">
           <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted">Bio</label>
+          <label class="col-lg-4 fw-bold text-muted">Professional Summary</label>
           <!--end::Label-->
 
           <!--begin::Col-->

@@ -29,7 +29,7 @@
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
-      <label class="form-label">Bio</label>
+      <label class="form-label">Professional Summary</label>
       <!--end::Label-->
 
       <Field
