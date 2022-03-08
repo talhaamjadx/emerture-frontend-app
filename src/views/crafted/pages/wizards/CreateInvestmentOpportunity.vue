@@ -578,7 +578,7 @@ export default defineComponent({
       if (fileSizeError.value) return;
       if (areDatesValid.value && _stepperObj.value?.currentStepIndex == 8)
         return;
-      if (!opensAtAdded.value || !closesAtAdded.value && _stepperObj.value?.currentStepIndex == 8) return;
+      if ((!opensAtAdded.value || !closesAtAdded.value) && _stepperObj.value?.currentStepIndex == 8) return;
       formData.value = {
         ...formData.value,
         ...values,

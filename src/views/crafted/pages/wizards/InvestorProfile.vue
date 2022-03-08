@@ -408,7 +408,6 @@ export default defineComponent({
           duration: 4000,
           show: true,
         });
-        router.push("/find-investment-opportunities");
       } catch (err) {
         loading.value = false;
         store.commit("setAlert", {

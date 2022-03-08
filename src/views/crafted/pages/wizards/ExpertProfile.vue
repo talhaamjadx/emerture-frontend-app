@@ -389,7 +389,12 @@ export default defineComponent({
 
     const handleStep = handleSubmit((values) => {
       if (!formDataTemp.value.get("documents") && currentStepIndex.value == 2) {
-        if (!expertProfile?.value?.document) {
+        if (
+          !expertProfile?.value?.document &&
+          !user.value?.userRoles?.some(
+            (role) => role.name.toLowerCase() == "founder"
+          )
+        ) {
           isDocumentAdded.value = false;
           return;
         }
@@ -470,9 +475,7 @@ export default defineComponent({
         loading.value = false;
         store.commit("setAlert", {
           message: "Error",
-          subMessage: `Expert Profile ${
-            doesExpertProfileExist.value ? "Updation" : "Creation"
-          } Unsuccessful`,
+          subMessage: store.getters.getErrors,
           variant: "danger",
           duration: 4000,
           show: true,
