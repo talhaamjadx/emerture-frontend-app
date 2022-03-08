@@ -41,7 +41,7 @@
                 "
               >
                 <h3 style="color: white !important">{{ business.name }}</h3>
-                <p>{{ business.summary }}</p>
+                <p class="overflow-hidden">{{ business.summary }}</p>
               </div>
             </div>
           </div>
