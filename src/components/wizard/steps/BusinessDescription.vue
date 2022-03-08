@@ -146,27 +146,24 @@ export default defineComponent({
       })();
       summary.value = (() => {
         if (summary.value) {
-          tempBusinessDraft["summary"] = summary.value.slice(0, 200);
-          return summary.value.slice(0, 200);
+          tempBusinessDraft["summary"] = summary.value
+          return summary.value
         }
-        return value?.summary.slice(0, 200) ?? "";
+        return value?.summary ?? "";
       })();
       overview.value = (() => {
         if (overview.value) {
-          tempBusinessDraft["overview"] = overview.value.slice(0, 200);
-          return overview.value.slice(0, 200);
+          tempBusinessDraft["overview"] = overview.value;
+          return overview.value;
         }
         return value?.overview ?? "";
       })();
       defensibleUsp.value = (() => {
         if (defensibleUsp.value) {
-          tempBusinessDraft["defensibleUsp"] = defensibleUsp.value.slice(
-            0,
-            200
-          );
-          return defensibleUsp.value.slice(0, 200);
+          tempBusinessDraft["defensibleUsp"] = defensibleUsp.value
+          return defensibleUsp.value
         }
-        return value?.defensibleUsp.slice(0, 200) ?? "";
+        return value?.defensibleUsp ?? "";
       })();
     });
     const limitInput = (e) => {

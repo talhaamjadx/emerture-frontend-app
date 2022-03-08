@@ -115,7 +115,8 @@
         <!--end::Separator-->
 
         <!--begin::Google link-->
-        <button
+        <a
+          href="javascript:void(0)"
           @click="googleLogin"
           class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
         >
@@ -125,8 +126,9 @@
             class="h-20px me-3"
           />
           Continue with Google
-        </button>
-        <button
+        </a>
+        <a
+          href="javascript:void(0)"
           @click="linkedInLogin"
           class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
         >
@@ -136,7 +138,7 @@
             class="h-20px me-3"
           />
           Continue with LinkedIn
-        </button>
+        </a>
         <!--end::Google link-->
 
         <!--begin::Google link-->
@@ -245,7 +247,7 @@ export default defineComponent({
           try {
             const response = await store.dispatch(Actions.AUTH_USER);
             if (response !== true) throw new Error();
-            loading.value = false
+            loading.value = false;
             areRolesAdded(store.getters.getUser)
               ? router.push({ name: "dashboard" })
               : router.push("/add-role");
