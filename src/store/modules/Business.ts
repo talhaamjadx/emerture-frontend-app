@@ -8,9 +8,13 @@ import objectPath from "object-path";
 export default class Business extends VuexModule {
     businesses = []
     investmentOpportunities = []
+    filteredInvestmentOpportunities = []
     connectedInvestmentOpportunities = []
     get getInvestmentOpportunities() {
         return this.investmentOpportunities
+    }
+    get getFilteredInvestmentOpportunities() {
+        return this.filteredInvestmentOpportunities
     }
     get getConnectedInvestmentOpportunities() {
         return this.connectedInvestmentOpportunities
@@ -35,6 +39,10 @@ export default class Business extends VuexModule {
     @Mutation
     [Mutations.SET_INVESTMENT_OPPORTUNITIES](payload): void {
         this.investmentOpportunities = payload
+    }
+    @Mutation
+    [Mutations.SET_FILTERED_INVESTMENT_OPPORTUNITIES](payload): void {
+        this.filteredInvestmentOpportunities = payload
     }
     @Action
     [Actions.CREATE_FOUNDER_BUSINESS](payload: AxiosRequestConfig): Promise<AxiosResponse> {
@@ -133,7 +141,11 @@ export default class Business extends VuexModule {
         ApiService.setHeader("application/json")
         return ApiService.post(`/investment-opportunities`, payload)
             .then(investmentOpportunities => {
-                this.context.commit(Mutations.SET_INVESTMENT_OPPORTUNITIES, investmentOpportunities.data.data);
+                if (payload) {
+                    this.context.commit(Mutations.SET_FILTERED_INVESTMENT_OPPORTUNITIES, investmentOpportunities.data.data);
+                }
+                else
+                    this.context.commit(Mutations.SET_INVESTMENT_OPPORTUNITIES, investmentOpportunities.data.data);
                 return true
             })
             .catch(err => {

@@ -195,6 +195,12 @@ export default defineComponent({
         fontIcon: "bi-search",
       },
       {
+        heading: "matched-investment-opportunities",
+        route: "/matched-investment-opportunities",
+        svgIcon: "media/icons/duotune/general/gen019.svg",
+        fontIcon: "bi-clipboard-check",
+      },
+      {
         heading: "addRole",
         route: "/add-role",
         svgIcon: "media/icons/duotune/ecommerce/ecm002.svg",
@@ -273,6 +279,7 @@ export default defineComponent({
         } else if (
           (config.heading == "investor-profile" ||
             config.heading == "find-investment-opportunities" ||
+            config.heading == "matched-investment-opportunities" ||
             config.heading == "connected-investment-opportunities") &&
           !(user.value?.investor instanceof Array) &&
           user.value.investor &&
@@ -298,6 +305,7 @@ export default defineComponent({
           config.heading !== "find-experts" &&
           config.heading !== "businesses" &&
           config.heading !== "find-investment-opportunities" &&
+          config.heading !== "matched-investment-opportunities" &&
           config.heading !== "dashboard" &&
           config.heading !== "connected-experts" &&
           config.heading !== "connected-investment-opportunities" &&

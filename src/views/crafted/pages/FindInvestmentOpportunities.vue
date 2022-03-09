@@ -6,11 +6,11 @@
           <div class="accordion-item">
             <h2 class="accordion-header d-flex" id="kt_accordion_1_header_2">
               <button
-                class="accordion-button fs-4 fw-bold collapsed"
+                class="accordion-button fs-4 fw-bold"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#kt_accordion_1_body_2"
-                aria-expanded="false"
+                aria-expanded="true"
                 aria-controls="kt_accordion_1_body_2"
               >
                 Industry Sectors
@@ -49,7 +49,7 @@
             </h2>
             <div
               id="kt_accordion_1_body_2"
-              class="accordion-collapse collapse"
+              class="accordion-collapse collapse show"
               aria-labelledby="kt_accordion_1_header_2"
               data-bs-parent="#kt_accordion_1"
             >
@@ -111,7 +111,7 @@
     </div>
     <InvestmentOpportunities
       :fromConnectedInvestmentOpportunities="false"
-      :investmentOpportunitiesMain="investmentOpportunities"
+      :investmentOpportunitiesMain="filteredInvestmentOpportunities"
     />
   </div>
 </template>
@@ -138,18 +138,17 @@ export default defineComponent({
   },
   setup() {
     const loading = ref<boolean>(false);
-    const globalSearch = ref<boolean>(false);
+    const globalSearch = ref<boolean>(true);
     watch(globalSearch, (value) => {
       if (value) {
-        selectedIndustrySectors.value = industrySectors.value?.map(is => is.id)
+        selectedIndustrySectors.value = industrySectors.value?.map(
+          (is) => is.id
+        );
       }
     });
     const store = useStore();
     const user = computed(() => store.getters.getUser);
     const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
-    const investmentOpportunities = computed(
-      () => store.getters.getInvestmentOpportunities
-    );
     watchEffect(() => {
       founderRequisiteExperts.value = user.value.founderRequisiteExpert;
     });
@@ -160,6 +159,9 @@ export default defineComponent({
     };
     const industrySectors = computed(() => store.getters.industrySectorsGetter);
     const selectedIndustrySectors = ref<Array<number>>([]);
+    const filteredInvestmentOpportunities = computed(
+      () => store.getters.getFilteredInvestmentOpportunities
+    );
     const filteredExperts = computed(() => store.getters.filteredExpertsGetter);
     const showError = ref<boolean>(false);
     const addToIndustrySectors = (event) => {
@@ -196,8 +198,6 @@ export default defineComponent({
     };
     onMounted(async () => {
       setCurrentPageBreadcrumbs("Find Investment Opportunities", []);
-      if (!investmentOpportunities.value.length)
-        await store.dispatch(Actions.FIND_INVESTMENT_OPPORTUNITIES);
       if (!industrySectors.value.length)
         await store.dispatch(Actions.GET_INDUSTRY_SECTORS);
     });
@@ -210,7 +210,7 @@ export default defineComponent({
       addToIndustrySectors,
       filteredExperts,
       isAlreadyConnected,
-      investmentOpportunities,
+      filteredInvestmentOpportunities,
       findOpportunityInvestment,
       selectedIndustrySectors,
     };

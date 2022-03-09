@@ -66,7 +66,7 @@ enum Actions {
   CHANGE_ACTIVE_CARD_STATUS = "changeActiveCardStatus",
   GET_PLANS = "getPlans",
   CONNECTED_FOUNDERS = "expertConnectedFounders",
-  GET_USER_PROFILE = "getUserProfile"
+  GET_USER_PROFILE = "getUserProfile",
 }
 
 enum Mutations {
@@ -106,7 +106,8 @@ enum Mutations {
   SET_DEFAULT_INVESTOR_STORE = "setDefaultInvestorStore",
   SET_DEFAULT_PAYMENT_STORE = "setDefaultPaymentStore",
   SET_DEFAULT_PLANS_STORE = "setDefaultPlansStore",
-  SET_DEFAULT_ROLE_STORE = "setDefaultRoleStore"
+  SET_DEFAULT_ROLE_STORE = "setDefaultRoleStore",
+  SET_FILTERED_INVESTMENT_OPPORTUNITIES = "setFilteredInvestmentOppertunities"
 }
 
 export { Actions, Mutations };
