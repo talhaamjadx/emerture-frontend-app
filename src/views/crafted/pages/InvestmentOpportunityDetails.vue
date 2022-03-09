@@ -12,7 +12,7 @@
               position-relative
             "
           >
-            <img
+            <img style="object-fit: contain;"
               :src="business.logo ?? require('@/assets/img/blank.png')"
               alt="image"
             />
