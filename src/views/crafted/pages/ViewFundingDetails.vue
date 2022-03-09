@@ -139,8 +139,22 @@
         <div class="row mt-4 mb-3 pr-3">
           <div class="col"></div>
           <div class="col text-end">
-            <span class="text-royalblue py-1 px-2 rounded-5 font-weight-bold"
-              >Awaiting Approval</span
+            <span
+              :style="
+                fundingRound?.status == 1
+                  ? 'background-color: green; color: white'
+                  : fundingRound?.status == 2
+                  ? 'background-color: red; color: white'
+                  : ''
+              "
+              class="text-royalblue py-1 px-2 rounded-5 font-weight-bold"
+              >{{
+                fundingRound?.status == 0
+                  ? "Awaiting Approval"
+                  : fundingRound?.status == 1
+                  ? "Approved"
+                  : "Rejected"
+              }}</span
             >
           </div>
         </div>
@@ -151,7 +165,7 @@
           <div class="row mb-7">
             <!--begin::Col-->
             <InvestmentHistory
-              v-if="fundingRound?.fundingRoundInvestments ?? false"
+              v-if="fundingRound?.fundingRoundInvestments?.length ?? false"
               :investments="fundingRound?.fundingRoundInvestments ?? []"
               :currencyCode="
                 currencyCodeSymbolEnums[business?.currencyCode ?? 'pound']
@@ -162,7 +176,11 @@
           </div>
         </div>
       </div>
-      <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+      <div
+        v-if="fundingRound?.status == 1"
+        class="card mb-5 mb-xl-10"
+        id="kt_profile_details_view"
+      >
         <div class="card-body p-9">
           <div class="row my-3"><h3>Investment Secured On This Round</h3></div>
           <div class="row mb-7">
@@ -184,15 +202,19 @@
               </div>
             </div>
           </div>
-          <button :data-kt-indicator="loading ? 'on' : null" @click="createInvestment" class="btn btn-primary float-end">
+          <button
+            :data-kt-indicator="loading ? 'on' : null"
+            @click="createInvestment"
+            class="btn btn-primary float-end"
+          >
             <span v-if="!loading" class="indicator-label">Save</span>
-          <span class="indicator-progress">
-            Please wait...
-            <span
-              v-if="loading"
-              class="spinner-border spinner-border-sm align-middle ms-2"
-            ></span
-          ></span>
+            <span class="indicator-progress">
+              Please wait...
+              <span
+                v-if="loading"
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span
+            ></span>
           </button>
         </div>
       </div>
@@ -239,36 +261,36 @@ export default defineComponent({
       Object.keys(fundingRound.value).length ? true : false
     );
     const createInvestment = async () => {
-      loading.value = true
+      loading.value = true;
       try {
         const response = await store.dispatch(
           Actions.CREATE_FUNDING_ROUND_INVESTMENT,
           {
             fundingRoundId: route.params.id,
             investment: investmentAmount.value,
-            businessId: route.query.businessId
+            businessId: route.query.businessId,
           }
         );
         if (!response?.success) throw new Error(response?.data?.message);
         investmentAmount.value = "";
         await refresh();
-        loading.value = false
+        loading.value = false;
         store.commit("setAlert", {
-              message: "Success",
-              subMessage: "Investment Created",
-              variant: "primary",
-              duration: 4000,
-              show: true,
-            });
+          message: "Success",
+          subMessage: "Investment Created",
+          variant: "primary",
+          duration: 4000,
+          show: true,
+        });
       } catch (err) {
-        loading.value = false
-         store.commit("setAlert", {
-              message: "Error",
-              subMessage: err,
-              variant: "danger",
-              duration: 4000,
-              show: true,
-            });
+        loading.value = false;
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: err,
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
       }
     };
     const formatDate = (date) => moment(date).format("YYYY-MM-DD");

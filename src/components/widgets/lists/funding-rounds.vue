@@ -154,8 +154,22 @@
           Total Investment: {{ formatter(round?.totalInvestment, "GBP") }}
         </div>
         <div class="col text-end mx-3">
-          <span class="text-royalblue py-1 px-2 rounded-5 font-weight-bold"
-            >Awaiting Approval</span
+          <span
+            :style="
+              round?.status == 1
+                ? 'background-color: green; color: white'
+                : round?.status == 2
+                ? 'background-color: red; color: white'
+                : ''
+            "
+            class="text-royalblue py-1 px-2 rounded-5 font-weight-bold"
+            >{{
+              round?.status == 0
+                ? "Awaiting Approval"
+                : round?.status == 1
+                ? "Approved"
+                : "Rejected"
+            }}</span
           >
         </div>
       </div>
