@@ -124,21 +124,74 @@
             </div>
             <!--end::Item-->
           </div>
+          <div>
+            <!--begin::Item-->
+            <div
+              :class="['mb-7', `bg-light-info`]"
+              class="d-flex align-items-center rounded p-5 mb-7"
+            >
+              <!--begin::Icon-->
+              <span :class="`svg-icon-info`" class="svg-icon me-5">
+                <span class="svg-icon svg-icon-1">
+                  <inline-svg src="media/icons/duotune/abstract/abs027.svg" />
+                </span>
+              </span>
+              <!--end::Icon-->
+
+              <!--begin::Title-->
+              <div class="flex-grow-1 me-2">
+                <a
+                  href="#"
+                  class="fw-bolder text-gray-800 text-hover-primary fs-6"
+                  >Total Investment</a
+                >
+              </div>
+              <!--end::Title-->
+
+              <!--begin::Lable-->
+              <span :class="`text-info`" class="fw-bolder py-1">{{
+                formatter(round?.totalInvestment, "GBP")
+              }}</span>
+              <!--end::Lable-->
+            </div>
+            <!--end::Item-->
+          </div>
+          <div>
+          <div class="row my-3"><h3>Investment History</h3></div>
+          <div class="row mb-7">
+            <!--begin::Col-->
+            <InvestmentHistory
+              v-if="round?.fundingRoundInvestments?.length ?? false"
+              :investments="round?.fundingRoundInvestments ?? []"
+              :currencyCode="
+                currencyCodeSymbolEnums[business?.currencyCode ?? 'pound']
+              "
+            />
+            <div v-else class="d-flex justify-content-center">No Entries</div>
+            <!--end::Col-->
+          </div>
         </div>
-        <!--end::Body-->
+        </div>
       </div>
       <div class="row mt-4 mb-3 pr-3">
-        <div class="col mx-3">
-          Total Investment: {{ formatter(round?.totalInvestment, "GBP") }}
-        </div>
         <div class="col text-end mx-3">
-          <span :style="round?.status == 1 ? 'background-color: green; color: white' : (round?.status == 2 ? 'background-color: red; color: white' : '')" class="text-royalblue py-1 px-2 rounded-5 font-weight-bold">{{
-            round?.status == 0
-              ? "Awaiting Approval"
-              : round?.status == 1
-              ? "Approved"
-              : "Rejected"
-          }}</span>
+          <span
+            :style="
+              round?.status == 1
+                ? 'background-color: green; color: white'
+                : round?.status == 2
+                ? 'background-color: red; color: white'
+                : ''
+            "
+            class="text-royalblue py-1 px-2 rounded-5 font-weight-bold"
+            >{{
+              round?.status == 0
+                ? "Awaiting Approval"
+                : round?.status == 1
+                ? "Approved"
+                : "Rejected"
+            }}</span
+          >
         </div>
       </div>
     </section>
@@ -150,6 +203,7 @@
 import { defineComponent, ref, watchEffect, computed } from "vue";
 import { mainFormatter } from "@/utils/index";
 import moment from "moment";
+import InvestmentHistory from "@/components/widgets/lists/Widget5.vue";
 
 export default defineComponent({
   name: "funding-rounds",
@@ -157,8 +211,15 @@ export default defineComponent({
     widgetClasses: String,
     fundingRounds: Array,
   },
-  components: {},
+  components: {
+    InvestmentHistory,
+  },
   setup(props) {
+    const currencyCodeSymbolEnums = {
+      dollar: "$",
+      pound: "£",
+      euro: "€",
+    };
     const rounds = ref<Array<Record<string, unknown>>>([]);
     const formatDate = (date) => moment(date).format("YYYY-MM-DD");
     const formatter = computed(() => mainFormatter);
@@ -166,6 +227,7 @@ export default defineComponent({
       rounds.value = props.fundingRounds as Array<Record<string, unknown>>;
     });
     return {
+      currencyCodeSymbolEnums,
       rounds,
       formatter,
       formatDate,
