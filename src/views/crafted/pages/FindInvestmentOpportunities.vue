@@ -54,7 +54,7 @@
               data-bs-parent="#kt_accordion_1"
             >
               <div class="accordion-body">
-                <div class="row" v-if="globalSearch">
+                <div class="row">
                   <div
                     v-for="is in industrySectors"
                     :key="is.id"
@@ -79,9 +79,6 @@
                     </label>
                   </div>
                 </div>
-                <p v-else>
-                  Turn on global search to filter by industry sectors.
-                </p>
               </div>
             </div>
           </div>
@@ -138,7 +135,7 @@ export default defineComponent({
   },
   setup() {
     const loading = ref<boolean>(false);
-    const globalSearch = ref<boolean>(true);
+    const globalSearch = ref<boolean>(false);
     watch(globalSearch, (value) => {
       if (value) {
         selectedIndustrySectors.value = industrySectors.value?.map(
