@@ -86,7 +86,7 @@
         <p v-if="showError" style="color: red">
           Select Atleast One To Find Experts
         </p>
-        <div v-if="globalSearch" class="mt-8">
+        <div class="mt-8">
           <button
             :data-kt-indicator="loading ? 'on' : null"
             @click="findOpportunityInvestment"
