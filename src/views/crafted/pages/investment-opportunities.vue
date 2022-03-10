@@ -36,28 +36,30 @@
                 >
                   View Investment Opportunity
                 </router-link>
-                <button
-                  v-if="
-                    !connectedIds[opportunity.id] &&
-                    !props.fromConnectedInvestmentOpportunities
-                  "
-                  data-bs-toggle="modal"
-                  :data-bs-target="`#kt_modal_delete_round_disclaimer_${opportunity.id}`"
-                  type="button"
-                  style="width: 70%; display: block; margin: auto"
-                  class="btn btn-danger my-sm-2 my-3"
-                >
-                  Connect
-                </button>
-                <button
-                  v-else
-                  disabled
-                  type="button"
-                  style="width: 70%; display: block; margin: auto"
-                  class="btn btn-danger my-sm-2 my-3"
-                >
-                  Connected
-                </button>
+                <div v-if="hasInvestorRole">
+                  <button
+                    v-if="
+                      !connectedIds[opportunity.id] &&
+                      !props.fromConnectedInvestmentOpportunities
+                    "
+                    data-bs-toggle="modal"
+                    :data-bs-target="`#kt_modal_delete_round_disclaimer_${opportunity.id}`"
+                    type="button"
+                    style="width: 70%; display: block; margin: auto"
+                    class="btn btn-danger my-sm-2 my-3"
+                  >
+                    Connect
+                  </button>
+                  <button
+                    v-else
+                    disabled
+                    type="button"
+                    style="width: 70%; display: block; margin: auto"
+                    class="btn btn-danger my-sm-2 my-3"
+                  >
+                    Connected
+                  </button>
+                </div>
               </div>
 
               <div
@@ -86,12 +88,16 @@
         </div> -->
       </div>
     </div>
-    <DisclaimerModal :key="opportunity.id" @connected="refresh()" :businessId="opportunity.id" />
+    <DisclaimerModal
+      :key="opportunity.id"
+      @connected="refresh()"
+      :businessId="opportunity.id"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, onMounted, watchEffect } from "vue";
+import { ref, defineComponent, onMounted, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import DisclaimerModal from "@/components/modals/forms/DisclaimerModal.vue";
@@ -111,6 +117,12 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore();
+    const user = computed(() => store.getters.getUser);
+    const hasInvestorRole = computed(() => {
+      return user.value?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "investor"
+      );
+    });
     const investmentOpportunities = ref<Record<string, unknown>>({});
     let connectedIds = ref<Record<string, unknown>>({});
     const refresh = async () => {
@@ -137,7 +149,8 @@ export default defineComponent({
       investmentOpportunities,
       connectedIds,
       props,
-      refresh
+      refresh,
+      hasInvestorRole,
     };
   },
 });

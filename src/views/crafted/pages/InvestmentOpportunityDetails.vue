@@ -12,12 +12,32 @@
               position-relative
             "
           >
-            <img style="object-fit: contain;"
+            <img
+              style="object-fit: contain"
               :src="business.logo ?? require('@/assets/img/blank.png')"
               alt="image"
             />
           </div>
           <h3 class="fw-bolder m-0 mx-3">{{ business.name }}</h3>
+        </div>
+        <div v-if="hasInvestorRole" class="d-flex align-items-center">
+          <button
+            v-if="!connectedIds[business.id]"
+            data-bs-toggle="modal"
+            :data-bs-target="`#kt_modal_delete_round_disclaimer_${business.id}`"
+            type="button"
+            class="btn btn-primary my-sm-2 my-3"
+          >
+            Request Virtual Pitch Event
+          </button>
+          <button
+            v-else
+            disabled
+            type="button"
+            class="btn btn-primary my-sm-2 my-3"
+          >
+            Requested
+          </button>
         </div>
         <!--end::Card title-->
 
@@ -220,7 +240,11 @@
       </div>
     </div>
   </div>
-  <!--end::details View-->
+  <DisclaimerModal
+    :key="business.id"
+    @connected="refresh()"
+    :businessId="business.id"
+  />
 </template>
 
 <script lang="ts">
@@ -230,14 +254,22 @@ import { useStore } from "vuex";
 import { Actions } from "@/store/enums/StoreEnums";
 import { useRoute } from "vue-router";
 import FundingRounds from "@/components/widgets/lists/funding-round-details-only.vue";
+import DisclaimerModal from "@/components/modals/forms/DisclaimerModal.vue";
 
 export default defineComponent({
   name: "business-details",
   components: {
-    FundingRounds
+    FundingRounds,
+    DisclaimerModal,
   },
   setup() {
     const store = useStore();
+    const user = computed(() => store.getters.getUser)
+    const hasInvestorRole = computed(() => {
+      return user.value?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "investor"
+      );
+    });
     const route = useRoute();
     const business = ref<Record<string, unknown>>({});
     const toUpperCase = (value) => {
@@ -248,6 +280,21 @@ export default defineComponent({
         return value ? JSON.parse(value) : [];
       } catch (err) {
         return [];
+      }
+    };
+    let connectedIds = ref<Record<string, unknown>>({});
+    const refresh = async () => {
+      try {
+        const response = await store.dispatch(
+          Actions.CONNECTED_INVESTMENT_OPPORTUNITIES
+        );
+        if (!response.success) throw new Error();
+        connectedIds.value = {};
+        for (let i = 0; i < response.data.length; i++) {
+          connectedIds.value[response.data?.[i]?.founderBusiness?.id] = true;
+        }
+      } catch (err) {
+        //
       }
     };
     onMounted(async () => {
@@ -261,15 +308,19 @@ export default defineComponent({
       } catch (err) {
         //
       }
+      refresh();
       setCurrentPageBreadcrumbs("Investment Opportunity Details", [
         "Find Investment Opportunities",
       ]);
     });
     return {
+      connectedIds,
       business,
       toUpperCase,
       parseJSON,
       route,
+      refresh,
+      hasInvestorRole
     };
   },
 });

@@ -22,7 +22,7 @@
           </div>
           <h3 class="fw-bolder m-0 mx-3">{{ expert.name }}</h3>
         </div>
-        <div class="d-flex align-items-center mx-5">
+        <div v-if="hasFounderRole" class="d-flex align-items-center mx-5">
           <a
             v-if="isConnected"
             href="javacript:void(0)"
@@ -54,7 +54,7 @@
               ></span
             ></span>
           </a>
-          </div>
+        </div>
       </div>
       <!--begin::Card header-->
 
@@ -95,7 +95,9 @@
         <!--end::Input group-->
         <div class="row mb-7">
           <!--begin::Label-->
-          <label class="col-lg-4 fw-bold text-muted">Professional Summary</label>
+          <label class="col-lg-4 fw-bold text-muted"
+            >Professional Summary</label
+          >
           <!--end::Label-->
 
           <!--begin::Col-->
@@ -220,6 +222,11 @@ export default defineComponent({
   setup() {
     const loading = ref<boolean>(false);
     const user = computed(() => store.getters.getUser);
+    const hasFounderRole = computed(() => {
+      return user.value?.userRoles?.some(
+        (role) => role.name.toLowerCase() == "founder"
+      );
+    });
     const op = computed(() => objectPath);
     const store = useStore();
     const route = useRoute();
@@ -305,6 +312,7 @@ export default defineComponent({
       expert,
       op,
       arrayStringConstructor,
+      hasFounderRole,
     };
   },
 });
