@@ -203,7 +203,9 @@
         <i class="fas fa-trash" @click="removeTeamMember(index)"></i>
       </div>
     </div>
-    <!--begin::Input group-->
+    <p v-if="isAnyTeamMemberAdded" style="color: red">
+      Kindly add a Team Member to continue
+    </p>
   </div>
   <!--end::Wrapper-->
 </template>
@@ -244,9 +246,14 @@ export default defineComponent({
     const teamMembers = ref<Array<TeamMember>>([]);
     const formData = ref<FormData>(props.formDataTemp);
     const business = inject("business");
+    const isAnyTeamMemberAdded = ref<boolean>(false);
     watch(
       () => props.touchedParent,
-      (value) => (touched.value = value)
+      (value) => {
+        touched.value = value;
+        if (value && !teamMembers.value?.length)
+          isAnyTeamMemberAdded.value = true;
+      }
     );
     watch(business as Record<string, unknown>, (value) => {
       try {
@@ -266,6 +273,7 @@ export default defineComponent({
         introduction: "",
       });
       touched.value = false;
+      isAnyTeamMemberAdded.value = false
       emit("resetTouch", false);
       emit("teamMembersLength", teamMembers.value.length);
     };
@@ -293,6 +301,7 @@ export default defineComponent({
       emit("form-data", formData.value);
     };
     return {
+      isAnyTeamMemberAdded,
       fileAdded,
       teamMembers,
       formData,
