@@ -237,6 +237,9 @@
         </div>
         <div data-kt-stepper-element="content">
           <IndustrySectorsBusinessesUpdate
+            @industrySectorsLength="industrySectorsLength = $event"
+            @resetTouch="touchedIndustrySector = $event"
+            :touchedParent="touchedIndustrySector"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></IndustrySectorsBusinessesUpdate>
@@ -370,6 +373,7 @@ export default defineComponent({
     const fileSizeError = ref<boolean>(false);
     const touched = ref<boolean>(false);
     const teamMembersLength = ref<number>(0);
+    const industrySectorsLength = ref<number>(0);
     const router = useRouter();
     const route = useRoute();
     const store = useStore();
@@ -406,8 +410,11 @@ export default defineComponent({
         } else formDataTemp.value.append(key, business.value[key] as string);
       }
     };
+    const touchedIndustrySector = ref<boolean>(false);
     const handleTouch = () => {
       if (_stepperObj.value?.currentStepIndex == 6) touched.value = true;
+      if (_stepperObj.value?.currentStepIndex == 7)
+        touchedIndustrySector.value = true;
     };
     onMounted(async () => {
       _stepperObj.value = StepperComponent.createInsance(
@@ -527,6 +534,13 @@ export default defineComponent({
     });
 
     const handleStep = handleSubmit((values) => {
+      if (!teamMembersLength.value && _stepperObj.value?.currentStepIndex == 6)
+        return;
+      if (
+        !industrySectorsLength.value &&
+        _stepperObj.value?.currentStepIndex == 7
+      )
+        return;
       if (fileSizeError.value) return;
       formData.value = {
         ...formData.value,
@@ -553,14 +567,14 @@ export default defineComponent({
     };
 
     const formSubmit = async () => {
-      loading.value = true
+      loading.value = true;
       try {
         const response = await store.dispatch(Actions.UPDATE_FOUNDER_BUSINESS, {
           id: route.params.id,
           payload: formDataTemp.value,
         });
         if (response !== true) throw new Error();
-        loading.value = false
+        loading.value = false;
         store.commit("setAlert", {
           message: "Success",
           subMessage: `Investment Opportunity ${"Updated"}`,
@@ -572,7 +586,7 @@ export default defineComponent({
           router.push("/businesses");
         }, 2000);
       } catch (err) {
-        loading.value = false
+        loading.value = false;
         store.commit("setAlert", {
           message: "Error",
           subMessage: "`Investment Opportunity Updation Unsuccessful`",
@@ -583,6 +597,8 @@ export default defineComponent({
       }
     };
     return {
+      touchedIndustrySector,
+      industrySectorsLength,
       loading,
       fileSizeError,
       touched,
