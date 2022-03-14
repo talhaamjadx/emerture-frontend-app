@@ -6,9 +6,7 @@
       <!--begin::Title-->
       <h2 class="fw-bolder text-dark">Investment Ticket Size</h2>
       <div class="text-gray-400 fw-bold fs-6">
-        Please confirm your minimum and maximum ticket size for investments.
-        This information would help in creating matches with relevant investment
-        rounds.
+        Please share your investment thesis populating the field items below. This information will help in creating suitable matches with investment rounds that are a close fit.
       </div>
     </div>
     <!--end::Heading-->

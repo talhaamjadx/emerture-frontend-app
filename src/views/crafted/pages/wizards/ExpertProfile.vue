@@ -300,7 +300,6 @@ export default defineComponent({
   },
   setup() {
     const showSuccess = ref<boolean>(false);
-    const router = useRouter();
     const loading = ref<boolean>(false);
     const store = useStore();
     let roleId = 0;

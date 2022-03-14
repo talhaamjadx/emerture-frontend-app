@@ -1,6 +1,32 @@
 <template>
-  <!--begin::Stepper-->
+  <div v-if="showSuccess" class="card my-3">
+    <!--begin::Card body-->
+    <div class="card-body p-0">
+      <!--begin::Wrapper-->
+      <div class="card-px text-center py-20 my-10">
+        <!--begin::Title-->
+        <h2 class="fs-2x fw-bolder mb-10"></h2>
+        <!--end::Title-->
+
+        <!--begin::Description-->
+        <p class="text-gray-400 fs-4 fw-bold mb-10">
+          Thank you for submitting your profile. A member of the team will
+          reveiw your profile and respond shortly
+        </p>
+        <router-link
+          to="/add-role"
+          as="button"
+          type="button"
+          class="btn btn-primary"
+        >
+          <span>Continue</span>
+        </router-link>
+      </div>
+    </div>
+    <!--end::Card body-->
+  </div>
   <div
+    v-else
     class="
       stepper stepper-pills stepper-column
       d-flex
@@ -430,6 +456,7 @@ export default defineComponent({
     FindExperts,
   },
   setup() {
+    const showSuccess = ref<boolean>(false);
     const opensAtAdded = ref<boolean>(false);
     const closesAtAdded = ref<boolean>(false);
     const areDatesValid = ref<boolean>(false);
@@ -663,6 +690,7 @@ export default defineComponent({
           duration: 4000,
           show: true,
         });
+        showSuccess.value = true
         setTimeout(async () => {
           try {
             const response = await store.dispatch(Actions.AUTH_USER);
@@ -698,6 +726,7 @@ export default defineComponent({
     };
 
     return {
+      showSuccess,
       touchedIndustrySector,
       industrySectorsLength,
       opensAtAdded,
