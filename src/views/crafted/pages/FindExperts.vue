@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p v-if="!areAtleastThreeExpertsConnected" style="color: red;">Please select a minimum of 3 expert profiles to address any gaps/challenges that the business is currently facing. The aim is to provide access to a breadth of industry expertise via this step of expert curation.</p>
     <div class="card">
       <div class="card-body">
         <div class="accordion" id="kt_accordion_1">
@@ -13,7 +14,7 @@
                 aria-expanded="true"
                 aria-controls="kt_accordion_1_body_1"
               >
-                Areas of Expertise
+                Areas of Expertise Sought
               </button>
             </h2>
             <div
@@ -59,7 +60,7 @@
                 aria-expanded="false"
                 aria-controls="kt_accordion_1_body_2"
               >
-                Industry Sectors
+                Select Industry Sector(s)
               </button>
             </h2>
             <div
@@ -142,6 +143,9 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const user = computed(() => store.getters.getUser);
+    const areAtleastThreeExpertsConnected = computed(() => {
+      return objectPath.get(user.value, 'founderRequisiteExpert.length', 0) >= 3
+    })
     const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
     watchEffect(() => {
       founderRequisiteExperts.value = user.value.founderRequisiteExpert;
@@ -213,6 +217,7 @@ export default defineComponent({
     });
 
     return {
+      areAtleastThreeExpertsConnected,
       showError,
       expertise,
       industrySectors,
