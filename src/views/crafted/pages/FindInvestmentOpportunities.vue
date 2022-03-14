@@ -35,7 +35,7 @@
                         class="my-2"
                         for="flexSwitchDefault"
                       >
-                        Global Search
+                        All Listed Opportunities
                       </p>
                       <input
                         v-model="globalSearch"

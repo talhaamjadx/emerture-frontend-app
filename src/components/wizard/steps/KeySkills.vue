@@ -8,7 +8,7 @@
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
-      <label class="form-label">Areas of Expertise</label>
+      <label class="form-label">Areas of Expertise Sought</label>
       <!--end::Label-->
       <div class="row">
         <div
@@ -33,7 +33,7 @@
     </div>
     <div class="fv-row mb-10">
       <!--end::Label-->
-      <label class="form-label">Industry Sectors</label>
+      <label class="form-label">Select Industry Sector(s)</label>
       <!--end::Label-->
       <div class="row">
         <div
