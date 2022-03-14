@@ -206,6 +206,9 @@
         ></i>
       </div>
     </div>
+    <p v-if="isAnyTeamMemberAdded" style="color: red">
+      Kindly add a Team Member to continue
+    </p>
     <!--begin::Input group-->
   </div>
   <!--end::Wrapper-->
@@ -244,9 +247,14 @@ export default defineComponent({
   setup(props, { emit }) {
     const store = useStore();
     const touched = ref<boolean>(false);
+    const isAnyTeamMemberAdded = ref<boolean>(false);
     watch(
       () => props.touchedParent,
-      (value) => (touched.value = value)
+      (value) => {
+        touched.value = value;
+        if (value && !teamMembers.value?.length)
+          isAnyTeamMemberAdded.value = true;
+      }
     );
     const businessDraft = computed(() => store.getters.businessDraftGetter);
     let tempBusinessDraft = { ...businessDraft.value };
@@ -266,6 +274,7 @@ export default defineComponent({
         introduction: "",
       });
       touched.value = false;
+      isAnyTeamMemberAdded.value = false
       emit("resetTouch", false);
       emit("teamMembersLength", teamMembers.value.length);
       tempBusinessDraft["teamMembers"] = teamMembers.value;
@@ -311,6 +320,7 @@ export default defineComponent({
       }
     };
     return {
+      isAnyTeamMemberAdded,
       createDraft,
       fileAdded,
       teamMembers,

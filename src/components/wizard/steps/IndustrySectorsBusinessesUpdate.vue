@@ -30,6 +30,9 @@
       </div>
       <!--end::Input-->
     </div>
+    <p v-if="isAnyIndustrySectorSelected" style="color: red">
+      Kindly select an industry sector to coontinue
+    </p>
   </div>
   <!--end::Wrapper-->
 </template>
@@ -45,6 +48,10 @@ export default defineComponent({
   props: {
     formDataTemp: {
       type: FormData,
+      required: true,
+    },
+    touchedParent: {
+      type: Boolean,
       required: true,
     },
   },
@@ -64,8 +71,19 @@ export default defineComponent({
             (sector) => sector.id
           ) as Array<number>),
         ];
+        emit("industrySectorsLength", selectedIndustrySectors.value.length);
       }
     });
+    const touched = ref<boolean>(false);
+    watch(
+      () => props.touchedParent,
+      (value) => {
+        touched.value = value;
+        if (value && !selectedIndustrySectors.value?.length)
+          isAnyIndustrySectorSelected.value = true;
+      }
+    );
+    const isAnyIndustrySectorSelected = ref<boolean>(false);
     watch(
       () => props.formDataTemp,
       () => {
@@ -99,6 +117,8 @@ export default defineComponent({
           }
         );
       }
+      emit("industrySectorsLength", selectedIndustrySectors.value.length);
+      isAnyIndustrySectorSelected.value = false
       fieldChanged();
     };
     onMounted(() => {
@@ -106,6 +126,7 @@ export default defineComponent({
         store.dispatch(Actions.GET_INDUSTRY_SECTORS);
     });
     return {
+      isAnyIndustrySectorSelected,
       formData,
       fieldChanged,
       industrySectors,

@@ -4,8 +4,7 @@
     <div class="mb-13 text-center">
       <h1 class="fs-2hx fw-bolder mb-5">Select Your Profile Type</h1>
       <div class="text-gray-400 fw-bold fs-5">
-        Access a curated ecosystem of Investors, industry experts and investee
-        businesses
+        Access a curated ecosystem of Investors, industry experts and investment opportunities
       </div>
       <div v-if="!isAnyRoleSelected" class="text-gray-400 fw-bold fs-5">
         Please select a role to start using the platform

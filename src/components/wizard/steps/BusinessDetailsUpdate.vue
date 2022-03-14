@@ -98,7 +98,6 @@
         <option selected value="uk">UK</option>
         <option value="us">US</option>
         <option value="eu">EU</option>
-        <option value="global">Global</option>
       </Field>
       <!--end::Input-->
       <ErrorMessage

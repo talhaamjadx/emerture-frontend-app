@@ -275,6 +275,9 @@
         </div>
         <div data-kt-stepper-element="content">
           <IndustrySectorsBusinesses
+            @industrySectorsLength="industrySectorsLength = $event"
+            @resetTouch="touchedIndustrySector = $event"
+            :touchedParent="touchedIndustrySector"
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
           ></IndustrySectorsBusinesses>
@@ -433,6 +436,7 @@ export default defineComponent({
     const loading = ref<boolean>(false);
     const touched = ref<boolean>(false);
     const teamMembersLength = ref<number>(0);
+    const industrySectorsLength = ref<number>(0);
     let roleId = 0;
     const roles = computed(() => {
       return store.getters.getRolesData;
@@ -458,8 +462,11 @@ export default defineComponent({
       expertIndustrySectors: [],
       expertExpertise: [],
     });
+    const touchedIndustrySector = ref<boolean>(false);
     const handleTouch = () => {
       if (_stepperObj.value?.currentStepIndex == 6) touched.value = true;
+      if (_stepperObj.value?.currentStepIndex == 7)
+        touchedIndustrySector.value = true;
     };
     onMounted(async () => {
       _stepperObj.value = StepperComponent.createInsance(
@@ -575,10 +582,21 @@ export default defineComponent({
     });
 
     const handleStep = handleSubmit((values) => {
+      if (!teamMembersLength.value && _stepperObj.value?.currentStepIndex == 6)
+        return;
+      if (
+        !industrySectorsLength.value &&
+        _stepperObj.value?.currentStepIndex == 7
+      )
+        return;
       if (fileSizeError.value) return;
       if (areDatesValid.value && _stepperObj.value?.currentStepIndex == 8)
         return;
-      if ((!opensAtAdded.value || !closesAtAdded.value) && _stepperObj.value?.currentStepIndex == 8) return;
+      if (
+        (!opensAtAdded.value || !closesAtAdded.value) &&
+        _stepperObj.value?.currentStepIndex == 8
+      )
+        return;
       formData.value = {
         ...formData.value,
         ...values,
@@ -680,6 +698,8 @@ export default defineComponent({
     };
 
     return {
+      touchedIndustrySector,
+      industrySectorsLength,
       opensAtAdded,
       closesAtAdded,
       areDatesValid,
@@ -696,7 +716,17 @@ export default defineComponent({
       teamMembersLength,
       touched,
       handleTouch,
+      _stepperObj,
     };
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (from.name === "expert-global") {
+        setTimeout(() => {
+          (vm as any)._stepperObj.goto(9);
+        }, 1);
+      }
+    });
   },
 });
 </script>
