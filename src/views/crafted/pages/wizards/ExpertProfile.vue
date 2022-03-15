@@ -179,7 +179,6 @@
           <ShowcaseYourExpertise
             @form-data="formDataTemp = $event"
             :formDataTemp="formDataTemp"
-            :isDocumentAddedProp="isDocumentAdded"
           ></ShowcaseYourExpertise>
         </div>
         <!--end::Step 3-->
@@ -303,7 +302,6 @@ export default defineComponent({
     const loading = ref<boolean>(false);
     const store = useStore();
     let roleId = 0;
-    const isDocumentAdded = ref<boolean>(true);
     const formDataTemp = ref<FormData>(new FormData());
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
@@ -413,17 +411,6 @@ export default defineComponent({
     });
 
     const handleStep = handleSubmit((values) => {
-      if (!formDataTemp.value.get("documents") && currentStepIndex.value == 2) {
-        if (
-          !expertProfile?.value?.document &&
-          !user.value?.userRoles?.some(
-            (role) => role.name.toLowerCase() == "founder"
-          )
-        ) {
-          isDocumentAdded.value = false;
-          return;
-        }
-      }
       formData.value = {
         ...formData.value,
         ...values,
@@ -511,7 +498,6 @@ export default defineComponent({
     return {
       showSuccess,
       loading,
-      isDocumentAdded,
       doesExpertProfileExist,
       formDataTemp,
       verticalWizardRef,

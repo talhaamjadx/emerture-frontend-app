@@ -183,65 +183,80 @@
       >
         <div class="card-body p-9">
           <div class="row my-3"><h3>Investment Secured On This Round</h3></div>
-          <div class="row mb-7">
-            <!--begin::Col-->
-            <div class="col-md-12">
-              <div class="fv-row mb-10">
-                <!--begin::Label-->
-                <label class="form-label required"
-                  >Investor</label
-                >
-                <!--end::Label-->
+          <form @submit="createInvestment">
+            <div class="row mb-7">
+              <div class="col-md-12">
+                <div class="fv-row mb-10">
+                  <!--begin::Label-->
+                  <label class="form-label required">Investor</label>
+                  <!--end::Label-->
 
-                <!--begin::Input-->
-                <Field
-                  v-model="investorId"
-                  name="notification"
-                  class="form-select form-select-lg form-select-solid"
-                  data-control="select2"
-                  data-placeholder="Select..."
-                  data-allow-clear="true"
-                  data-hide-search="true"
-                  as="select"
-                >
-                  <option selected value=""></option>
-                </Field>
-                <!--end::Input-->
-                <ErrorMessage
-                  name="notification"
-                  class="fv-plugins-message-container invalid-feedback"
-                ></ErrorMessage>
-              </div>
-              <div class="fv-row mb-10">
-                <!--begin::Label-->
-                <label class="form-label required">Add Investment</label>
-                <el-input v-model="investmentAmount" placeholder="0.00">
-                  <template #prepend>{{
-                    currencyCodeSymbolEnums[
-                      op.get(business, "currencyCode", "pound")
-                    ]
-                  }}</template>
-                  <template #append>{{
-                    currencyCodeEnums[op.get(business, "currencyCode", "pound")]
-                  }}</template>
-                </el-input>
+                  <!--begin::Input-->
+                  <Field
+                    v-model="investorId"
+                    name="investor"
+                    class="form-select form-select-lg form-select-solid"
+                    data-control="select2"
+                    data-placeholder="Select..."
+                    data-allow-clear="true"
+                    data-hide-search="true"
+                    as="select"
+                  >
+                    <option
+                      v-for="investor in investors"
+                      :key="investor.id"
+                      :value="investor.id"
+                    >
+                      {{ investor?.user?.firstName }}
+                      {{ investor?.user?.lastName }}
+                    </option>
+                  </Field>
+                  <!--end::Input-->
+                  <ErrorMessage
+                    name="investor"
+                    class="fv-plugins-message-container invalid-feedback"
+                  ></ErrorMessage>
+                </div>
+                <div class="fv-row mb-10">
+                  <!--begin::Label-->
+                  <label class="form-label required">Add Investment</label>
+                  <el-input
+                    name="amount"
+                    v-model="investmentAmount"
+                    placeholder="0.00"
+                  >
+                    <template #prepend>{{
+                      currencyCodeSymbolEnums[
+                        op.get(business, "currencyCode", "pound")
+                      ]
+                    }}</template>
+                    <template #append>{{
+                      currencyCodeEnums[
+                        op.get(business, "currencyCode", "pound")
+                      ]
+                    }}</template>
+                  </el-input>
+                  <p v-if="!investmentAmount && touched" style="color: red">
+                    Amount is required!
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          <button
-            :data-kt-indicator="loading ? 'on' : null"
-            @click="createInvestment"
-            class="btn btn-primary float-end"
-          >
-            <span v-if="!loading" class="indicator-label">Save</span>
-            <span class="indicator-progress">
-              Please wait...
-              <span
-                v-if="loading"
-                class="spinner-border spinner-border-sm align-middle ms-2"
-              ></span
-            ></span>
-          </button>
+            <button
+              :data-kt-indicator="loading ? 'on' : null"
+              @click="touch"
+              class="btn btn-primary float-end"
+            >
+              <span v-if="!loading" class="indicator-label">Save</span>
+              <span class="indicator-progress">
+                Please wait...
+                <span
+                  v-if="loading"
+                  class="spinner-border spinner-border-sm align-middle ms-2"
+                ></span
+              ></span>
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -258,17 +273,27 @@ import { mainFormatter } from "@/utils/index";
 import moment from "moment";
 import objectPath from "object-path";
 import InvestmentHistory from "@/components/widgets/lists/Widget5.vue";
-import { Field, ErrorMessage } from "vee-validate";
+import { Field, ErrorMessage, useForm } from "vee-validate";
+import * as Yup from "yup";
 
 export default defineComponent({
   name: "view-funding-round",
   components: {
     InvestmentHistory,
     Field,
-    ErrorMessage
+    ErrorMessage,
   },
   setup() {
-    const investorId = ref<string | number>("")
+    const { resetForm, handleSubmit } = useForm({
+      validationSchema: Yup.object({
+        investor: Yup.string().required().label("Investor"),
+      }),
+    });
+    const touched = ref<boolean>(false);
+    const touch = () => {
+      touched.value = true;
+    };
+    const investorId = ref<string | number>("");
     const loading = ref<boolean>(false);
     const store = useStore();
     const route = useRoute();
@@ -290,7 +315,8 @@ export default defineComponent({
     const fundingRoundExists = computed(() =>
       Object.keys(fundingRound.value).length ? true : false
     );
-    const createInvestment = async () => {
+    const createInvestment = handleSubmit(async () => {
+      if (!investmentAmount.value) return;
       loading.value = true;
       try {
         const response = await store.dispatch(
@@ -299,6 +325,7 @@ export default defineComponent({
             fundingRoundId: route.params.id,
             investment: investmentAmount.value,
             businessId: route.query.businessId,
+            investorId: investorId.value,
           }
         );
         if (!response?.success) throw new Error(response?.data?.message);
@@ -312,6 +339,8 @@ export default defineComponent({
           duration: 4000,
           show: true,
         });
+        investorId.value = ""
+        touched.value = false
       } catch (err) {
         loading.value = false;
         store.commit("setAlert", {
@@ -322,7 +351,7 @@ export default defineComponent({
           show: true,
         });
       }
-    };
+    });
     const formatDate = (date) => moment(date).format("YYYY-MM-DD");
     const formatter = computed(() => mainFormatter);
     const refresh = async () => {
@@ -351,6 +380,7 @@ export default defineComponent({
           });
       });
     };
+    const investors = ref<Array<Record<string, unknown>>>([]);
     onMounted(async () => {
       if (!businesses.value?.founderBusinesses?.length) {
         await refresh();
@@ -365,10 +395,29 @@ export default defineComponent({
           string,
           unknown
         >) ?? {};
-      console.log(fundingRound.value);
+      try {
+        const response = await store.dispatch(
+          Actions.BUSINESS_INVESTORS,
+          route.query.businessId
+        );
+        if (response?.success) {
+          investors.value = response?.data ?? [];
+        } else throw new Error(response?.message);
+      } catch (err) {
+        store.commit("setAlert", {
+          message: "Error",
+          subMessage: err,
+          variant: "danger",
+          duration: 4000,
+          show: true,
+        });
+      }
       setCurrentPageBreadcrumbs("Funding Round", ["Business Details"]);
     });
     return {
+      touch,
+      touched,
+      investors,
       investorId,
       loading,
       formatter,
