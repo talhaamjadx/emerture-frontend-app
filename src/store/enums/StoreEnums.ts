@@ -67,6 +67,7 @@ enum Actions {
   GET_PLANS = "getPlans",
   CONNECTED_FOUNDERS = "expertConnectedFounders",
   GET_USER_PROFILE = "getUserProfile",
+  BUSINESS_INVESTORS = "businessInvestors"
 }
 
 enum Mutations {
