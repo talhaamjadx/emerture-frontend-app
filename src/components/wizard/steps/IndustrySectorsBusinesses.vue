@@ -29,7 +29,9 @@
           </label>
         </div>
       </div>
-      <!--end::Input-->
+      <p v-if="isAnyIndustrySectorSelected" style="color: red">
+        Kindly select an industry sector to coontinue
+      </p>
     </div>
   </div>
   <!--end::Wrapper-->
@@ -55,9 +57,23 @@ export default defineComponent({
       type: FormData,
       required: true,
     },
+    touchedParent: {
+      type: Boolean,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const store = useStore();
+    const touched = ref<boolean>(false);
+    watch(
+      () => props.touchedParent,
+      (value) => {
+        touched.value = value;
+        if (value && !selectedIndustrySectors.value?.length)
+          isAnyIndustrySectorSelected.value = true;
+      }
+    );
+    const isAnyIndustrySectorSelected = ref<boolean>(false);
     const industrySectors = computed(() => store.getters.industrySectorsGetter);
     let formData = ref<FormData>(props.formDataTemp);
     let selectedIndustrySectors = ref<Array<number>>([]);
@@ -77,6 +93,7 @@ export default defineComponent({
       ) {
         checkedIndustrySectors[businessDraft.value?.industrySectors[i]] = true;
       }
+      emit("industrySectorsLength", selectedIndustrySectors.value.length);
     });
     watch(
       () => props.formDataTemp,
@@ -120,6 +137,8 @@ export default defineComponent({
           }
         );
       }
+      emit("industrySectorsLength", selectedIndustrySectors.value.length);
+      isAnyIndustrySectorSelected.value = false
       fieldChanged();
     };
     onMounted(async () => {
@@ -133,6 +152,7 @@ export default defineComponent({
       addToIndustrySectors,
       selectedIndustrySectors,
       checkedIndustrySectors,
+      isAnyIndustrySectorSelected,
     };
   },
 });

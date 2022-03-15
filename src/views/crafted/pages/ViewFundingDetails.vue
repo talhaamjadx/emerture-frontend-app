@@ -188,6 +188,32 @@
             <div class="col-md-12">
               <div class="fv-row mb-10">
                 <!--begin::Label-->
+                <label class="form-label required"
+                  >Investor</label
+                >
+                <!--end::Label-->
+
+                <!--begin::Input-->
+                <Field
+                  v-model="investorId"
+                  name="notification"
+                  class="form-select form-select-lg form-select-solid"
+                  data-control="select2"
+                  data-placeholder="Select..."
+                  data-allow-clear="true"
+                  data-hide-search="true"
+                  as="select"
+                >
+                  <option selected value=""></option>
+                </Field>
+                <!--end::Input-->
+                <ErrorMessage
+                  name="notification"
+                  class="fv-plugins-message-container invalid-feedback"
+                ></ErrorMessage>
+              </div>
+              <div class="fv-row mb-10">
+                <!--begin::Label-->
                 <label class="form-label required">Add Investment</label>
                 <el-input v-model="investmentAmount" placeholder="0.00">
                   <template #prepend>{{
@@ -232,13 +258,17 @@ import { mainFormatter } from "@/utils/index";
 import moment from "moment";
 import objectPath from "object-path";
 import InvestmentHistory from "@/components/widgets/lists/Widget5.vue";
+import { Field, ErrorMessage } from "vee-validate";
 
 export default defineComponent({
   name: "view-funding-round",
   components: {
     InvestmentHistory,
+    Field,
+    ErrorMessage
   },
   setup() {
+    const investorId = ref<string | number>("")
     const loading = ref<boolean>(false);
     const store = useStore();
     const route = useRoute();
@@ -339,6 +369,7 @@ export default defineComponent({
       setCurrentPageBreadcrumbs("Funding Round", ["Business Details"]);
     });
     return {
+      investorId,
       loading,
       formatter,
       business,
