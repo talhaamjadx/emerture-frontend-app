@@ -27,7 +27,7 @@
           <!--begin::Content-->
           <div class="timeline-content d-flex">
             <span class="fw-bolder text-gray-800 ps-3">{{
-              `${currencyCodeTemp} ${investment?.investment} Invested Through External Sources`
+              `${currencyCodeTemp} ${investment?.investment} Invested By ${investment?.investor?.user?.firstName ?? ''} ${investment?.investor?.user?.lastName ?? ''}`
             }}</span>
           </div>
           <!--end::Content-->

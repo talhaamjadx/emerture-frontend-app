@@ -58,6 +58,19 @@ export default class Business extends VuexModule {
             })
     }
     @Action
+    [Actions.BUSINESS_INVESTORS](payload): Promise<AxiosResponse> {
+        ApiService.setHeader("application/json")
+        return ApiService.get(`/founder-business/connected-investor/${payload}`)
+            .then(res => {
+                return res?.data
+            })
+            .catch(err => {
+                console.log(err)
+                this.context.commit(Mutations.SET_ERROR, objectPath.get(err, "response.data.errors", []));
+                return err.response
+            })
+    }
+    @Action
     [Actions.UPDATE_FOUNDER_BUSINESS]({ id, payload }): Promise<AxiosResponse> {
         ApiService.setHeader("multipart/form-data")
         return ApiService.post(`/founder-business/${id}`, payload)
