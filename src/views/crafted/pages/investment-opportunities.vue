@@ -48,7 +48,7 @@
                     style="width: 70%; display: block; margin: auto"
                     class="btn btn-danger my-sm-2 my-3"
                   >
-                    Connect
+                    Request Virtual Pitch Event
                   </button>
                   <button
                     v-else
@@ -57,7 +57,7 @@
                     style="width: 70%; display: block; margin: auto"
                     class="btn btn-danger my-sm-2 my-3"
                   >
-                    Connected
+                    Requested
                   </button>
                 </div>
               </div>

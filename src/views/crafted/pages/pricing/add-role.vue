@@ -7,7 +7,7 @@
         Access a curated ecosystem of Investors, industry experts and investment opportunities
       </div>
       <div v-if="!isAnyRoleSelected" class="text-gray-400 fw-bold fs-5">
-        Please select a role to start using the platform
+        Choose one of the following roles to unleash the full potential of Emerture
       </div>
     </div>
     <!--end::Heading-->
