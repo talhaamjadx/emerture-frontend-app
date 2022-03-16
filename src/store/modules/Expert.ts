@@ -193,4 +193,16 @@ export default class Expert extends VuexModule {
                 return err.response
             })
     }
+    @Action
+    [Actions.UPDATE_FOUNDER_REQUISITE_EXPERT_STATUS]({ id, status }): Promise<AxiosResponse> {
+        ApiService.setHeader("appilcation/json")
+        return ApiService.get(`/founder-requisite-expert/${id}/${status}`)
+            .then(Response => {
+                return Response.data
+            })
+            .catch(err => {
+                errorHandler(err, this.context)
+                return err.response
+            })
+    }
 }

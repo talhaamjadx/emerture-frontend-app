@@ -1,6 +1,11 @@
 <template>
   <div>
-    <p v-if="!areAtleastThreeExpertsConnected" style="color: red;">Please select a minimum of 3 expert profiles to address any gaps/challenges that the business is currently facing. The aim is to provide access to a breadth of industry expertise via this step of expert curation.</p>
+    <p v-if="!areAtleastThreeExpertsConnected" style="color: red">
+      Please select a minimum of 3 expert profiles to address any
+      gaps/challenges that the business is currently facing. The aim is to
+      provide access to a breadth of industry expertise via this step of expert
+      curation.
+    </p>
     <div class="card">
       <div class="card-body">
         <div class="accordion" id="kt_accordion_1">
@@ -98,7 +103,15 @@
           </div>
         </div>
         <p v-if="showError" style="color: red">
-          Select Atleast one {{ selectedExpertise.length ? (selectedIndustrySectors.length ? '' : 'Industry Sector') : 'Expertise' }} to Find Experts
+          Select Atleast one
+          {{
+            selectedExpertise.length
+              ? selectedIndustrySectors.length
+                ? ""
+                : "Industry Sector"
+              : "Expertise"
+          }}
+          to Find Experts
         </p>
       </div>
     </div>
@@ -109,6 +122,7 @@
         class="col-md-4 my-4"
       >
         <ExpertDetailsCard
+          :key="expert.id"
           :name="expert.name"
           :jobTitle="expert.jobTitle"
           :profilePicture="expert.user.profileImage"
@@ -121,6 +135,8 @@
           avg-earnings="$14,560"
           total-sales="$236,400"
           :isAlreadyConnected="isAlreadyConnected(expert.id)"
+          :expertRequisiteConnectionStatus="expertRequisiteConnectionStatus"
+          :founderRequisiteExpertsMain="founderRequisiteExperts"
         />
       </div>
     </div>
@@ -144,8 +160,10 @@ export default defineComponent({
     const store = useStore();
     const user = computed(() => store.getters.getUser);
     const areAtleastThreeExpertsConnected = computed(() => {
-      return objectPath.get(user.value, 'founderRequisiteExpert.length', 0) >= 3
-    })
+      return (
+        objectPath.get(user.value, "founderRequisiteExpert.length", 0) >= 3
+      );
+    });
     const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
     watchEffect(() => {
       founderRequisiteExperts.value = user.value.founderRequisiteExpert;
@@ -155,6 +173,14 @@ export default defineComponent({
         return objectPath.get(expert, "id", false) == id;
       });
     };
+    const expertRequisiteConnectionStatus = computed(() => {
+      const temp = {};
+      founderRequisiteExperts.value.forEach((expert) => {
+        temp[(expert as { id })?.id] =
+          (expert as { pivot: { status } })?.pivot?.status ?? "";
+      });
+      return temp;
+    });
     const expertise = computed(() => store.getters.expertiseGetter);
     const industrySectors = computed(() => store.getters.industrySectorsGetter);
     const selectedExpertise = ref<Array<number>>([]);
@@ -227,7 +253,8 @@ export default defineComponent({
       filteredExperts,
       isAlreadyConnected,
       selectedExpertise,
-      selectedIndustrySectors
+      selectedIndustrySectors,
+      expertRequisiteConnectionStatus,
     };
   },
 });
