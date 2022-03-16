@@ -92,6 +92,11 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "/connection-request",
+        name: "connection-request",
+        component: () => import("@/views/crafted/pages/connection-request.vue"),
+      },
+      {
         path: "/subscription",
         name: "stripe",
         component: () => import("@/views/crafted/pages/subscription.vue"),
