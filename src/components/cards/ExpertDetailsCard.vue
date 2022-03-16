@@ -4,8 +4,10 @@
     <!--begin::Card-->
     <div class="card" :class="cardClasses">
       <!--begin::Card body-->
-      <div class="card-body d-flex flex-center flex-column p-9 border" style="background-color: #f5f8fa;
-    border-radius: 7px;">
+      <div
+        class="card-body d-flex flex-center flex-column p-9 border"
+        style="background-color: #f5f8fa; border-radius: 7px"
+      >
         <!--begin::Avatar-->
         <div v-if="avatar" class="symbol symbol-65px symbol-circle mb-5">
           <img
@@ -93,14 +95,24 @@
         </router-link>
         <div v-if="!fromConnectedExperts">
           <a
-            v-if="isConnected"
+            v-if="
+              isConnected && expertRequisiteConnectionStatus[expertId] !== ''
+            "
             href="javacript:void(0)"
             class="btn btn-sm btn-light-primary"
           >
             <span class="svg-icon svg-icon-3">
               <inline-svg src="media/icons/duotune/arrows/arr012.svg" />
             </span>
-            Connected
+            {{
+              expertRequisiteConnectionStatus[expertId] == 0
+                ? "Pending"
+                : expertRequisiteConnectionStatus[expertId] == 1
+                ? "Connected"
+                : expertRequisiteConnectionStatus[expertId] == 2
+                ? "Rejected"
+                : ""
+            }}
           </a>
           <a
             :data-kt-indicator="loading ? 'on' : null"
@@ -173,11 +185,16 @@ export default defineComponent({
     isAlreadyConnected: Boolean,
 
     fromConnectedExperts: Boolean,
+
+    founderRequisiteExpertsMain: Array,
+
+    expertRequisiteConnectionStatus: Object,
   },
   setup(props) {
     const loading = ref<boolean>(false);
     const store = useStore();
     const isConnected = ref<boolean>(props.isAlreadyConnected);
+    const founderRequisiteExperts = ref<Array<Record<string, unknown>>>([]);
     watch(
       () => props.isAlreadyConnected,
       (value) => (isConnected.value = value)
@@ -217,6 +234,7 @@ export default defineComponent({
       loading,
       attachExpert,
       isConnected,
+      founderRequisiteExperts,
     };
   },
 });

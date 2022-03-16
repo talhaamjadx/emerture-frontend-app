@@ -210,6 +210,7 @@
                       {{ investor?.user?.firstName }}
                       {{ investor?.user?.lastName }}
                     </option>
+                    <option value="0">Other</option>
                   </Field>
                   <!--end::Input-->
                   <ErrorMessage
